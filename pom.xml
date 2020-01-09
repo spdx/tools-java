@@ -21,5 +21,10 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+    	<groupId>org.spdx</groupId>
+    	<artifactId>java-spdx-library</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 </project>
