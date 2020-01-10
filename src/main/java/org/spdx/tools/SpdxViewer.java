@@ -23,6 +23,7 @@ import java.util.Properties;
 
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.SpdxDocument;
+import org.spdx.spdxRdfStore.RdfStore;
 import org.spdx.tag.CommonCode;
 
 /**
@@ -56,8 +57,10 @@ public class SpdxViewer {
 			System.out.printf("Warning: Extra arguments will be ignored");
 		}
 		SpdxDocument doc = null;
+		RdfStore store = new RdfStore();
 		try {
-			doc = SPDXDocumentFactory.createSpdxDocument(args[0]);
+			String documentUri = store.loadModelFromFile(args[0], false);
+			doc = new SpdxDocument(store, documentUri, null, false);
 		} catch (Exception ex) {
 			System.out
 					.print("Error creating SPDX Document: " + ex.getMessage());
