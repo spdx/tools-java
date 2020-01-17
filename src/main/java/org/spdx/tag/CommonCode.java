@@ -180,7 +180,7 @@ public class CommonCode {
 		// print any described packages
 		for (SpdxElement item:items) {
 			if (item instanceof SpdxPackage) {
-				printPackage((SpdxPackage)items, out, constants, allFiles, doc.getDocumentUri());
+				printPackage((SpdxPackage)item, out, constants, allFiles, doc.getDocumentUri());
 				alreadyPrinted.add(item);
 			}
 		}
@@ -339,7 +339,7 @@ public class CommonCode {
 			PrintWriter out, Properties constants, String nameProperty,
 			String commentProperty) throws InvalidSPDXAnalysisException {
 		if (element.getName().isPresent() && !element.getName().get().isEmpty()) {
-			println(out, constants.getProperty(nameProperty) + element.getName());
+			println(out, constants.getProperty(nameProperty) + element.getName().get());
 		}
 		if (element.getId() != null && !element.getId().isEmpty()) {
 			println(out, constants.getProperty("PROP_ELEMENT_ID") + element.getId());
@@ -347,7 +347,7 @@ public class CommonCode {
 		if (element.getComment().isPresent() && !element.getComment().get().isEmpty()) {
 			println(out, constants.getProperty(commentProperty)
 					+ constants.getProperty("PROP_BEGIN_TEXT")
-					+ element.getComment()
+					+ element.getComment().get()
 					+ constants.getProperty("PROP_END_TEXT"));
 		}
 	}
