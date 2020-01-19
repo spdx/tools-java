@@ -31,5 +31,10 @@
     	<artifactId>spdx-rdf-store</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
     </dependency>
+    <dependency>
+    	<groupId>org.spdx</groupId>
+    	<artifactId>jsonstore</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 </project>
