@@ -26,7 +26,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import org.spdx.jsonstore.JsonStore;
+import org.spdx.jsonstore.MultiFormatStore;
+import org.spdx.jsonstore.MultiFormatStore.Format;
+import org.spdx.jsonstore.MultiFormatStore.Verbose;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.ModelCopyManager;
 import org.spdx.library.SpdxConstants;
@@ -157,7 +159,11 @@ public class SpdxConverter {
 			});
 			toStore.serialize(documentUri, output);
 		} catch (Exception ex) {
-			System.err.println("Error converting SPDX file: "+ex.getMessage());
+			String msg = "Error converting SPDX file: "+ex.getClass().toString();
+			if (Objects.nonNull(ex.getMessage())) {
+				msg = msg + ex.getMessage();
+			}
+			System.err.println(msg);
 		} finally {
 			if (Objects.nonNull(input)) {
 				try {
@@ -179,12 +185,12 @@ public class SpdxConverter {
 
 	private static ISerializableModelStore fileTypeToStore(FileType fromFileType) throws InvalidSPDXAnalysisException {
 		switch(fromFileType) {
-		case JSON: return new JsonStore();
+		case JSON: return new MultiFormatStore(Format.JSON_PRETTY, Verbose.COMPACT);
 		case RDFXML: return new RdfStore();
 		case TAG: throw new InvalidSPDXAnalysisException("Tag/value is current unsupported.  Check back later.");
 		case XLS: throw new InvalidSPDXAnalysisException("Excel is current unsupported.  Check back later.");
-		case XML: throw new InvalidSPDXAnalysisException("XML is current unsupported.  Check back later.");
-		case YAML: throw new InvalidSPDXAnalysisException("YAML is current unsupported.  Check back later.");
+		case XML: return new MultiFormatStore(Format.XML, Verbose.COMPACT);
+		case YAML: return new MultiFormatStore(Format.YAML, Verbose.COMPACT);
 		default: throw new InvalidSPDXAnalysisException("Unsupporte file type: "+fromFileType+".  Check back later.");
 		}
 	}
