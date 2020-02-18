@@ -172,7 +172,8 @@ public class RdfSchemaToJsonContext {
 			documentContext.put("@type", "spdx:SpdxDocument");
 			documentContext.put("@id", "spdx:spdxDocument");
 			contexts.set("Document", documentContext);
-			contexts.put("SPDXID", "@id");
+			contexts.put(SpdxConstants.SPDX_IDENTIFIER, "@id");
+			contexts.put(SpdxConstants.EXTERNAL_DOCUMENT_REF_IDENTIFIER, "@id");
 			ObjectNode context = jsonMapper.createObjectNode();
 			context.set("@context", contexts);
 			os = new FileOutputStream(toFile);
