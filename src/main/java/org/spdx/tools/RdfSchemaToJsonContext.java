@@ -32,6 +32,7 @@ import java.util.Objects;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.ontology.OntProperty;
+import org.apache.jena.ontology.OntResource;
 import org.apache.jena.ontology.Restriction;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
@@ -62,9 +63,10 @@ public class RdfSchemaToJsonContext {
 		namespaceMap.put(SpdxConstants.RDF_POINTER_NAMESPACE, "rdfpointer");
 		namespaceMap.put(SpdxConstants.OWL_NAMESPACE, "owl");
 		namespaceMap.put(SpdxConstants.DOAP_NAMESPACE, "doap");
+		namespaceMap.put(SpdxConstants.XML_SCHEMA_NAMESPACE, "xsd");
 		NAMESPACES = Collections.unmodifiableMap(namespaceMap);
 	}
-
+	
 	/**
 	 * @param args arg[0] RDF Schema file path; arg[1] output file path
 	 */
@@ -103,6 +105,7 @@ public class RdfSchemaToJsonContext {
 			Property minCardProperty = model.createProperty("http://www.w3.org/2002/07/owl#minCardinality");
 			Property minQualCardProperty = model.createProperty("http://www.w3.org/2002/07/owl#minQualifiedCardinality");
 			Property owlClassProperty = model.createProperty("http://www.w3.org/2002/07/owl#onClass");
+			 
 			ObjectNode contexts = jsonMapper.createObjectNode();
 			NAMESPACES.forEach((namespace, name) -> {
 				contexts.put(name, namespace);
@@ -150,6 +153,16 @@ public class RdfSchemaToJsonContext {
 							hasListProperty = true;
 					} else if (Objects.nonNull(minQualCardPropValue) && minQualCardPropValue.isLiteral()) {
 						hasListProperty = true;
+					}
+				}
+				if (Objects.isNull(type)) {
+					ExtendedIterator<? extends OntResource> rangeIter = property.listRange();
+					while (rangeIter.hasNext()) {
+						OntResource range = rangeIter.next();
+						if (range.isURIResource()) {
+							String typeUri = range.asResource().getURI();
+							type = uriToNamespace(typeUri) + uriToPropName(typeUri);
+						}
 					}
 				}
 				if (Objects.nonNull(type)) {
