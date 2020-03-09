@@ -26,9 +26,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import org.spdx.jsonstore.MultiFormatStore;
-import org.spdx.jsonstore.MultiFormatStore.Format;
-import org.spdx.jsonstore.MultiFormatStore.Verbose;
+import org.spdx.jacksonstore.MultiFormatStore;
+import org.spdx.jacksonstore.MultiFormatStore.Format;
+import org.spdx.jacksonstore.MultiFormatStore.Verbose;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.ModelCopyManager;
 import org.spdx.library.SpdxConstants;
@@ -89,7 +89,7 @@ public class SpdxConverter {
 		}
 		File toFile = new File(args[1]);
 		if (toFile.exists()) {
-			System.err.println("Output file "+args[0]+" already exists.");
+			System.err.println("Output file "+args[1]+" already exists.");
 			usage();
 			return;
 		}

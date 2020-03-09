@@ -38,7 +38,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.util.iterator.ExtendedIterator;
-import org.spdx.jsonstore.MultiFormatStore;
+import org.spdx.jacksonstore.MultiFormatStore;
 import org.spdx.library.SpdxConstants;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -63,7 +63,7 @@ public class RdfSchemaToJsonContext {
 		namespaceMap.put(SpdxConstants.RDF_POINTER_NAMESPACE, "rdfpointer");
 		namespaceMap.put(SpdxConstants.OWL_NAMESPACE, "owl");
 		namespaceMap.put(SpdxConstants.DOAP_NAMESPACE, "doap");
-		namespaceMap.put(SpdxConstants.XML_SCHEMA_NAMESPACE, "xsd");
+		namespaceMap.put(SpdxConstants.XML_SCHEMA_NAMESPACE, "xs");
 		NAMESPACES = Collections.unmodifiableMap(namespaceMap);
 	}
 	
@@ -117,64 +117,20 @@ public class RdfSchemaToJsonContext {
 				String propNamespace = uriToNamespace(property.getURI());
 				ObjectNode propContext = jsonMapper.createObjectNode();
 				propContext.put("@id", propNamespace + propName);
-				String type = null;
-				boolean hasListProperty = false;	// If any of the cardinalities is > 1, this will be set to true
-				ExtendedIterator<Restriction> restrictionIter = property.listReferringRestrictions();
-				while (restrictionIter.hasNext()) {
-					Restriction r = restrictionIter.next();
-					RDFNode typePropertyValue = r.getPropertyValue(owlClassProperty);
-					if (Objects.nonNull(typePropertyValue) && typePropertyValue.isURIResource()) {
-						String typeUri = typePropertyValue.asResource().getURI();
-						type = uriToNamespace(typeUri) + uriToPropName(typeUri);
-					}
-					RDFNode qualCardPropValue = r.getPropertyValue(qualCardProperty);
-					RDFNode cardPropValue = r.getPropertyValue(cardProperty);
-					RDFNode maxQualCardPropValue = r.getPropertyValue(maxQualCardProperty);
-					RDFNode maxCardPropValue = r.getPropertyValue(maxCardProperty);
-					RDFNode minCardPropValue = r.getPropertyValue(minCardProperty);
-					RDFNode minQualCardPropValue = r.getPropertyValue(minQualCardProperty);
-					if (Objects.nonNull(qualCardPropValue) && qualCardPropValue.isLiteral()) {
-						if (qualCardPropValue.asLiteral().getInt() > 1) {
-							hasListProperty = true;
-						}
-					} else if (Objects.nonNull(cardPropValue) && cardPropValue.isLiteral()) {
-						if (cardPropValue.asLiteral().getInt() > 1) {
-							hasListProperty = true;
-						}
-					} else if (Objects.nonNull(maxQualCardPropValue) && maxQualCardPropValue.isLiteral()) {
-						if (maxQualCardPropValue.asLiteral().getInt() > 1) {
-							hasListProperty = true;
-						}
-					} else if (Objects.nonNull(maxCardPropValue) && maxCardPropValue.isLiteral()) {
-						if (maxCardPropValue.asLiteral().getInt() > 1) {
-							hasListProperty = true;
-						}
-					} else if (Objects.nonNull(minCardPropValue) && minCardPropValue.isLiteral()) {
-							hasListProperty = true;
-					} else if (Objects.nonNull(minQualCardPropValue) && minQualCardPropValue.isLiteral()) {
-						hasListProperty = true;
-					}
-				}
-				if (Objects.isNull(type)) {
-					ExtendedIterator<? extends OntResource> rangeIter = property.listRange();
-					while (rangeIter.hasNext()) {
-						OntResource range = rangeIter.next();
-						if (range.isURIResource()) {
-							String typeUri = range.asResource().getURI();
-							type = uriToNamespace(typeUri) + uriToPropName(typeUri);
-						}
-					}
-				}
-				if (Objects.nonNull(type)) {
-					propContext.put("@type", type);
+				
+				PropertyRestrictions propertyRestrictions = new PropertyRestrictions(property);
+				boolean hasListProperty = propertyRestrictions.isListProperty();
+				String typeUri = propertyRestrictions.getTypeUri();
+				if (Objects.nonNull(typeUri)) {
+					propContext.put("@type", uriToNamespace(typeUri) + uriToPropName(typeUri));
 				}
 				contexts.set(propName, propContext);
 				if (hasListProperty) {
 					String listPropName = MultiFormatStore.propertyNameToCollectionPropertyName(propName);
 					ObjectNode listPropContext = jsonMapper.createObjectNode();
 					listPropContext.put("@id", propNamespace + listPropName);
-					if (Objects.nonNull(type)) {
-						listPropContext.put("@type", type);
+					if (Objects.nonNull(typeUri)) {
+						listPropContext.put("@type", uriToNamespace(typeUri) + uriToPropName(typeUri));
 					}
 					listPropContext.put("@container", "@set");
 					contexts.set(listPropName, listPropContext);
