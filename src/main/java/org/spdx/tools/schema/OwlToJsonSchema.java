@@ -17,17 +17,21 @@
  */
 package org.spdx.tools.schema;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 
 import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntProperty;
 import org.apache.jena.ontology.Ontology;
+import org.apache.jena.ontology.Restriction;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.util.iterator.ExtendedIterator;
 import org.spdx.jacksonstore.MultiFormatStore;
 import org.spdx.jacksonstore.SpdxJsonLDContext;
 import org.spdx.library.SpdxConstants;
+import org.spdx.library.model.ReferenceType;
 import org.spdx.library.model.SpdxElement;
 import org.spdx.library.model.SpdxModelFactory;
 import org.spdx.library.model.license.AnyLicenseInfo;
@@ -120,13 +124,12 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 		ObjectNode retval = jsonMapper.createObjectNode();
 		retval.put("type", "object");
 		ObjectNode properties = jsonMapper.createObjectNode();
-		ExtendedIterator<OntProperty> propertyIter = spdxClass.listDeclaredProperties(false);
-		while (propertyIter.hasNext()) {
-			OntProperty property = propertyIter.next();
+		Collection<OntProperty> ontProperties = propertiesFromClassRestrictions(spdxClass);
+		for (OntProperty property:ontProperties) {
 			if (SKIPPED_PROPERTIES.contains(property.getURI())) {
 				continue;
 			}
-			PropertyRestrictions restrictions = getPropertyRestrictions(property);
+			PropertyRestrictions restrictions = getPropertyRestrictions(spdxClass, property);
 			Objects.requireNonNull(restrictions.getTypeUri(), "Missing type for property "+property.getLocalName());
 			if (restrictions.getTypeUri().equals(RELATIONSHIP_TYPE)) {
 				continue;
@@ -141,6 +144,44 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 		}
 		retval.set("properties", properties);
 		return retval;
+	}
+	
+	/**
+	 * @param oClass
+	 * @return collection of all properties which have a restriction on the class or a subclass
+	 */
+	private Collection<OntProperty> propertiesFromClassRestrictions(OntClass oClass) {
+		Collection<OntProperty> properties = new HashSet<>();
+		Collection<OntClass> reviewedClasses = new HashSet<>();
+		collectPropertiesFromRestrictions(oClass, properties, reviewedClasses);
+		return properties;
+	}
+
+	/**
+	 * Collects any properties used in restrictions and adds them to the properties collection - includes all subclasses
+	 * @param oClass Class to collect properties from
+	 * @param properties collection of any properties found
+	 * @param reviewedClasses collection of classes already reviewed - used to prevent infinite recursion
+	 */
+	private void collectPropertiesFromRestrictions(OntClass oClass, 
+			Collection<OntProperty> properties, Collection<OntClass> reviewedClasses) {
+		//spdxClass.listDeclaredProperties(false);
+		if (reviewedClasses.contains(oClass)) {
+			return;
+		}
+		reviewedClasses.add(oClass);
+		if (oClass.isRestriction()) {
+			Restriction r = oClass.asRestriction();
+			OntProperty property = r.getOnProperty();
+			if (Objects.nonNull(property)) {
+				properties.add(property);
+			}
+		} else {
+			ExtendedIterator<OntClass> subClassIter = oClass.listSuperClasses(false);
+			while (subClassIter.hasNext()) {
+				collectPropertiesFromRestrictions(subClassIter.next(), properties, reviewedClasses);
+			}
+		}
 	}
 
 	/**
@@ -157,7 +198,7 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 		Statement commentStatement = property.getProperty(commentProperty);
 		if (Objects.nonNull(commentStatement) && Objects.nonNull(commentStatement.getObject())
 				&& commentStatement.getObject().isLiteral()) {
-			propertySchema.put("description", commentStatement.getObject().toString());
+			propertySchema.put("description", commentStatement.getObject().asLiteral().getString());
 		}
 		if (list) {
 			propertySchema.put("type", "array");
@@ -198,8 +239,9 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 		} else if (restrictions.getTypeUri().startsWith(SpdxConstants.SPDX_NAMESPACE)) {
 			String spdxType = restrictions.getTypeUri().substring(SpdxConstants.SPDX_NAMESPACE.length());
 			Class<? extends Object> clazz = SpdxModelFactory.SPDX_TYPE_TO_CLASS.get(spdxType);
-			if (Objects.nonNull(clazz) && (AnyLicenseInfo.class.isAssignableFrom(clazz))) {
-				// check for AnyLicenseInfo - these are strings
+			if (Objects.nonNull(clazz) && (AnyLicenseInfo.class.isAssignableFrom(clazz))
+					&& !SpdxConstants.PROP_SPDX_EXTRACTED_LICENSES.equals(property.getLocalName())) {
+				// check for AnyLicenseInfo - these are strings with the exception of the extractedLicensingInfos which are the actual license description
 				JsonNode description = propertySchema.get("description");
 				if (Objects.isNull(description)) {
 					propertySchema.put("description", "License expression");
@@ -207,13 +249,20 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 					propertySchema.put("description", "License expression for "+property.getLocalName()+".  "+description.asText());
 				}
 				propertySchema.put("type", "string");
-			} else if (Objects.nonNull(clazz) &&SpdxElement.class.isAssignableFrom(clazz)) {
+			} else if (Objects.nonNull(clazz) && SpdxElement.class.isAssignableFrom(clazz)) {
 				// check for SPDX Elements - these are strings
 				JsonNode description = propertySchema.get("description");
 				if (Objects.isNull(description)) {
 					propertySchema.put("description", "SPDX ID for "+spdxType);
 				} else {
 					propertySchema.put("description", "SPDX ID for "+spdxType+".  "+description.asText());
+				}
+				propertySchema.put("type", "string");
+			} else if (Objects.nonNull(clazz) && ReferenceType.class.isAssignableFrom(clazz)) {
+				// check for ReferenceType - these are strings URI's and not the full object description
+				JsonNode description = propertySchema.get("description");
+				if (Objects.nonNull(description)) {
+					propertySchema.put("description", description.asText());
 				}
 				propertySchema.put("type", "string");
 			} else {
@@ -224,7 +273,7 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 				if (Objects.nonNull(commentStatement) && Objects.nonNull(commentStatement.getObject())
 						&& commentStatement.getObject().isLiteral()) {
 					// replace the property comment with the class comment
-					propertySchema.put("description", commentStatement.getObject().toString());
+					propertySchema.put("description", commentStatement.getObject().asLiteral().getString());
 				}
 			}
 		} else {
@@ -233,7 +282,7 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 			if (Objects.nonNull(commentStatement) && Objects.nonNull(commentStatement.getObject())
 					&& commentStatement.getObject().isLiteral()) {
 				// replace the property comment with the class comment
-				propertySchema.put("description", commentStatement.getObject().toString());
+				propertySchema.put("description", commentStatement.getObject().asLiteral().getString());
 			}
 			Objects.requireNonNull(typeClass, "No type class found for "+restrictions.getTypeUri());
 			propertySchema = ontClassToJsonSchema(typeClass);

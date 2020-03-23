@@ -24,26 +24,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
-import org.apache.jena.ontology.OntProperty;
-import org.apache.jena.ontology.OntResource;
-import org.apache.jena.ontology.Restriction;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.util.iterator.ExtendedIterator;
-import org.spdx.jacksonstore.MultiFormatStore;
-import org.spdx.library.SpdxConstants;
+import org.spdx.tools.schema.OwlToJsonContext;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
@@ -52,20 +40,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  *
  */
 public class RdfSchemaToJsonContext {
-	
-	static final Map<String, String> NAMESPACES;
-	
-	static {
-		Map<String, String> namespaceMap = new HashMap<>();
-		namespaceMap.put(SpdxConstants.SPDX_NAMESPACE, "spdx");
-		namespaceMap.put(SpdxConstants.RDFS_NAMESPACE, "rdfs");
-		namespaceMap.put(SpdxConstants.RDF_NAMESPACE, "rdf");
-		namespaceMap.put(SpdxConstants.RDF_POINTER_NAMESPACE, "rdfpointer");
-		namespaceMap.put(SpdxConstants.OWL_NAMESPACE, "owl");
-		namespaceMap.put(SpdxConstants.DOAP_NAMESPACE, "doap");
-		namespaceMap.put(SpdxConstants.XML_SCHEMA_NAMESPACE, "xs");
-		NAMESPACES = Collections.unmodifiableMap(namespaceMap);
-	}
 	
 	/**
 	 * @param args arg[0] RDF Schema file path; arg[1] output file path
@@ -90,63 +64,30 @@ public class RdfSchemaToJsonContext {
 			usage();
 			return;
 		}
-		
-		ObjectMapper jsonMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 		InputStream is = null;
-		OutputStream os = null;
+		OwlToJsonContext owlToJsonContext = null;
 		try {
 			is = new FileInputStream(fromFile);
 			OntModel model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
 			model.read(is, "RDF/XML");
-			Property qualCardProperty = model.createProperty("http://www.w3.org/2002/07/owl#qualifiedCardinality");
-			Property maxQualCardProperty = model.createProperty("http://www.w3.org/2002/07/owl#maxQualifiedCardinality");
-			Property maxCardProperty = model.createProperty("http://www.w3.org/2002/07/owl#maxCardinality");
-			Property cardProperty = model.createProperty("http://www.w3.org/2002/07/owl#cardinality");
-			Property minCardProperty = model.createProperty("http://www.w3.org/2002/07/owl#minCardinality");
-			Property minQualCardProperty = model.createProperty("http://www.w3.org/2002/07/owl#minQualifiedCardinality");
-			Property owlClassProperty = model.createProperty("http://www.w3.org/2002/07/owl#onClass");
-			 
-			ObjectNode contexts = jsonMapper.createObjectNode();
-			NAMESPACES.forEach((namespace, name) -> {
-				contexts.put(name, namespace);
-			});
-			ExtendedIterator<OntProperty> iter = model.listAllOntProperties();
-			while (iter.hasNext()) {
-				OntProperty property = iter.next();
-				String propName = uriToPropName(property.getURI());
-				String propNamespace = uriToNamespace(property.getURI());
-				ObjectNode propContext = jsonMapper.createObjectNode();
-				propContext.put("@id", propNamespace + propName);
-				
-				PropertyRestrictions propertyRestrictions = new PropertyRestrictions(property);
-				boolean hasListProperty = propertyRestrictions.isListProperty();
-				String typeUri = propertyRestrictions.getTypeUri();
-				if (Objects.nonNull(typeUri)) {
-					propContext.put("@type", uriToNamespace(typeUri) + uriToPropName(typeUri));
-				}
-				contexts.set(propName, propContext);
-				if (hasListProperty) {
-					String listPropName = MultiFormatStore.propertyNameToCollectionPropertyName(propName);
-					ObjectNode listPropContext = jsonMapper.createObjectNode();
-					listPropContext.put("@id", propNamespace + listPropName);
-					if (Objects.nonNull(typeUri)) {
-						listPropContext.put("@type", uriToNamespace(typeUri) + uriToPropName(typeUri));
-					}
-					listPropContext.put("@container", "@set");
-					contexts.set(listPropName, listPropContext);
+			owlToJsonContext = new OwlToJsonContext(model);
+		} catch (FileNotFoundException e) {
+			System.err.println("File not found for "+fromFile.getName());
+			return;
+		} finally {
+			if (Objects.nonNull(is)) {
+				try {
+					is.close();
+				} catch (IOException e) {
+					System.err.println("Error closing input file stream: "+e.getMessage());
 				}
 			}
-			// Manually added contexts - specific to the JSON format
-			ObjectNode documentContext = jsonMapper.createObjectNode();
-			documentContext.put("@type", "spdx:SpdxDocument");
-			documentContext.put("@id", "spdx:spdxDocument");
-			contexts.set("Document", documentContext);
-			contexts.put(SpdxConstants.SPDX_IDENTIFIER, "@id");
-			contexts.put(SpdxConstants.EXTERNAL_DOCUMENT_REF_IDENTIFIER, "@id");
-			ObjectNode context = jsonMapper.createObjectNode();
-			context.set("@context", contexts);
+		}
+		ObjectNode context = owlToJsonContext.convertToContext();
+		OutputStream os = null;
+		try {
 			os = new FileOutputStream(toFile);
-			jsonMapper.writeTree(jsonMapper.getFactory().createGenerator(os).useDefaultPrettyPrinter(), 
+			OwlToJsonContext.jsonMapper.writeTree(OwlToJsonContext.jsonMapper.getFactory().createGenerator(os).useDefaultPrettyPrinter(), 
 					context);
 		} catch (FileNotFoundException e) {
 			System.err.println("File not found for "+fromFile.getName());
@@ -158,13 +99,6 @@ public class RdfSchemaToJsonContext {
 			System.err.println("I/O error: "+e.getMessage());
 			return;
 		} finally {
-			if (Objects.nonNull(is)) {
-				try {
-					is.close();
-				} catch (IOException e) {
-					System.err.println("Error closing input file stream: "+e.getMessage());
-				}
-			}
 			if (Objects.nonNull(os)) {
 				try {
 					os.close();
@@ -173,29 +107,6 @@ public class RdfSchemaToJsonContext {
 				}
 			}
 		}
-
-	}
-
-	/**
-	 * @param uri
-	 * @return The namespace portion of the URI
-	 */
-	private static String uriToNamespace(String uri) {
-		int poundIndex = uri.lastIndexOf('#');
-		String propNamespace = uri.substring(0, poundIndex+1);
-		if (NAMESPACES.containsKey(propNamespace)) {
-			propNamespace = NAMESPACES.get(propNamespace) + ":";
-		}
-		return propNamespace;
-	}
-	
-	/**
-	 * @param uri
-	 * @return The name portion of the URI
-	 */
-	private static String uriToPropName(String uri) {
-		int poundIndex = uri.lastIndexOf('#');
-		return uri.substring(poundIndex+1);
 	}
 
 	public static void usage() {

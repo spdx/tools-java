@@ -17,11 +17,15 @@
  */
 package org.spdx.tools.schema;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import org.apache.jena.ontology.Individual;
+import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntProperty;
 import org.apache.jena.ontology.OntResource;
@@ -30,6 +34,7 @@ import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.util.iterator.ExtendedIterator;
+import org.spdx.library.SpdxConstants;
 import org.spdx.library.model.enumerations.SpdxEnumFactory;
 
 /**
@@ -58,6 +63,7 @@ public class AbstractOwlRdfConverter {
 
 		private OntProperty property;
 		private boolean listProperty = false;
+		private boolean singleProperty = false;
 		private String typeUri = null;
 		private int absoluteCardinality = -1;
 		private int minCardinality = -1;
@@ -66,24 +72,50 @@ public class AbstractOwlRdfConverter {
 		private boolean enumProperty = false;
 		Set<String> enumValues = new HashSet<>();
 
-		public PropertyRestrictions(OntProperty property) {
+		public PropertyRestrictions(OntClass ontClass, OntProperty property) {
+			Objects.requireNonNull(ontClass, "Missing required ontology class");
+			Objects.requireNonNull(property, "Missing required property");
 			this.property = property;
-			ExtendedIterator<Restriction> restrictionIter = property.listReferringRestrictions();
-			while (restrictionIter.hasNext()) {
-				Restriction r = restrictionIter.next();
+			List<Restriction> restrictions = getRestrictionsFromSuperclasses(ontClass, property);
+			interpretRestrictions(restrictions);
+		}
+		
+		/**
+		 * Convert a list of restrictions for this property into the field values
+		 * @param restrictions
+		 */
+		private void interpretRestrictions(List<Restriction> restrictions) {
+			for (Restriction r:restrictions) {
 				RDFNode typePropertyValue = r.getPropertyValue(owlClassProperty);
 				if (Objects.nonNull(typePropertyValue) && typePropertyValue.isURIResource()) {
 					typeUri = typePropertyValue.asResource().getURI();
-				}
-				// Check for enumeration types
-				NodeIterator hasValueIter = r.listPropertyValues(hasValueProperty);
-				while (hasValueIter.hasNext()) {
-					RDFNode hasValue = hasValueIter.next();
-					if (hasValue.isURIResource()) {
-						Enum<?> e = SpdxEnumFactory.uriToEnum.get(hasValue.asResource().getURI());
-						if (Objects.nonNull(e)) {
-							this.enumValues.add(e.toString());
-							this.enumProperty = true;
+					// check to see if this type is an enumeration type
+					OntClass typeClass = model.getOntClass(typeUri);
+					if (Objects.nonNull(typeClass)) {
+						ExtendedIterator<Individual> individualIter = model.listIndividuals(typeClass);
+						while (individualIter.hasNext()) {
+							Individual individual = individualIter.next();
+							if (individual.isURIResource()) {
+								Enum<?> e = SpdxEnumFactory.uriToEnum.get(individual.getURI());
+								if (Objects.nonNull(e)) {
+									this.enumValues.add(e.toString());
+									this.enumProperty = true;
+								}
+							}
+						}
+					}
+					
+				} else {
+					// Check for enumeration types as a direct restriction
+					NodeIterator hasValueIter = r.listPropertyValues(hasValueProperty);
+					while (hasValueIter.hasNext()) {
+						RDFNode hasValue = hasValueIter.next();
+						if (hasValue.isURIResource()) {
+							Enum<?> e = SpdxEnumFactory.uriToEnum.get(hasValue.asResource().getURI());
+							if (Objects.nonNull(e)) {
+								this.enumValues.add(e.toString());
+								this.enumProperty = true;
+							}
 						}
 					}
 				}
@@ -101,6 +133,8 @@ public class AbstractOwlRdfConverter {
 					}
 					if (absoluteCardinality > 1) {
 						listProperty = true;
+					} else {
+						singleProperty = true;
 					}
 				} else if (Objects.nonNull(cardPropValue) && cardPropValue.isLiteral()) {
 					absoluteCardinality = cardPropValue.asLiteral().getInt();
@@ -109,16 +143,22 @@ public class AbstractOwlRdfConverter {
 					}
 					if (absoluteCardinality > 1) {
 						listProperty = true;
+					} else {
+						singleProperty = true;
 					}
 				} else if (Objects.nonNull(maxQualCardPropValue) && maxQualCardPropValue.isLiteral()) {
 					maxCardinality = maxQualCardPropValue.asLiteral().getInt();
 					if (maxCardinality > 1) {
 						listProperty = true;
+					} else if (maxCardinality == 1) {
+						singleProperty = true;
 					}
 				} else if (Objects.nonNull(maxCardPropValue) && maxCardPropValue.isLiteral()) {
 					maxCardinality = maxCardPropValue.asLiteral().getInt();
 					if (maxCardinality > 1) {
 						listProperty = true;
+					} else if (maxCardinality == 1) {
+						singleProperty = true;
 					}
 				} else if (Objects.nonNull(minCardPropValue) && minCardPropValue.isLiteral()) {
 					minCardinality = minCardPropValue.asLiteral().getInt();
@@ -146,8 +186,38 @@ public class AbstractOwlRdfConverter {
 					}
 				}
 			}
+			if (Objects.isNull(typeUri) && ("comment".equals(property.getLocalName()) || "seeAlso".equals(property.getLocalName()))) {
+				// A bit of a hack, the schema file can not store the type of rdfs:comment, so we must override it to xsd:string
+				typeUri = SpdxConstants.XML_SCHEMA_NAMESPACE + "string";
+			}
 		}
-		
+
+		private List<Restriction> getRestrictionsFromSuperclasses(OntClass ontClass, OntProperty property) {
+			List<Restriction> retval = new ArrayList<>();
+			ExtendedIterator<OntClass> superClasses = ontClass.listSuperClasses();
+			while (superClasses.hasNext()) {
+				OntClass superClass = superClasses.next();
+				if (superClass.isRestriction()) {
+					if (property.equals(superClass.asRestriction().getOnProperty())) {
+						retval.add(superClass.asRestriction());
+					}
+				} else {
+					retval.addAll(getRestrictionsFromSuperclasses(superClass, property));
+				}
+			}
+			return retval;
+		}
+
+		public PropertyRestrictions(OntProperty property) {
+			Objects.requireNonNull(property, "Missing required property");
+			this.property = property;
+			List<Restriction> propertyRestrictions = new ArrayList<>();
+			ExtendedIterator<Restriction> restrictionIter = property.listReferringRestrictions();
+			while (restrictionIter.hasNext()) {
+				propertyRestrictions.add(restrictionIter.next());
+			}
+			interpretRestrictions(propertyRestrictions);
+		}
 		/**
 		 * @return the property
 		 */
@@ -210,6 +280,13 @@ public class AbstractOwlRdfConverter {
 		public Set<String> getEnumValues() {
 			return enumValues;
 		}
+
+		/**
+		 * @return the singleProperty
+		 */
+		public boolean isSingleProperty() {
+			return singleProperty;
+		}
 	}
 
 	protected OntModel model;
@@ -237,8 +314,8 @@ public class AbstractOwlRdfConverter {
 		commentProperty = model.createProperty("http://www.w3.org/2000/01/rdf-schema#comment");
 	}
 	
-	public PropertyRestrictions getPropertyRestrictions(OntProperty property) {
-		return new PropertyRestrictions(property);
+	public PropertyRestrictions getPropertyRestrictions(OntClass ontClass, OntProperty property) {
+		return new PropertyRestrictions(ontClass, property);
 	}
 
 }
