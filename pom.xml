@@ -36,5 +36,10 @@
     	<artifactId>jsonstore</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
     </dependency>
+    <dependency>
+    	<groupId>org.apache.ws.xmlschema</groupId>
+    	<artifactId>xmlschema-core</artifactId>
+    	<version>2.2.5</version>
+    </dependency>
   </dependencies>
 </project>

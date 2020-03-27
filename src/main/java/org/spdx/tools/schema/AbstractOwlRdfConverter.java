@@ -29,6 +29,7 @@ import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntProperty;
 import org.apache.jena.ontology.OntResource;
+import org.apache.jena.ontology.Ontology;
 import org.apache.jena.ontology.Restriction;
 import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.Property;
@@ -299,6 +300,7 @@ public class AbstractOwlRdfConverter {
 	Property owlClassProperty;
 	Property hasValueProperty;
 	Property commentProperty;
+	Ontology ontology;
 
 	public AbstractOwlRdfConverter(OntModel model) {
 		Objects.requireNonNull(model, "Model must not be null");
@@ -312,6 +314,15 @@ public class AbstractOwlRdfConverter {
 		owlClassProperty = model.createProperty("http://www.w3.org/2002/07/owl#onClass");
 		hasValueProperty = model.createProperty("http://www.w3.org/2002/07/owl#hasValue");
 		commentProperty = model.createProperty("http://www.w3.org/2000/01/rdf-schema#comment");
+		ontology = null;
+		ExtendedIterator<Ontology> ontIter = model.listOntologies();
+		if (!ontIter.hasNext()) {
+			throw new RuntimeException("No ontologies defined in RDF OWL");
+		}
+		ontology = ontIter.next();
+		if (ontIter.hasNext()) {
+			throw new RuntimeException("No ontologies defined in RDF OWL");
+		}
 	}
 	
 	public PropertyRestrictions getPropertyRestrictions(OntClass ontClass, OntProperty property) {
