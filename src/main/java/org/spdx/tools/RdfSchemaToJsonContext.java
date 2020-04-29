@@ -60,7 +60,7 @@ public class RdfSchemaToJsonContext {
 		}
 		File toFile = new File(args[1]);
 		if (toFile.exists()) {
-			System.err.println("Output file "+args[0]+" already exists.");
+			System.err.println("Output file "+args[1]+" already exists.");
 			usage();
 			return;
 		}

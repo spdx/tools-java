@@ -155,8 +155,10 @@ public class CommonCode {
 		println(out, "");
 		// Print the actual files
 		@SuppressWarnings("unchecked")
-		Stream<SpdxPackage> allPackages = (Stream<SpdxPackage>) SpdxModelFactory.getElements(doc.getModelStore(), doc.getDocumentUri(),
+		Stream<SpdxPackage> allPackagesStream = (Stream<SpdxPackage>) SpdxModelFactory.getElements(doc.getModelStore(), doc.getDocumentUri(),
 				doc.getCopyManager(), SpdxPackage.class);
+		final List<SpdxPackage> allPackages = new ArrayList<>();
+		allPackagesStream.forEach((SpdxPackage pkg) -> allPackages.add(pkg));
 		@SuppressWarnings("unchecked")
 		Stream<SpdxFile> allFilesStream = (Stream<SpdxFile>) SpdxModelFactory.getElements(doc.getModelStore(), doc.getDocumentUri(),
 				doc.getCopyManager(), SpdxFile.class);
@@ -580,6 +582,15 @@ public class CommonCode {
 					+ constants.getProperty("PROP_BEGIN_TEXT") 
 					+ pkg.getDescription().get() + constants.getProperty("PROP_END_TEXT"));
 		}
+		// Attribution text
+		if (!pkg.getAttributionText().isEmpty()) {
+			pkg.getAttributionText().forEach(s -> {
+				println(out, constants.getProperty("PROP_PACKAGE_ATTRIBUTION_TEXT")
+						+ constants.getProperty("PROP_BEGIN_TEXT") 
+						+ s + constants.getProperty("PROP_END_TEXT"));
+			});
+			
+		}
 		// External Refs
 		Collection<ExternalRef> externalRefs = pkg.getExternalRefs();
 		if (!externalRefs.isEmpty()) {
@@ -728,6 +739,14 @@ public class CommonCode {
 					constants.getProperty("PROP_BEGIN_TEXT") +
 					file.getNoticeText().get() + 
 					constants.getProperty("PROP_END_TEXT"));
+		}
+		// file attribution text
+		if (!file.getAttributionText().isEmpty()) {
+			file.getAttributionText().forEach(s -> {
+				println(out, constants.getProperty("PROP_FILE_ATTRIBUTION_TEXT")
+						+ constants.getProperty("PROP_BEGIN_TEXT") 
+						+ s + constants.getProperty("PROP_END_TEXT"));
+			});
 		}
 		// file contributors
 		Collection<String> fileContributors = file.getFileContributors();

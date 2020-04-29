@@ -126,7 +126,7 @@ public class OwlToJsonContext extends AbstractOwlRdfConverter {
 	 */
 	private String uriToPropName(String uri) {
 		int poundIndex = uri.lastIndexOf('#');
-		return uri.substring(poundIndex+1);
+		return checkConvertRenamedPropertyName(uri.substring(poundIndex+1));
 	}
 
 }

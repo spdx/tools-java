@@ -107,7 +107,7 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 	private JsonNode toArrayPropertySchema(OntClass ontClass, int min) {
 		ObjectNode classSchema = ontClassToJsonSchema(ontClass);
 		ObjectNode property = jsonMapper.createObjectNode();
-		property.put("description", ontClass.getLocalName() + "s referenced in the SPDX document");
+		property.put("description", checkConvertRenamedPropertyName(ontClass.getLocalName()) + "s referenced in the SPDX document");
 		property.put("type", "array");
 		property.set("items", classSchema);
 		if (min > 0) {
@@ -135,10 +135,11 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 				continue;
 			}
 			if (restrictions.isListProperty()) {
-				properties.set(MultiFormatStore.propertyNameToCollectionPropertyName(property.getLocalName()),
+				properties.set(MultiFormatStore.propertyNameToCollectionPropertyName(
+						checkConvertRenamedPropertyName(property.getLocalName())),
 						derivePropertySchema(property, restrictions, true));
 			} else {
-				properties.set(property.getLocalName(),	derivePropertySchema(property, restrictions, false));
+				properties.set(checkConvertRenamedPropertyName(property.getLocalName()),	derivePropertySchema(property, restrictions, false));
 			}
 			
 		}
@@ -240,13 +241,13 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 			String spdxType = restrictions.getTypeUri().substring(SpdxConstants.SPDX_NAMESPACE.length());
 			Class<? extends Object> clazz = SpdxModelFactory.SPDX_TYPE_TO_CLASS.get(spdxType);
 			if (Objects.nonNull(clazz) && (AnyLicenseInfo.class.isAssignableFrom(clazz))
-					&& !SpdxConstants.PROP_SPDX_EXTRACTED_LICENSES.equals(property.getLocalName())) {
+					&& !SpdxConstants.PROP_SPDX_EXTRACTED_LICENSES.equals(checkConvertRenamedPropertyName(property.getLocalName()))) {
 				// check for AnyLicenseInfo - these are strings with the exception of the extractedLicensingInfos which are the actual license description
 				JsonNode description = propertySchema.get("description");
 				if (Objects.isNull(description)) {
 					propertySchema.put("description", "License expression");
 				} else {
-					propertySchema.put("description", "License expression for "+property.getLocalName()+".  "+description.asText());
+					propertySchema.put("description", "License expression for "+checkConvertRenamedPropertyName(property.getLocalName())+".  "+description.asText());
 				}
 				propertySchema.put("type", "string");
 			} else if (Objects.nonNull(clazz) && SpdxElement.class.isAssignableFrom(clazz)) {

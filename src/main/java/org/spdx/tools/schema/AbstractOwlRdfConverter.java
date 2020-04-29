@@ -19,8 +19,10 @@ package org.spdx.tools.schema;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -52,6 +54,20 @@ public class AbstractOwlRdfConverter {
 		skipped.add("http://www.w3.org/2003/06/sw-vocab-status/ns#term_status");
 		
 		SKIPPED_PROPERTIES = Collections.unmodifiableSet(skipped);
+	}
+	
+	/**
+	 * Map of the properties renamed due to spec inconsistencies between the RDF format and other formats
+	 */
+	public static final Map<String, String> RENAMED_PROPERTY_TO_OWL_PROPERTY;
+	public static final Map<String, String> OWL_PROPERTY_TO_RENAMED_PROPERTY;
+	static {
+		Map<String, String> renamedToOwl = new HashMap<>();
+		Map<String, String> owlToRenamed = new HashMap<>();
+		renamedToOwl.put(SpdxConstants.PROP_SPDX_SPEC_VERSION, SpdxConstants.PROP_SPDX_VERSION);
+		owlToRenamed.put(SpdxConstants.PROP_SPDX_VERSION, SpdxConstants.PROP_SPDX_SPEC_VERSION);
+		RENAMED_PROPERTY_TO_OWL_PROPERTY = Collections.unmodifiableMap(renamedToOwl);
+		OWL_PROPERTY_TO_RENAMED_PROPERTY = Collections.unmodifiableMap(owlToRenamed);
 	}
 	
 	/**
@@ -329,4 +345,16 @@ public class AbstractOwlRdfConverter {
 		return new PropertyRestrictions(ontClass, property);
 	}
 
+	/**
+	 * Checks to see if an OWL property name has been renamed for the JSON/YAML formats
+	 * @param owlPropertyName
+	 * @return renamed property if it was renamed, owlPropertyName if not renamed
+	 */
+	public static String checkConvertRenamedPropertyName(String owlPropertyName) {
+		if (OWL_PROPERTY_TO_RENAMED_PROPERTY.containsKey(owlPropertyName)) {
+			return OWL_PROPERTY_TO_RENAMED_PROPERTY.get(owlPropertyName);
+		} else {
+			return owlPropertyName;
+		}
+	}
 }
