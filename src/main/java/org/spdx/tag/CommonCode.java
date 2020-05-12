@@ -649,8 +649,8 @@ public class CommonCode {
 					referenceType = ListedReferenceTypes.getListedReferenceTypes().getListedReferenceName(new URI(externalRef.getReferenceType().getIndividualURI()));
 					if (referenceType == null) {
 						referenceType = externalRef.getReferenceType().getIndividualURI();
-						if (referenceType.startsWith(docNamespace)) {
-							referenceType = referenceType.substring(docNamespace.length());
+						if (referenceType.startsWith(docNamespace + "#")) {
+							referenceType = referenceType.substring(docNamespace.length()+1);
 						}
 					}
 				} catch (URISyntaxException e) {
