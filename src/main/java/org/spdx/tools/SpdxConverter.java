@@ -33,7 +33,10 @@ import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.ModelCopyManager;
 import org.spdx.library.SpdxConstants;
 import org.spdx.spdxRdfStore.RdfStore;
+import org.spdx.spreadsheetstore.SpreadsheetStore;
+import org.spdx.spreadsheetstore.SpreadsheetStore.SpreadsheetFormatType;
 import org.spdx.storage.ISerializableModelStore;
+import org.spdx.storage.simple.InMemSpdxStore;
 
 /**
  * Converts between various SPDX file types
@@ -51,7 +54,7 @@ public class SpdxConverter {
 	static final int MAX_ARGS = 4;
 	
 	enum FileType {
-		JSON, RDFXML, XML, XLS, YAML, TAG
+		JSON, RDFXML, XML, XLS, XLSX, YAML, TAG
 	}
 	
 	static Map<String, FileType> EXT_TO_FILETYPE;
@@ -61,6 +64,7 @@ public class SpdxConverter {
 		temp.put("rdf.xml", FileType.RDFXML);
 		temp.put("xml", FileType.XML);
 		temp.put("xls", FileType.XLS);
+		temp.put("xlsx", FileType.XLSX);
 		temp.put("yaml", FileType.YAML);
 		temp.put("tag", FileType.TAG);
 		EXT_TO_FILETYPE = Collections.unmodifiableMap(temp);
@@ -185,12 +189,13 @@ public class SpdxConverter {
 
 	private static ISerializableModelStore fileTypeToStore(FileType fromFileType) throws InvalidSPDXAnalysisException {
 		switch(fromFileType) {
-		case JSON: return new MultiFormatStore(Format.JSON_PRETTY, Verbose.COMPACT);
+		case JSON: return new MultiFormatStore(new InMemSpdxStore(), Format.JSON_PRETTY, Verbose.COMPACT);
 		case RDFXML: return new RdfStore();
 		case TAG: throw new InvalidSPDXAnalysisException("Tag/value is current unsupported.  Check back later.");
-		case XLS: throw new InvalidSPDXAnalysisException("Excel is current unsupported.  Check back later.");
-		case XML: return new MultiFormatStore(Format.XML, Verbose.COMPACT);
-		case YAML: return new MultiFormatStore(Format.YAML, Verbose.COMPACT);
+		case XLS: return new SpreadsheetStore(new InMemSpdxStore(), SpreadsheetFormatType.XLS);
+		case XLSX: return new SpreadsheetStore(new InMemSpdxStore(), SpreadsheetFormatType.XLSX);
+		case XML: return new MultiFormatStore(new InMemSpdxStore(), Format.XML, Verbose.COMPACT);
+		case YAML: return new MultiFormatStore(new InMemSpdxStore(), Format.YAML, Verbose.COMPACT);
 		default: throw new InvalidSPDXAnalysisException("Unsupporte file type: "+fromFileType+".  Check back later.");
 		}
 	}
