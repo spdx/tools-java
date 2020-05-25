@@ -11,6 +11,7 @@ import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.ws.commons.schema.XmlSchema;
+import org.apache.ws.commons.schema.XmlSchemaSerializer.XmlSchemaSerializerException;
 
 import junit.framework.TestCase;
 
@@ -26,7 +27,7 @@ public class OwlToXSDTest extends TestCase {
 		super.tearDown();
 	}
 
-	public void testConvertToXsd() throws IOException {
+	public void testConvertToXsd() throws IOException, XmlSchemaSerializerException, SchemaException {
 		OwlToXSD otx = null;
 		try (InputStream is = new FileInputStream(new File(OWL_FILE_PATH))) {
 			OntModel model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);

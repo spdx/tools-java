@@ -18,14 +18,12 @@
 package org.spdx.tools.schema;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Objects;
 
 import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntProperty;
 import org.apache.jena.ontology.Ontology;
-import org.apache.jena.ontology.Restriction;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.util.iterator.ExtendedIterator;
 import org.spdx.jacksonstore.MultiFormatStore;
@@ -145,44 +143,6 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 		}
 		retval.set("properties", properties);
 		return retval;
-	}
-	
-	/**
-	 * @param oClass
-	 * @return collection of all properties which have a restriction on the class or a subclass
-	 */
-	private Collection<OntProperty> propertiesFromClassRestrictions(OntClass oClass) {
-		Collection<OntProperty> properties = new HashSet<>();
-		Collection<OntClass> reviewedClasses = new HashSet<>();
-		collectPropertiesFromRestrictions(oClass, properties, reviewedClasses);
-		return properties;
-	}
-
-	/**
-	 * Collects any properties used in restrictions and adds them to the properties collection - includes all subclasses
-	 * @param oClass Class to collect properties from
-	 * @param properties collection of any properties found
-	 * @param reviewedClasses collection of classes already reviewed - used to prevent infinite recursion
-	 */
-	private void collectPropertiesFromRestrictions(OntClass oClass, 
-			Collection<OntProperty> properties, Collection<OntClass> reviewedClasses) {
-		//spdxClass.listDeclaredProperties(false);
-		if (reviewedClasses.contains(oClass)) {
-			return;
-		}
-		reviewedClasses.add(oClass);
-		if (oClass.isRestriction()) {
-			Restriction r = oClass.asRestriction();
-			OntProperty property = r.getOnProperty();
-			if (Objects.nonNull(property)) {
-				properties.add(property);
-			}
-		} else {
-			ExtendedIterator<OntClass> subClassIter = oClass.listSuperClasses(false);
-			while (subClassIter.hasNext()) {
-				collectPropertiesFromRestrictions(subClassIter.next(), properties, reviewedClasses);
-			}
-		}
 	}
 
 	/**

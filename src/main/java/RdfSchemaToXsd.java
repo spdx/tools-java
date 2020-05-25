@@ -1,3 +1,21 @@
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Objects;
+
+import org.apache.jena.ontology.OntModel;
+import org.apache.jena.ontology.OntModelSpec;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.ws.commons.schema.XmlSchema;
+import org.apache.ws.commons.schema.XmlSchemaSerializer.XmlSchemaSerializerException;
+import org.spdx.tools.schema.OwlToXSD;
+import org.spdx.tools.schema.SchemaException;
+
+
 /**
  * Copyright (c) 2020 Source Auditor Inc.
  *
@@ -15,33 +33,13 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package org.spdx.tools;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Objects;
-
-import org.apache.jena.ontology.OntModel;
-import org.apache.jena.ontology.OntModelSpec;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.spdx.tools.schema.OwlToJsonSchema;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
- * Convert an RDF schema file containing SPDX property to a JSON schema file for all properties in the SPDX namspace
+ * Convert an RDF OWL document to an XML Schema
  * @author Gary O'Neall
  *
  */
-public class RdfSchemaToJsonSchema {
+public class RdfSchemaToXsd {
 
 	/**
 	 * @param args arg[0] RDF Schema file path; arg[1] output file path
@@ -84,44 +82,46 @@ public class RdfSchemaToJsonSchema {
 				}
 			}
 		}
-		OwlToJsonSchema owlToJson = new OwlToJsonSchema(model);
-		ObjectNode root = owlToJson.convertToJsonSchema();
-		ObjectMapper jsonMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-
-		OutputStream os = null;
 		try {
-			os = new FileOutputStream(toFile);
-			jsonMapper.writeTree(jsonMapper.getFactory().createGenerator(os).useDefaultPrettyPrinter(), 
-					root);
-		} catch (JsonProcessingException e) {
-			System.err.println("JSON error "+e.getMessage());
-			return;
-		} catch (IOException e) {
-			System.err.println("I/O error: "+e.getMessage());
-			return;
-		} finally {
-			if (Objects.nonNull(is)) {
-				try {
-					is.close();
-				} catch (IOException e) {
-					System.err.println("Error closing input file stream: "+e.getMessage());
+			OwlToXSD owlToXsd = new OwlToXSD(model);
+			XmlSchema xmlSchema = owlToXsd.convertToXsd();
+			OutputStream os = null;
+			try {
+				os = new FileOutputStream(toFile);
+				xmlSchema.write(os);
+			} catch (IOException e) {
+				System.err.println("I/O error: "+e.getMessage());
+				return;
+			} finally {
+				if (Objects.nonNull(is)) {
+					try {
+						is.close();
+					} catch (IOException e) {
+						System.err.println("Error closing input file stream: "+e.getMessage());
+					}
+				}
+				if (Objects.nonNull(os)) {
+					try {
+						os.close();
+					} catch (IOException e) {
+						System.err.println("Error closing output file stream: "+e.getMessage());
+					}
 				}
 			}
-			if (Objects.nonNull(os)) {
-				try {
-					os.close();
-				} catch (IOException e) {
-					System.err.println("Error closing output file stream: "+e.getMessage());
-				}
-			}
+		} catch (XmlSchemaSerializerException e1) {
+			System.err.println("Error generating XSD schema: "+e1.getMessage());
+		} catch (SchemaException e1) {
+			System.err.println("Error generating XSD schema: "+e1.getMessage());
 		}
+		
 
 	}
 
 	public static void usage() {
 		System.out.println("Usage:");
-		System.out.println("RdfSchemaToJsonScema rdfSchemaFile jsonSchemaFile");
+		System.out.println("RdfSchemaToXsd rdfSchemaFile xsdFile");
 		System.out.println("\trdfSchemaFile RDF schema file in RDF/XML format");
-		System.out.println("\tjsonSchemaFile output JSON Schema file");
+		System.out.println("\txsdFile output XML Schema");
 	}
+
 }

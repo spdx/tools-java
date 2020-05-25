@@ -18,12 +18,14 @@
 package org.spdx.tools.schema;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.jena.ontology.Individual;
@@ -355,6 +357,62 @@ public class AbstractOwlRdfConverter {
 			return OWL_PROPERTY_TO_RENAMED_PROPERTY.get(owlPropertyName);
 		} else {
 			return owlPropertyName;
+		}
+	}
+	
+	/**
+	 * @param oClass
+	 * @param direct if true, only return properties for the class but not any superclasses
+	 * @return collection of all properties which have a restriction on the class or superclasses if not direct
+	 */
+	protected Collection<OntProperty> propertiesFromClassRestrictions(OntClass oClass, boolean direct) {
+		Collection<OntProperty> properties = new HashSet<>();
+		Collection<OntClass> reviewedClasses = new HashSet<>();
+		collectPropertiesFromRestrictions(oClass, properties, reviewedClasses, direct);
+		return properties;
+	}
+	
+	/**
+	 * @param property
+	 * @return The class or type for the property
+	 * @throws SchemaException
+	 */
+	protected Optional<OntResource> getPropertyType(OntProperty property) throws SchemaException {
+		ExtendedIterator<? extends OntResource> rangeIter = property.listRange();
+		while (rangeIter.hasNext()) {
+			OntResource range = rangeIter.next();
+			if (range.isURIResource()) {
+				return Optional.of(range);
+			}
+		}
+		return Optional.empty();
+	}
+
+	/**
+	 * Collects any properties used in restrictions and adds them to the properties collection - includes all subclasses
+	 * @param oClass Class to collect properties from
+	 * @param properties collection of any properties found
+	 * @param reviewedClasses collection of classes already reviewed - used to prevent infinite recursion
+	 * @param direct if true, only collect properties for the class and not the superclasses
+	 */
+	private void collectPropertiesFromRestrictions(OntClass oClass, 
+			Collection<OntProperty> properties, Collection<OntClass> reviewedClasses, boolean direct) {
+		//spdxClass.listDeclaredProperties(false);
+		if (reviewedClasses.contains(oClass)) {
+			return;
+		}
+		reviewedClasses.add(oClass);
+		if (oClass.isRestriction()) {
+			Restriction r = oClass.asRestriction();
+			OntProperty property = r.getOnProperty();
+			if (Objects.nonNull(property)) {
+				properties.add(property);
+			}
+		} else {
+			ExtendedIterator<OntClass> subClassIter = oClass.listSuperClasses(direct);
+			while (subClassIter.hasNext()) {
+				collectPropertiesFromRestrictions(subClassIter.next(), properties, reviewedClasses, direct);
+			}
 		}
 	}
 }
