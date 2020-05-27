@@ -1,3 +1,4 @@
+package org.spdx.tools;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -12,7 +13,7 @@ import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaSerializer.XmlSchemaSerializerException;
-import org.spdx.tools.schema.OwlToXSD;
+import org.spdx.tools.schema.OwlToXsd;
 import org.spdx.tools.schema.SchemaException;
 
 
@@ -83,7 +84,7 @@ public class RdfSchemaToXsd {
 			}
 		}
 		try {
-			OwlToXSD owlToXsd = new OwlToXSD(model);
+			OwlToXsd owlToXsd = new OwlToXsd(model);
 			XmlSchema xmlSchema = owlToXsd.convertToXsd();
 			OutputStream os = null;
 			try {

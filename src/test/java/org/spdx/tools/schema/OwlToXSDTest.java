@@ -28,11 +28,11 @@ public class OwlToXSDTest extends TestCase {
 	}
 
 	public void testConvertToXsd() throws IOException, XmlSchemaSerializerException, SchemaException {
-		OwlToXSD otx = null;
+		OwlToXsd otx = null;
 		try (InputStream is = new FileInputStream(new File(OWL_FILE_PATH))) {
 			OntModel model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
 			model.read(is, "RDF/XML");
-			otx = new OwlToXSD(model);
+			otx = new OwlToXsd(model);
 		}
 		XmlSchema result = otx.convertToXsd();
 		

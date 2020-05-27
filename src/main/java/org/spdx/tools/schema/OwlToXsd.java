@@ -62,11 +62,11 @@ import org.w3c.dom.Text;
  * @author Gary O'Neall
  *
  */
-public class OwlToXSD extends AbstractOwlRdfConverter {
+public class OwlToXsd extends AbstractOwlRdfConverter {
 	
 	XmlSchemaCollection schemas = new XmlSchemaCollection();
 
-	public OwlToXSD(OntModel model) {
+	public OwlToXsd(OntModel model) {
 		super(model);
 	}
 	
