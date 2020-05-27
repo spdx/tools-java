@@ -38,6 +38,7 @@ import org.apache.jena.ontology.Restriction;
 import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.iterator.ExtendedIterator;
 import org.spdx.library.SpdxConstants;
 import org.spdx.library.model.enumerations.SpdxEnumFactory;
@@ -54,7 +55,9 @@ public class AbstractOwlRdfConverter {
 	static {
 		Set<String> skipped = new HashSet<>();
 		skipped.add("http://www.w3.org/2003/06/sw-vocab-status/ns#term_status");
-		
+		skipped.add("http://www.w3.org/2002/07/owl#qualifiedCardinality");
+		skipped.add("http://www.w3.org/2002/07/owl#deprecatedProperty");
+		skipped.add("http://www.w3.org/2002/07/owl#deprecatedClass");
 		SKIPPED_PROPERTIES = Collections.unmodifiableSet(skipped);
 	}
 	
@@ -318,6 +321,11 @@ public class AbstractOwlRdfConverter {
 	Property owlClassProperty;
 	Property hasValueProperty;
 	Property commentProperty;
+	Property unionOfProperty;
+	Property firstResource;
+	Property restResource;
+	Property intersectionOfProperty;
+	
 	Ontology ontology;
 
 	public AbstractOwlRdfConverter(OntModel model) {
@@ -332,6 +340,10 @@ public class AbstractOwlRdfConverter {
 		owlClassProperty = model.createProperty("http://www.w3.org/2002/07/owl#onClass");
 		hasValueProperty = model.createProperty("http://www.w3.org/2002/07/owl#hasValue");
 		commentProperty = model.createProperty("http://www.w3.org/2000/01/rdf-schema#comment");
+		unionOfProperty = model.createProperty("http://www.w3.org/2002/07/owl#unionOf");
+		intersectionOfProperty = model.createProperty("http://www.w3.org/2002/07/owl#intersectionOf");
+		firstResource = model.createProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#first");
+		restResource = model.createProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#rest");
 		ontology = null;
 		ExtendedIterator<Ontology> ontIter = model.listOntologies();
 		if (!ontIter.hasNext()) {
@@ -362,14 +374,22 @@ public class AbstractOwlRdfConverter {
 	
 	/**
 	 * @param oClass
-	 * @param direct if true, only return properties for the class but not any superclasses
+	 * @param excludeSuperClassProperties if true, only return properties for the class but not any superclasses
 	 * @return collection of all properties which have a restriction on the class or superclasses if not direct
 	 */
-	protected Collection<OntProperty> propertiesFromClassRestrictions(OntClass oClass, boolean direct) {
+	protected Collection<OntProperty> propertiesFromClassRestrictions(OntClass oClass, boolean excludeSuperClassProperties) {
 		Collection<OntProperty> properties = new HashSet<>();
 		Collection<OntClass> reviewedClasses = new HashSet<>();
-		collectPropertiesFromRestrictions(oClass, properties, reviewedClasses, direct);
+		collectPropertiesFromRestrictions(oClass, properties, reviewedClasses, excludeSuperClassProperties);
 		return properties;
+	}
+	
+	/**
+	 * @param oClass
+	 * @return collection of all properties which have a restriction on the class or superclasses
+	 */
+	protected Collection<OntProperty> propertiesFromClassRestrictions(OntClass oClass) {
+		return propertiesFromClassRestrictions(oClass, false);
 	}
 	
 	/**
@@ -377,15 +397,48 @@ public class AbstractOwlRdfConverter {
 	 * @return The class or type for the property
 	 * @throws SchemaException
 	 */
-	protected Optional<OntResource> getPropertyType(OntProperty property) throws SchemaException {
+	protected Optional<Resource> getPropertyType(OntProperty property) throws SchemaException {
 		ExtendedIterator<? extends OntResource> rangeIter = property.listRange();
 		while (rangeIter.hasNext()) {
 			OntResource range = rangeIter.next();
 			if (range.isURIResource()) {
 				return Optional.of(range);
+			} else if (range.hasProperty(unionOfProperty)) {
+				// Search for a type
+				Resource unionOf = range.getPropertyResourceValue(unionOfProperty);
+				Optional<Resource> retval = findTypeInCollection(unionOf.getPropertyResourceValue(firstResource),
+						unionOf.getPropertyResourceValue(restResource));
+				if (retval.isPresent()) {
+					return retval;
+				}
+			} else if (range.hasProperty(intersectionOfProperty)) {
+				// Search for a type
+				Resource intersectionOf = range.getPropertyResourceValue(intersectionOfProperty);
+				Optional<Resource> retval = findTypeInCollection(intersectionOf.getPropertyResourceValue(firstResource),
+						intersectionOf.getPropertyResourceValue(restResource));
+				if (retval.isPresent()) {
+					return retval;
+				}
 			}
 		}
 		return Optional.empty();
+	}
+
+	/**
+	 * Search a collection for a URI value assumed to be the type
+	 * @param first first element in the collection
+	 * @param rest rest of the collection
+	 * @return
+	 */
+	private Optional<Resource> findTypeInCollection(Resource first, Resource rest) {
+		if (Objects.nonNull(first) && first.isURIResource()) {
+			return Optional.of(first);
+		} else if (Objects.isNull(rest) || "http://www.w3.org/1999/02/22-rdf-syntax-ns#nil".equals(rest)) {
+			return Optional.empty();
+		} else {
+			return findTypeInCollection(rest.getPropertyResourceValue(firstResource),
+					rest.getPropertyResourceValue(restResource));
+		}
 	}
 
 	/**
@@ -393,10 +446,10 @@ public class AbstractOwlRdfConverter {
 	 * @param oClass Class to collect properties from
 	 * @param properties collection of any properties found
 	 * @param reviewedClasses collection of classes already reviewed - used to prevent infinite recursion
-	 * @param direct if true, only collect properties for the class and not the superclasses
+	 * @param excludeSuperClassProperties if true, only collect properties for the class and not the superclasses
 	 */
 	private void collectPropertiesFromRestrictions(OntClass oClass, 
-			Collection<OntProperty> properties, Collection<OntClass> reviewedClasses, boolean direct) {
+			Collection<OntProperty> properties, Collection<OntClass> reviewedClasses, boolean excludeSuperClassProperties) {
 		//spdxClass.listDeclaredProperties(false);
 		if (reviewedClasses.contains(oClass)) {
 			return;
@@ -409,9 +462,15 @@ public class AbstractOwlRdfConverter {
 				properties.add(property);
 			}
 		} else {
-			ExtendedIterator<OntClass> subClassIter = oClass.listSuperClasses(direct);
+			ExtendedIterator<OntClass> subClassIter = oClass.listSuperClasses(excludeSuperClassProperties);
+			if (excludeSuperClassProperties) {
+				subClassIter = subClassIter.filterDrop(sc -> {
+					return sc.isURIResource() && 
+							!"http://www.w3.org/2000/01/rdf-schema#Container".equals(sc.getURI());
+				});
+			}			
 			while (subClassIter.hasNext()) {
-				collectPropertiesFromRestrictions(subClassIter.next(), properties, reviewedClasses, direct);
+				collectPropertiesFromRestrictions(subClassIter.next(), properties, reviewedClasses, excludeSuperClassProperties);
 			}
 		}
 	}

@@ -19,9 +19,7 @@ package org.spdx.tools.schema;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -29,30 +27,30 @@ import javax.annotation.Nullable;
 import javax.xml.namespace.QName;
 
 import org.apache.jena.ontology.Individual;
-import org.apache.jena.ontology.ObjectProperty;
 import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntProperty;
-import org.apache.jena.ontology.OntResource;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.iterator.ExtendedIterator;
 import org.apache.ws.commons.schema.XmlSchema;
-import org.apache.ws.commons.schema.XmlSchemaAll;
 import org.apache.ws.commons.schema.XmlSchemaAnnotated;
 import org.apache.ws.commons.schema.XmlSchemaAnnotation;
 import org.apache.ws.commons.schema.XmlSchemaCollection;
 import org.apache.ws.commons.schema.XmlSchemaComplexContent;
 import org.apache.ws.commons.schema.XmlSchemaComplexContentExtension;
-import org.apache.ws.commons.schema.XmlSchemaComplexContentRestriction;
 import org.apache.ws.commons.schema.XmlSchemaComplexType;
 import org.apache.ws.commons.schema.XmlSchemaContentType;
 import org.apache.ws.commons.schema.XmlSchemaDocumentation;
 import org.apache.ws.commons.schema.XmlSchemaElement;
 import org.apache.ws.commons.schema.XmlSchemaEnumerationFacet;
+import org.apache.ws.commons.schema.XmlSchemaForm;
+import org.apache.ws.commons.schema.XmlSchemaSequence;
 import org.apache.ws.commons.schema.XmlSchemaSerializer.XmlSchemaSerializerException;
 import org.apache.ws.commons.schema.XmlSchemaSimpleType;
 import org.apache.ws.commons.schema.XmlSchemaSimpleTypeRestriction;
 import org.apache.ws.commons.schema.XmlSchemaType;
 import org.apache.ws.commons.schema.utils.NamespaceMap;
+import org.spdx.library.SpdxConstants;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
@@ -75,18 +73,14 @@ public class OwlToXSD extends AbstractOwlRdfConverter {
 	public XmlSchema convertToXsd() throws XmlSchemaSerializerException, SchemaException {
 		String nameSpace = ontology.getURI();
 		XmlSchema schema = new XmlSchema(nameSpace, schemas);
+		schema.setSchemaNamespacePrefix(nameSpace);
 		schema.setInputEncoding(StandardCharsets.UTF_8.name());
+		schema.setElementFormDefault(XmlSchemaForm.QUALIFIED);
 		NamespaceMap namespaces = new NamespaceMap();
+		namespaces.add("xs", "http://www.w3.org/2001/XMLSchema");
 		schema.setNamespaceContext(namespaces);
 		addDocumentation(schema, schema, ontology.getComment(null));
-		ExtendedIterator<OntProperty> propertyIter = model.listAllOntProperties().filterKeep(objectProp -> {
-			return objectProp.isURIResource();
-		});
-		while (propertyIter.hasNext()) {
-			OntProperty property = propertyIter.next();
-			addElementToSchema(schema, property);
-		}
-		
+
 		ExtendedIterator<OntClass> classIter = model.listClasses().filterKeep(ontClass -> {
 			return ontClass.isURIResource();
 		});
@@ -94,47 +88,46 @@ public class OwlToXSD extends AbstractOwlRdfConverter {
 			OntClass type = classIter.next();
 			addTypeToSchema(schema, type);
 		}
+		
+		// Add the top level element
+		XmlSchemaElement documentElement = new XmlSchemaElement(schema, true);
+		documentElement.setName("Document");
+		documentElement.setSchemaTypeName(new QName(SpdxConstants.SPDX_NAMESPACE.substring(0, SpdxConstants.SPDX_NAMESPACE.length()-1), "SpdxDocument"));
+		addDocumentation(schema, documentElement, "Top level element for the SPDX document");
 		return schema;
 	}
 
-	private XmlSchemaElement addElementToSchema(XmlSchema schema, OntProperty dataProp) throws SchemaException, XmlSchemaSerializerException {
-		XmlSchemaElement retval = new XmlSchemaElement(schema, true);
-		retval.setName(dataProp.getLocalName());
-		//TODO: Check the namespace for non-SPDX namespaces
-//		retval.setId(dataProp.getLocalName());
-		Optional<OntResource> rdfType = getPropertyType(dataProp);
-		if (rdfType.isPresent()) {
-			retval.setSchemaTypeName(new QName(
-					rdfType.get().getNameSpace().substring(0, rdfType.get().getNameSpace().length()-1), 
-					rdfType.get().getLocalName()));
+	private void addTypeToSchema(XmlSchema schema, OntClass type) throws XmlSchemaSerializerException, SchemaException {
+		ExtendedIterator<Individual> individualIter = model.listIndividuals(type);
+		if (individualIter.hasNext()) {
+			// Enum type
+			addEnumTypeToSchema(schema, type, individualIter.toList());
+		} else {
+			addComplexTypeToSchema(schema, type);
 		}
-		addDocumentation(schema, retval, dataProp.getComment(null));
-		return retval;
 	}
 	
 	private XmlSchemaType addComplexTypeToSchema(XmlSchema schema, OntClass type) throws XmlSchemaSerializerException, SchemaException {
 		XmlSchemaComplexType xmlType = new XmlSchemaComplexType(schema, true);
 		xmlType.setName(type.getLocalName());
-		//TODO: Handle other namespaces
 		addDocumentation(schema, xmlType, type.getComment(null));
 		XmlSchemaComplexContentExtension schemaExtension = null;
 		ExtendedIterator<OntClass> superClassIter = type.listSuperClasses(true).filterKeep(sc -> {
-			return sc.isURIResource();
+			return sc.isURIResource() && 
+					!"http://www.w3.org/2000/01/rdf-schema#Container".equals(sc.getURI());
 		});
 		
-		while (superClassIter.hasNext()) {
+		if (superClassIter.hasNext()) {
 			OntClass superClass = superClassIter.next();
-			if (!"http://www.w3.org/2000/01/rdf-schema#Container".equals(superClass.getURI())) {
-				if (Objects.nonNull(schemaExtension)) {
-					throw new SchemaException("Ambiguous superclasses for "+type.getLocalName());
-				}
-				schemaExtension = new XmlSchemaComplexContentExtension();
-				schemaExtension.setBaseTypeName(new QName(superClass.getNameSpace().substring(0, superClass.getNameSpace().length()-1), superClass.getLocalName()));
-			}
+			schemaExtension = new XmlSchemaComplexContentExtension();
+			schemaExtension.setBaseTypeName(new QName(SpdxConstants.SPDX_NAMESPACE.substring(0, SpdxConstants.SPDX_NAMESPACE.length()-1), superClass.getLocalName()));
+		}
+		if (superClassIter.hasNext()) {
+			throw new SchemaException("Ambiguous superclasses for "+type.getLocalName());
 		}
 		Collection<OntProperty> ontProperties = propertiesFromClassRestrictions(type, true);
 		xmlType.setContentType(XmlSchemaContentType.ELEMENT_ONLY);
-		XmlSchemaAll allRestriction = new XmlSchemaAll();
+		XmlSchemaSequence sequence = new XmlSchemaSequence();
 		for (OntProperty property:ontProperties) {
 			if (SKIPPED_PROPERTIES.contains(property.getURI())) {
 				continue;
@@ -142,12 +135,17 @@ public class OwlToXSD extends AbstractOwlRdfConverter {
 			PropertyRestrictions restrictions = getPropertyRestrictions(type, property);
 			XmlSchemaElement propertyMember = new XmlSchemaElement(schema, false);
 			propertyMember.setName(property.getLocalName());
-			//TODO: Check the namespace for non-SPDX namespaces
-			Optional<OntResource> rdfType = getPropertyType(property);
+			Optional<Resource> rdfType = getPropertyType(property);
 			if (rdfType.isPresent()) {
+				String typeNamespace;
+				if (rdfType.get().getNameSpace().equals(SpdxConstants.RDF_POINTER_NAMESPACE) || 
+						rdfType.get().getNameSpace().equals(SpdxConstants.DOAP_NAMESPACE)) {
+					typeNamespace = SpdxConstants.SPDX_NAMESPACE.substring(0, SpdxConstants.SPDX_NAMESPACE.length()-1);
+				} else {
+					typeNamespace = rdfType.get().getNameSpace().substring(0, rdfType.get().getNameSpace().length()-1);
+				}
 				propertyMember.setSchemaTypeName(
-						new QName(rdfType.get().getNameSpace().substring(0, rdfType.get().getNameSpace().length()-1), 
-						rdfType.get().getLocalName()));
+						new QName(typeNamespace, rdfType.get().getLocalName()));
 			}
 			addDocumentation(schema, propertyMember, property.getComment(null));
 			if (restrictions.isOptional()) {
@@ -168,35 +166,34 @@ public class OwlToXSD extends AbstractOwlRdfConverter {
 				propertyMember.setMaxOccurs(1);
 			}
 			//TODO: Change the propertyMember to ref=
-			allRestriction.getItems().add(propertyMember);
+			sequence.getItems().add(propertyMember);
+		}
+		if (type.getLocalName().equals(SpdxConstants.CLASS_SPDX_ELEMENT)) {
+			// Manually add in SPDXID
+			XmlSchemaElement propertyMember = new XmlSchemaElement(schema, false);
+			propertyMember.setName("SPDXID");
+			propertyMember.setSchemaTypeName(
+					new QName("http://www.w3.org/2001/XMLSchema", "string"));
+			sequence.getItems().add(propertyMember);
 		}
 		XmlSchemaComplexContent contentModel = new XmlSchemaComplexContent();
 		if (Objects.nonNull(schemaExtension)) {
-			schemaExtension.setParticle(allRestriction);
+			if (sequence.getItems().size() > 0) {
+				schemaExtension.setParticle(sequence);
+			}
 			contentModel.setContent(schemaExtension);
+			xmlType.setContentModel(contentModel);
+		} else if (sequence.getItems().size() > 0) {
+			xmlType.setParticle(sequence);
 		} else {
-			XmlSchemaComplexContentRestriction complexRestriction = new XmlSchemaComplexContentRestriction();
-			complexRestriction.setParticle(allRestriction);
-			contentModel.setContent(complexRestriction);
+			xmlType.setAbstract(true);
 		}
-		xmlType.setContentModel(contentModel);
 		return xmlType;
-	}
-
-	private void addTypeToSchema(XmlSchema schema, OntClass type) throws XmlSchemaSerializerException, SchemaException {
-		ExtendedIterator<Individual> individualIter = model.listIndividuals(type);
-		if (individualIter.hasNext()) {
-			// Enum type
-			addEnumTypeToSchema(schema, type, individualIter.toList());
-		} else {
-			addComplexTypeToSchema(schema, type);
-		}
 	}
 
 	private void addEnumTypeToSchema(XmlSchema schema, OntClass type, List<Individual> individuals) throws XmlSchemaSerializerException {
 		XmlSchemaSimpleType xmlType = new XmlSchemaSimpleType(schema, true);
 		xmlType.setName(type.getLocalName());
-		//TODO: Handle other namespaces
 		addDocumentation(schema, xmlType, type.getComment(null));
 		XmlSchemaSimpleTypeRestriction xmlContent = new XmlSchemaSimpleTypeRestriction();
 		xmlContent.setBaseTypeName(new QName("http://www.w3.org/2001/XMLSchema","string"));
@@ -222,7 +219,6 @@ public class OwlToXSD extends AbstractOwlRdfConverter {
 			XmlSchemaAnnotation annotation = new XmlSchemaAnnotation();
 			XmlSchemaDocumentation schemaDoc = new XmlSchemaDocumentation();
 			xmlSchemaObject.setAnnotation(annotation);
-			//FIXME: This is very kludgy - there has to be an easier way to create the markup
 			final Text commentNode = schema.getSchemaDocument().createTextNode(documentation);
 			NodeList markup = new NodeList() {
 
