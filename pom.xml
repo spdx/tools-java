@@ -3,8 +3,8 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.spdx</groupId>
-  <artifactId>tools</artifactId>
-  <version>0.0.2-SNAPSHOT</version>
+  <artifactId>java-tools</artifactId>
+  <version>0.0.3</version>
   <packaging>jar</packaging>
 
   <name>tools</name>
@@ -24,17 +24,17 @@
     <dependency>
     	<groupId>org.spdx</groupId>
     	<artifactId>java-spdx-library</artifactId>
-    	<version>0.0.2-SNAPSHOT</version>
+    	<version>0.0.4-SNAPSHOT</version>
     </dependency>
     <dependency>
     	<groupId>org.spdx</groupId>
     	<artifactId>spdx-rdf-store</artifactId>
-    	<version>0.0.2-SNAPSHOT</version>
+    	<version>0.0.3</version>
     </dependency>
     <dependency>
     	<groupId>org.spdx</groupId>
-    	<artifactId>jsonstore</artifactId>
-    	<version>0.0.2-SNAPSHOT</version>
+    	<artifactId>spdx-jackson-store</artifactId>
+    	<version>0.0.3</version>
     </dependency>
     <dependency>
     	<groupId>org.apache.ws.xmlschema</groupId>
@@ -44,12 +44,12 @@
     <dependency>
     	<groupId>org.spdx</groupId>
     	<artifactId>spdx-spreadsheet-store</artifactId>
-    	<version>0.0.2-SNAPSHOT</version>
+    	<version>0.0.3</version>
     </dependency>
     <dependency>
     	<groupId>org.spdx</groupId>
     	<artifactId>spdx-tagvalue-store</artifactId>
-    	<version>0.0.1-SNAPSHOT</version>
+    	<version>0.0.4-SNAPSHOT</version>
     </dependency>
   </dependencies>
     <build>

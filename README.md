@@ -1,7 +1,17 @@
 # Spdx-Tools-Java
-SPDX Tools using the Spdx-Java-Library
+SPDX Command Line Tools using the Spdx-Java-Library
 
-Note: This tools is in early development and is only partially implemented.  Reviews, suggestions are welcome especially as it relates to the design.  Please enter an issue with any suggestions.
+Note: This tools is in development and is partially implemented.  Reviews, suggestions are welcome especially as it relates to the design.  Please enter an issue with any suggestions.
+
+# Commands
+
+Following are the commands available:
+
+<TO BE FILLED IN>
+
+# Programmatic Access
+
+Tools functionality can be accessed programatically by calling <TO BE FILLED IN>
 
 ## Update for new properties or classes
 To update Spdx-Tools-Library, the following is a very brief checklist:

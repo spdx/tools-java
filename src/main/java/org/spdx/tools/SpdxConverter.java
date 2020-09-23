@@ -21,23 +21,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
-import org.spdx.jacksonstore.MultiFormatStore;
-import org.spdx.jacksonstore.MultiFormatStore.Format;
-import org.spdx.jacksonstore.MultiFormatStore.Verbose;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.ModelCopyManager;
 import org.spdx.library.SpdxConstants;
-import org.spdx.spdxRdfStore.RdfStore;
-import org.spdx.spreadsheetstore.SpreadsheetStore;
-import org.spdx.spreadsheetstore.SpreadsheetStore.SpreadsheetFormatType;
 import org.spdx.storage.ISerializableModelStore;
-import org.spdx.storage.simple.InMemSpdxStore;
-import org.spdx.tagvaluestore.TagValueStore;
+import org.spdx.tools.SpdxToolsHelper.SerFileType;
 
 /**
  * Converts between various SPDX file types
@@ -54,24 +44,6 @@ public class SpdxConverter {
 	static final int MIN_ARGS = 2;
 	static final int MAX_ARGS = 4;
 	
-	enum FileType {
-		JSON, RDFXML, XML, XLS, XLSX, YAML, TAG
-	}
-	
-	static Map<String, FileType> EXT_TO_FILETYPE;
-	static {
-		HashMap<String, FileType> temp = new HashMap<>();
-		temp.put("json", FileType.JSON);
-		temp.put("rdf.xml", FileType.RDFXML);
-		temp.put("xml", FileType.XML);
-		temp.put("xls", FileType.XLS);
-		temp.put("xlsx", FileType.XLSX);
-		temp.put("yaml", FileType.YAML);
-		temp.put("tag", FileType.TAG);
-		temp.put("spdx", FileType.TAG);
-		EXT_TO_FILETYPE = Collections.unmodifiableMap(temp);
-	}
-
 	/**
 	 * @param args
 	 */
@@ -99,10 +71,10 @@ public class SpdxConverter {
 			usage();
 			return;
 		}
-		FileType fromFileType;
+		SerFileType fromFileType;
 		if (args.length > 2) {
 			try {
-				fromFileType = strToFileType(args[2]);
+				fromFileType = SpdxToolsHelper.strToFileType(args[2]);
 			} catch(Exception ex) {
 				System.err.println("Invalid file type for input file: "+args[2]);
 				usage();
@@ -110,17 +82,17 @@ public class SpdxConverter {
 			}
 		} else {
 			try {
-				fromFileType = fileToFileType(fromFile);
+				fromFileType = SpdxToolsHelper.fileToFileType(fromFile);
 			} catch(Exception ex) {
 				System.err.println("Can not determine file type for input file: "+args[0]);
 				usage();
 				return;
 			}
 		}
-		FileType toFileType;
+		SerFileType toFileType;
 		if (args.length > 3) {
 			try {
-				toFileType = strToFileType(args[3]);
+				toFileType = SpdxToolsHelper.strToFileType(args[3]);
 			} catch(Exception ex) {
 				System.err.println("Invalid file type for output file: "+args[3]);
 				usage();
@@ -128,7 +100,7 @@ public class SpdxConverter {
 			}
 		} else {
 			try {
-				toFileType = fileToFileType(toFile);
+				toFileType = SpdxToolsHelper.fileToFileType(toFile);
 			} catch(Exception ex) {
 				System.err.println("Can not determine file type for output file: "+args[0]);
 				usage();
@@ -138,8 +110,8 @@ public class SpdxConverter {
 		FileInputStream input = null;
 		FileOutputStream output = null;
 		try {
-			ISerializableModelStore fromStore = fileTypeToStore(fromFileType);
-			ISerializableModelStore toStore = fileTypeToStore(toFileType);
+			ISerializableModelStore fromStore = SpdxToolsHelper.fileTypeToStore(fromFileType);
+			ISerializableModelStore toStore = SpdxToolsHelper.fileTypeToStore(toFileType);
 			input = new FileInputStream(fromFile);
 			output = new FileOutputStream(toFile);
 			String documentUri = fromStore.deSerialize(input, false);
@@ -186,45 +158,6 @@ public class SpdxConverter {
 				}
 			}
 		}
-	}
-
-
-	private static ISerializableModelStore fileTypeToStore(FileType fromFileType) throws InvalidSPDXAnalysisException {
-		switch(fromFileType) {
-		case JSON: return new MultiFormatStore(new InMemSpdxStore(), Format.JSON_PRETTY, Verbose.COMPACT);
-		case RDFXML: return new RdfStore();
-		case TAG: return new TagValueStore(new InMemSpdxStore());
-		case XLS: return new SpreadsheetStore(new InMemSpdxStore(), SpreadsheetFormatType.XLS);
-		case XLSX: return new SpreadsheetStore(new InMemSpdxStore(), SpreadsheetFormatType.XLSX);
-		case XML: return new MultiFormatStore(new InMemSpdxStore(), Format.XML, Verbose.COMPACT);
-		case YAML: return new MultiFormatStore(new InMemSpdxStore(), Format.YAML, Verbose.COMPACT);
-		default: throw new InvalidSPDXAnalysisException("Unsupporte file type: "+fromFileType+".  Check back later.");
-		}
-	}
-
-
-	private static FileType fileToFileType(File file) throws InvalidFileNameException {
-		String fileName = file.getName();
-		if (!fileName.contains(".")) {
-			throw new InvalidFileNameException("Can not convert file to file type - no file extension");
-		}
-		String ext = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
-		if ("xml".equals(ext)) {
-			if (fileName.endsWith("rdf.xml")) {
-				ext = "rdf.xml";
-			}
-		}
-		FileType retval = EXT_TO_FILETYPE.get(ext);
-		if (Objects.isNull(retval)) {
-			throw new InvalidFileNameException("Unrecognized file extension: "+ext);
-		}
-		return retval;
-	}
-
-
-	private static FileType strToFileType(String str) {
-		String strFileType = str.toUpperCase().trim();
-		return FileType.valueOf(strFileType);
 	}
 
 
