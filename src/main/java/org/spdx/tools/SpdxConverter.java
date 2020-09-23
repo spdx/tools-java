@@ -36,10 +36,13 @@ import org.spdx.tools.SpdxToolsHelper.SerFileType;
  * arg[2] from file type [RDFXML|JSON|XLS|XLSX|YAML|TAG] - if not present, file type of the from file will be used
  * arg[3] to file type [RDFXML|JSON|XLS|XLSX|YAML|TAG] - if not present, file type of the to file will be used
  * 
+ * the <code>covert(...)</code> methods can be called programmatically to convert files
  * @author Gary O'Neall
  *
  */
 public class SpdxConverter {
+	
+	static final int ERROR_STATUS = 1;
 	
 	static final int MIN_ARGS = 2;
 	static final int MAX_ARGS = 4;
@@ -53,59 +56,87 @@ public class SpdxConverter {
 			System.err
 					.println("Invalid number of arguments");
 			usage();
-			return;
+			System.exit(ERROR_STATUS);
 		}
 		if (args.length > MAX_ARGS) {
 			System.out.printf("Warning: Extra arguments will be ignored");
 		}
-		File fromFile = new File(args[0]);
-		if (!fromFile.exists()) {
-			System.err
-				.println("Input file "+args[0]+" does not exist.");
-			usage();
-			return;
+		if (args.length == 3) {
+			System.out.printf("Warning: only the input file type specified - it will be ignored");
 		}
-		File toFile = new File(args[1]);
-		if (toFile.exists()) {
-			System.err.println("Output file "+args[1]+" already exists.");
-			usage();
-			return;
-		}
-		SerFileType fromFileType;
-		if (args.length > 2) {
+		if (args.length < 4) {
+			try {
+				convert(args[0], args[1]);
+			} catch (SpdxConverterException e) {
+				System.err.println("Error converting: "+e.getMessage());
+				System.exit(ERROR_STATUS);
+			}
+		} else {
+			SerFileType fromFileType = null;
 			try {
 				fromFileType = SpdxToolsHelper.strToFileType(args[2]);
-			} catch(Exception ex) {
-				System.err.println("Invalid file type for input file: "+args[2]);
+			} catch (IllegalArgumentException e) {
+				System.err
+				.println("From file type is not a valid SPDX file type: "+args[2]);
 				usage();
-				return;
+				System.exit(ERROR_STATUS);
 			}
-		} else {
-			try {
-				fromFileType = SpdxToolsHelper.fileToFileType(fromFile);
-			} catch(Exception ex) {
-				System.err.println("Can not determine file type for input file: "+args[0]);
-				usage();
-				return;
-			}
-		}
-		SerFileType toFileType;
-		if (args.length > 3) {
+			SerFileType toFileType = null;
 			try {
 				toFileType = SpdxToolsHelper.strToFileType(args[3]);
-			} catch(Exception ex) {
-				System.err.println("Invalid file type for output file: "+args[3]);
+			} catch (IllegalArgumentException e) {
+				System.err
+				.println("To file type is not a valid SPDX file type: "+args[3]);
 				usage();
-				return;
+				System.exit(ERROR_STATUS);
 			}
-		} else {
 			try {
-				toFileType = SpdxToolsHelper.fileToFileType(toFile);
-			} catch(Exception ex) {
-				System.err.println("Can not determine file type for output file: "+args[0]);
-				usage();
-				return;
+				convert(args[0], args[1], fromFileType, toFileType);
+			} catch (SpdxConverterException e) {
+				System.err.println("Error converting: "+e.getMessage());
+				System.exit(ERROR_STATUS);
 			}
+		}
+	}
+	
+	/**
+	 * Convert an SPDX file from the fromFilePath to a new file at the toFilePath using the file extensions to determine the serialization type
+	 * @param fromFilePath Path of the file to convert from
+	 * @param toFilePath Path of output file for the conversion
+	 * @throws SpdxConverterException
+	 */
+	public static void convert(String fromFilePath, String toFilePath) throws SpdxConverterException {
+		SerFileType fromFileType;
+		try {
+			fromFileType = SpdxToolsHelper.fileToFileType(new File(fromFilePath));
+		} catch (InvalidFileNameException e) {
+			throw new SpdxConverterException("From file "+fromFilePath+" does not end with a valid SPDX file extension.");
+		}
+		SerFileType toFileType;
+		try {
+			toFileType = SpdxToolsHelper.fileToFileType(new File(toFilePath));
+		} catch (InvalidFileNameException e) {
+			throw new SpdxConverterException("To file "+toFilePath+" does not end with a valid SPDX file extension.");
+		}
+		convert(fromFilePath, toFilePath, fromFileType, toFileType);
+	}
+	
+	/**
+	 * Convert an SPDX file from the fromFilePath to a new file at the toFilePath
+	 * @param fromFilePath Path of the file to convert from
+	 * @param toFilePath Path of output file for the conversion
+	 * @param fromFileType Serialization type of the file to convert from
+	 * @param toFileType Serialization type of the file to convert to
+	 * @throws SpdxConverterException 
+	 */
+	public static void convert(String fromFilePath, String toFilePath, SerFileType fromFileType, SerFileType toFileType) throws SpdxConverterException {
+		File fromFile = new File(fromFilePath);
+		if (!fromFile.exists()) {
+			throw new SpdxConverterException("Input file "+fromFilePath+" does not exist.");
+		}
+		File toFile = new File(toFilePath);
+		if (toFile.exists()) {
+			throw new SpdxConverterException("Output file "+toFilePath+" already exists.");
 		}
 		FileInputStream input = null;
 		FileOutputStream output = null;
@@ -141,20 +172,20 @@ public class SpdxConverter {
 			if (Objects.nonNull(ex.getMessage())) {
 				msg = msg + ex.getMessage();
 			}
-			System.err.println(msg);
+			throw new SpdxConverterException(msg, ex);
 		} finally {
 			if (Objects.nonNull(input)) {
 				try {
 					input.close();
 				} catch (IOException e) {
-					System.out.println("Error closing input file: "+e.getMessage());
+					throw new SpdxConverterException("Error closing input file: "+e.getMessage());
 				}
 			}
 			if (Objects.nonNull(output)) {
 				try {
 					output.close();
 				} catch (IOException e) {
-					System.out.println("Error closing output file: "+e.getMessage());
+					throw new SpdxConverterException("Error closing output file: "+e.getMessage());
 				}
 			}
 		}
