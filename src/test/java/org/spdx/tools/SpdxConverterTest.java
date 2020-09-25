@@ -25,8 +25,6 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Objects;
 
 import org.spdx.library.InvalidSPDXAnalysisException;
@@ -93,6 +91,126 @@ public class SpdxConverterTest extends TestCase {
 	}
 	
 	// Supported file types: JSON, XLS, XLSX, TAG, RDFXML, YAML or XML
+	
+	public void testXlsxToRDFXML() throws SpdxConverterException, InvalidSPDXAnalysisException, IOException, SpdxCompareException {
+		String outFileName = "result.rdf.xml";
+		Path outFilePath = tempDirPath.resolve(outFileName);
+		SpdxConverter.convert(TEST_SPREADSHEET_XLSX_FILE_PATH, outFilePath.toString(), SerFileType.XLSX, SerFileType.RDFXML);
+		File result = new File(outFilePath.toString());
+		File source = new File(TEST_SPREADSHEET_XLSX_FILE_PATH);
+		assertTrue(result.exists());
+		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocument(source, SerFileType.XLSX);
+		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.RDFXML);
+		SpdxComparer comparer = new SpdxComparer();
+		comparer.compare(sourceDoc, resultDoc);
+		assertFalse(comparer.isDifferenceFound());
+		
+		// Try with no file types
+		Files.delete(outFilePath);
+		SpdxConverter.convert(TEST_SPREADSHEET_XLSX_FILE_PATH, outFilePath.toString());
+		result = new File(outFilePath.toString());
+		assertTrue(result.exists());
+		resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.RDFXML);
+		comparer = new SpdxComparer();
+		comparer.compare(sourceDoc, resultDoc);
+		assertFalse(comparer.isDifferenceFound());
+	}
+	
+	public void testTagToRDFXML() throws SpdxConverterException, InvalidSPDXAnalysisException, IOException, SpdxCompareException {
+		String outFileName = "result.rdf.xml";
+		Path outFilePath = tempDirPath.resolve(outFileName);
+		SpdxConverter.convert(TEST_TAG_FILE_PATH, outFilePath.toString(), SerFileType.TAG, SerFileType.RDFXML);
+		File result = new File(outFilePath.toString());
+		File source = new File(TEST_TAG_FILE_PATH);
+		assertTrue(result.exists());
+		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocument(source, SerFileType.TAG);
+		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.RDFXML);
+		SpdxComparer comparer = new SpdxComparer();
+		comparer.compare(sourceDoc, resultDoc);
+		assertFalse(comparer.isDifferenceFound());
+		
+		// Try with no file types
+		Files.delete(outFilePath);
+		SpdxConverter.convert(TEST_TAG_FILE_PATH, outFilePath.toString());
+		result = new File(outFilePath.toString());
+		assertTrue(result.exists());
+		resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.RDFXML);
+		comparer = new SpdxComparer();
+		comparer.compare(sourceDoc, resultDoc);
+		assertFalse(comparer.isDifferenceFound());
+	}
+	
+	public void testYamlToRDFXML() throws SpdxConverterException, InvalidSPDXAnalysisException, IOException, SpdxCompareException {
+		String outFileName = "result.rdf.xml";
+		Path outFilePath = tempDirPath.resolve(outFileName);
+		SpdxConverter.convert(TEST_YAML_FILE_PATH, outFilePath.toString(), SerFileType.YAML, SerFileType.RDFXML);
+		File result = new File(outFilePath.toString());
+		File source = new File(TEST_YAML_FILE_PATH);
+		assertTrue(result.exists());
+		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocument(source, SerFileType.YAML);
+		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.RDFXML);
+		SpdxComparer comparer = new SpdxComparer();
+		comparer.compare(sourceDoc, resultDoc);
+		assertFalse(comparer.isDifferenceFound());
+		
+		// Try with no file types
+		Files.delete(outFilePath);
+		SpdxConverter.convert(TEST_YAML_FILE_PATH, outFilePath.toString());
+		result = new File(outFilePath.toString());
+		assertTrue(result.exists());
+		resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.RDFXML);
+		comparer = new SpdxComparer();
+		comparer.compare(sourceDoc, resultDoc);
+		assertFalse(comparer.isDifferenceFound());
+	}
+	
+	public void testXmlToRDFXML() throws SpdxConverterException, InvalidSPDXAnalysisException, IOException, SpdxCompareException {
+		String outFileName = "result.rdf.xml";
+		Path outFilePath = tempDirPath.resolve(outFileName);
+		SpdxConverter.convert(TEST_XML_FILE_PATH, outFilePath.toString(), SerFileType.XML, SerFileType.RDFXML);
+		File result = new File(outFilePath.toString());
+		File source = new File(TEST_XML_FILE_PATH);
+		assertTrue(result.exists());
+		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocument(source, SerFileType.XML);
+		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.RDFXML);
+		SpdxComparer comparer = new SpdxComparer();
+		comparer.compare(sourceDoc, resultDoc);
+		assertFalse(comparer.isDifferenceFound());
+		
+		// Try with no file types
+		Files.delete(outFilePath);
+		SpdxConverter.convert(TEST_XML_FILE_PATH, outFilePath.toString());
+		result = new File(outFilePath.toString());
+		assertTrue(result.exists());
+		resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.RDFXML);
+		comparer = new SpdxComparer();
+		comparer.compare(sourceDoc, resultDoc);
+		assertFalse(comparer.isDifferenceFound());
+	}
+	
+	public void testXlsToRDFXML() throws SpdxConverterException, InvalidSPDXAnalysisException, IOException, SpdxCompareException {
+		String outFileName = "result.rdf.xml";
+		Path outFilePath = tempDirPath.resolve(outFileName);
+		SpdxConverter.convert(TEST_SPREADSHEET_XLS_FILE_PATH, outFilePath.toString(), SerFileType.XLS, SerFileType.RDFXML);
+		File result = new File(outFilePath.toString());
+		File source = new File(TEST_SPREADSHEET_XLS_FILE_PATH);
+		assertTrue(result.exists());
+		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocument(source, SerFileType.XLS);
+		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.RDFXML);
+		SpdxComparer comparer = new SpdxComparer();
+		comparer.compare(sourceDoc, resultDoc);
+		assertFalse(comparer.isDifferenceFound());
+		
+		// Try with no file types
+		Files.delete(outFilePath);
+		SpdxConverter.convert(TEST_SPREADSHEET_XLS_FILE_PATH, outFilePath.toString());
+		result = new File(outFilePath.toString());
+		assertTrue(result.exists());
+		resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.RDFXML);
+		comparer = new SpdxComparer();
+		comparer.compare(sourceDoc, resultDoc);
+		assertFalse(comparer.isDifferenceFound());
+	}
 	
 	public void testJsonToXls() throws SpdxConverterException, InvalidSPDXAnalysisException, IOException, SpdxCompareException {
 		String xmlFileName = "result.rdf.xls";

@@ -284,8 +284,6 @@ THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED WAR
     <fileContributors>Open Logic Inc.</fileContributors>
     <fileContributors>Source Auditor Inc.</fileContributors>
     <fileContributors>Black Duck Software In.c</fileContributors>
-    <fileDependencies>SPDXRef-JenaLib</fileDependencies>
-    <fileDependencies>SPDXRef-CommonsLangSrc</fileDependencies>
     <fileName>./src/org/spdx/parser/DOAPProject.java</fileName>
     <fileTypes>SOURCE</fileTypes>
     <licenseConcluded>Apache-2.0</licenseConcluded>
@@ -323,7 +321,6 @@ under the Apache License 2.0 (see: StringUtils.containsWhitespace())</noticeText
     <copyrightText>(c) Copyright 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 Hewlett-Packard Development Company, LP</copyrightText>
     <fileContributors>Apache Software Foundation</fileContributors>
     <fileContributors>Hewlett Packard Inc.</fileContributors>
-    <fileDependencies>SPDXRef-CommonsLangSrc</fileDependencies>
     <fileName>./lib-source/jena-2.6.3-sources.jar</fileName>
     <fileTypes>ARCHIVE</fileTypes>
     <licenseComments>This license is used by Jena</licenseComments>

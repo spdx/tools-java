@@ -57,6 +57,7 @@ public class SpdxToolsHelper {
 		HashMap<String, SerFileType> temp = new HashMap<>();
 		temp.put("json", SerFileType.JSON);
 		temp.put("rdf.xml", SerFileType.RDFXML);
+		temp.put("rdf", SerFileType.RDFXML);
 		temp.put("xml", SerFileType.XML);
 		temp.put("xls", SerFileType.XLS);
 		temp.put("xlsx", SerFileType.XLSX);

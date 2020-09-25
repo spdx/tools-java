@@ -137,7 +137,6 @@ LicenseComments: This license is used by Jena
 FileCopyrightText: <text>(c) Copyright 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 Hewlett-Packard Development Company, LP</text>
 FileContributor: Hewlett Packard Inc.
 FileContributor: Apache Software Foundation
-FileDependency: ./lib-source/commons-lang3-3.1-sources.jar
 ## Relationships
 Relationship: SPDXRef-JenaLib CONTAINS SPDXRef-Package
 
@@ -153,8 +152,6 @@ FileContributor: Black Duck Software In.c
 FileContributor: Source Auditor Inc.
 FileContributor: SPDX Technical Team Members
 FileContributor: Protecode Inc.
-FileDependency: ./lib-source/jena-2.6.3-sources.jar
-FileDependency: ./lib-source/commons-lang3-3.1-sources.jar
 
 ## Package Information
 PackageName: Apache Commons Lang

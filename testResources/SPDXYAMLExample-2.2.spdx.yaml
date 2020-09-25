@@ -245,9 +245,6 @@ files:
   - "Open Logic Inc."
   - "Source Auditor Inc."
   - "Black Duck Software In.c"
-  fileDependencies:
-  - "SPDXRef-JenaLib"
-  - "SPDXRef-CommonsLangSrc"
   fileName: "./src/org/spdx/parser/DOAPProject.java"
   fileTypes:
   - "SOURCE"
@@ -282,9 +279,6 @@ files:
   fileContributors:
   - "Apache Software Foundation"
   - "Hewlett Packard Inc."
-  fileDependencies:
-  - "SPDXRef-CommonsLangSrc"
-  fileName: "./lib-source/jena-2.6.3-sources.jar"
   fileTypes:
   - "ARCHIVE"
   licenseComments: "This license is used by Jena"
