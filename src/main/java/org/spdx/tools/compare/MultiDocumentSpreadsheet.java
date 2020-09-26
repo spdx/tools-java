@@ -28,9 +28,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spdx.library.InvalidSPDXAnalysisException;
@@ -228,7 +228,7 @@ public class MultiDocumentSpreadsheet {
 		FileOutputStream excelOut = null;
 		try {
 			excelOut = new FileOutputStream(spreadsheetFile);
-			Workbook wb = new HSSFWorkbook();
+			Workbook wb = new XSSFWorkbook();
 			DocumentSheet.create(wb, DOCUMENT_SHEET_NAME);
 			CreatorSheet.create(wb, CREATOR_SHEET_NAME);
 			ExternalReferencesSheet.create(wb, EXTERNAL_REFERENCES_SHEET_NAME);

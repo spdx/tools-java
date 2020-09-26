@@ -67,7 +67,7 @@ public class SpdxConverterTest extends TestCase {
 		deleteDirAndFiles(tempDirPath);
 	}
 	
-	private void deleteDirAndFiles(Path dirOrFile) {
+	public static void deleteDirAndFiles(Path dirOrFile) {
 		if (Objects.isNull(dirOrFile)) {
 			return;
 		}

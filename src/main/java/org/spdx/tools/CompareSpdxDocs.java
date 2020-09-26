@@ -87,8 +87,8 @@ public class CompareSpdxDocs {
 		for (int i = 1; i < args.length; i++) {
 			try {
 				SpdxDocument doc = SpdxToolsHelper.deserializeDocument(new File(args[i]));
+				compareDocs.add(doc);
 				List<String> warnings = doc.verify();
-				verificationErrors.add(warnings);
 				if (!warnings.isEmpty()) {
 					System.out.println("Verification errors were found in "+args[i].trim()+".  See verification errors sheet for details.");
 				}

@@ -126,9 +126,9 @@ public abstract class AbstractFileCompareSheet extends AbstractSheet {
 		}
 		while (!allFilesExhausted(files, fileIndexes)) {
 			Row currentRow = this.addRow();
-			String fileName = getNextFileName(files, fileIndexes);
+			Optional<String> fileName = getNextFileName(files, fileIndexes);
 			Cell fileNameCell = currentRow.createCell(FILENAME_COL);
-			fileNameCell.setCellValue(fileName);
+			fileNameCell.setCellValue(NormalizedFileNameComparator.normalizeFileName(fileName));
 			boolean allValuesMatch = true;
 			SpdxFile lastFile = null;
 			int lastDocIndex = 0;
@@ -136,7 +136,7 @@ public abstract class AbstractFileCompareSheet extends AbstractSheet {
 			for (int i = 0; i < files.size(); i++) {
 				Cell cell = currentRow.createCell(i + FIRST_DOCUMENT_COL);
 				if (fileIndexes[i] < files.get(i).size() &&
-						normalizedFileNameComparator.compare(files.get(i).get(fileIndexes[i]).getName(), Optional.of(fileName)) == 0) {
+						normalizedFileNameComparator.compare(files.get(i).get(fileIndexes[i]).getName(), fileName) == 0) {
 					String val = getFileValue(files.get(i).get(fileIndexes[i]));
 					if (allValuesMatch && lastFile != null &&
 							!valuesMatch(comparer, lastFile, lastDocIndex, files.get(i).get(fileIndexes[i]), i)) {
@@ -206,7 +206,7 @@ public abstract class AbstractFileCompareSheet extends AbstractSheet {
 	 * @return
 	 * @throws InvalidSPDXAnalysisException 
 	 */
-	private String getNextFileName(List<List<SpdxFile>> files, int[] fileIndexes) throws InvalidSPDXAnalysisException {
+	private Optional<String> getNextFileName(List<List<SpdxFile>> files, int[] fileIndexes) throws InvalidSPDXAnalysisException {
 		Optional<String> retval = null;
 		for (int i = 0; i < files.size(); i++) {
 			if (files.get(i).size() > fileIndexes[i]) {
@@ -216,7 +216,7 @@ public abstract class AbstractFileCompareSheet extends AbstractSheet {
 				}
 			}
 		}
-		return NormalizedFileNameComparator.normalizeFileName(retval);
+		return retval;
 	}
 
 	/**

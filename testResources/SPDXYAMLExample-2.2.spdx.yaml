@@ -279,6 +279,7 @@ files:
   fileContributors:
   - "Apache Software Foundation"
   - "Hewlett Packard Inc."
+  fileName: "./lib-source/jena-2.6.3-sources.jar"
   fileTypes:
   - "ARCHIVE"
   licenseComments: "This license is used by Jena"

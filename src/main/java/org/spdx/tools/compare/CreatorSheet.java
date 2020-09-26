@@ -90,7 +90,7 @@ public class CreatorSheet extends AbstractSheet {
 		for (int i = 0; i < comparer.getNumSpdxDocs(); i++) {
 			Cell headerCell = header.getCell(i);
 			headerCell.setCellValue(docNames.get(i));
-			String[] creators = (String[]) comparer.getSpdxDoc(i).getCreationInfo().getCreators().toArray();
+			String[] creators = comparer.getSpdxDoc(i).getCreationInfo().getCreators().toArray(new String[comparer.getSpdxDoc(i).getCreationInfo().getCreators().size()]);
 			Arrays.sort(creators);
 			for (int j = 0; j < creators.length; j++) {
 				Cell creatorCell = null;
