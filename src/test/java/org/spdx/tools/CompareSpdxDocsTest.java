@@ -22,8 +22,12 @@ package org.spdx.tools;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.spdx.spreadsheetstore.SpreadsheetException;
+import org.spdx.tools.compare.DocumentSheet;
 import org.spdx.tools.compare.MultiDocumentSpreadsheet;
 
 import junit.framework.TestCase;
@@ -44,6 +48,7 @@ public class CompareSpdxDocsTest extends TestCase {
 	static final String TEST_TAG_FILE_PATH = TEST_DIR + File.separator + "SPDXTagExample-v2.2.spdx";
 	static final String TEST_XML_FILE_PATH = TEST_DIR + File.separator + "SPDXXMLExample-v2.2.spdx.xml";
 	static final String TEST_YAML_FILE_PATH = TEST_DIR + File.separator + "SPDXYAMLExample-2.2.spdx.yaml";
+	static final String TEST_DIFF_FILE_COMMNENT_FILE_PATH = TEST_DIR + File.separator + "DifferentFileComment.spdx.yaml";
 	
 
 
@@ -66,13 +71,43 @@ public class CompareSpdxDocsTest extends TestCase {
 	
 	public void testCompareDocuments() throws OnlineToolException, SpreadsheetException {
 		String outputFilePath = tempDirPath + File.separator + "comp.xlsx";
-		String[] params = new String[] {outputFilePath, TEST_JSON_FILE_PATH, TEST_RDF_FILE_PATH,
+		String[] params = new String[] {outputFilePath, TEST_JSON_FILE_PATH, 
+				TEST_RDF_FILE_PATH,
 				TEST_SPREADSHEET_XLS_FILE_PATH, TEST_SPREADSHEET_XLSX_FILE_PATH, TEST_TAG_FILE_PATH,
-				TEST_XML_FILE_PATH, TEST_YAML_FILE_PATH
+				TEST_XML_FILE_PATH, 
+				TEST_YAML_FILE_PATH
 		};
 		CompareSpdxDocs.onlineFunction(params);
 		MultiDocumentSpreadsheet result = new MultiDocumentSpreadsheet(new File(outputFilePath), false, true);
-		
+		DocumentSheet docSheet = result.getDocumentSheet();
+		Row resultRow = docSheet.getSheet().getRow(docSheet.getFirstDataRow());
+		Cell cell = resultRow.getCell(1);
+		int nextCol = 2;
+		while (Objects.nonNull(cell) && !cell.getStringCellValue().isEmpty()) {
+			assertTrue("Equals".equals(cell.getStringCellValue()) || "N/A".equals(cell.getStringCellValue()));
+			cell = resultRow.getCell(nextCol++);
+		}
 	}
-
+	
+	public void testDifferentDocuments() throws OnlineToolException, SpreadsheetException {
+		String outputFilePath = tempDirPath + File.separator + "comp.xlsx";
+		String[] params = new String[] {outputFilePath, 
+				TEST_YAML_FILE_PATH, TEST_DIFF_FILE_COMMNENT_FILE_PATH
+		};
+		CompareSpdxDocs.onlineFunction(params);
+		MultiDocumentSpreadsheet result = new MultiDocumentSpreadsheet(new File(outputFilePath), false, true);
+		DocumentSheet docSheet = result.getDocumentSheet();
+		Row resultRow = docSheet.getSheet().getRow(docSheet.getFirstDataRow());
+		Row titleRow = docSheet.getSheet().getRow(docSheet.getFirstDataRow()-1);
+		Cell cell = resultRow.getCell(1);
+		int nextCol = 2;
+		while (Objects.nonNull(cell) && !cell.getStringCellValue().isEmpty()) {
+			if ("Document Describes".equals(titleRow.getCell(nextCol-1).getStringCellValue()) || "Relationships".equals(titleRow.getCell(nextCol-1).getStringCellValue())) {
+				assertTrue("Diff".equals(cell.getStringCellValue()));
+			} else {
+				assertTrue("Equals".equals(cell.getStringCellValue()) || "N/A".equals(cell.getStringCellValue()));
+			}
+			cell = resultRow.getCell(nextCol++);
+		}
+	}
 }

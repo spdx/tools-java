@@ -16,7 +16,6 @@
 */
 package org.spdx.tools.compare;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.poi.ss.usermodel.Workbook;
@@ -52,7 +51,7 @@ public class FileNoticeSheet extends AbstractFileCompareSheet {
 	@Override
 	boolean valuesMatch(SpdxComparer comparer, SpdxFile fileA, int docIndexA,
 			SpdxFile fileB, int docIndexB) throws SpdxCompareException, InvalidSPDXAnalysisException {
-		return Objects.equals(fileA.getNoticeText(), fileB.getNoticeText());
+		return SpdxComparer.stringsEqual(fileA.getNoticeText(), fileB.getNoticeText());
 	}
 
 	/* (non-Javadoc)

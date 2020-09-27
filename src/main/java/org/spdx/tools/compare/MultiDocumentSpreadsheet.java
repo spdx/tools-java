@@ -63,7 +63,7 @@ import org.spdx.utility.compare.SpdxComparer;
  */
 public class MultiDocumentSpreadsheet {
 
-	private static final class SpdxFileComparator implements Comparator<SpdxFile> {
+	protected static final class SpdxFileComparator implements Comparator<SpdxFile> {
 
 		private NormalizedFileNameComparator normalizedFileNameComparator = new NormalizedFileNameComparator();
 
@@ -88,60 +88,60 @@ public class MultiDocumentSpreadsheet {
 	private SpdxFileComparator fileComparator = new SpdxFileComparator();
 
 	static Logger logger = LoggerFactory.getLogger(MultiDocumentSpreadsheet.class);
-	private static final String DOCUMENT_SHEET_NAME = "Document";
-	private DocumentSheet documentSheet;
-	private static final String CREATOR_SHEET_NAME = "Creator";
-	private CreatorSheet creatorSheet;
-	private static final String PACKAGE_SHEET_NAME = "Package";
-	private PackageSheet packageSheet;
-	private static final String EXTRACTED_LICENSE_SHEET_NAME = "Extracted Licenses";
-	private ExtractedLicenseSheet extractedLicenseSheet;
-	private static final String FILE_CHECKSUM_SHEET_NAME = "File Checksum";
-	private FileChecksumSheet fileChecksumSheet;
-	private static final String FILE_CONCLUDED_SHEET_NAME = "File Concluded";
-	private FileConcludedSheet fileConcludedSheet;
-	private static final String FILE_FOUND_SHEET_NAME = "File Found Licenses";
-	private FileLicenseInfoSheet fileLicenseInfoSheet;
-	private static final String FILE_LICENSE_COMMENT_SHEET_NAME = "File License Comment";
-	private FileLicenseCommentsSheet fileLicenseCommentsSheet;
-	private static final String FILE_COMMENT_SHEET_NAME = "File Comment";
-	private FileCommentSheet fileCommentSheet;
-	private static final String FILE_TYPE_SHEET_NAME = "File Type";
-	private FileTypeSheet fileTypeSheet;
-	private static final String FILE_CONTRIBUTOR_SHEET_NAME = "File Contributors";
-	private FileContributorsSheet fileContributorsSheet;
-	private static final String FILE_ATTRIBUTION_SHEET_NAME = "File Attribution";
-	private FileAttributionSheet fileAttributionSheet;
-	private static final String FILE_NOTICE_SHEET_NAME = "File Notices";
-	private FileNoticeSheet fileNoticeSheet;
-	private static final String VERIFICATION_SHEET_NAME = "Verification Errors";
+	protected static final String DOCUMENT_SHEET_NAME = "Document";
+	protected DocumentSheet documentSheet;
+	protected static final String CREATOR_SHEET_NAME = "Creator";
+	protected CreatorSheet creatorSheet;
+	protected static final String PACKAGE_SHEET_NAME = "Package";
+	protected PackageSheet packageSheet;
+	protected static final String EXTRACTED_LICENSE_SHEET_NAME = "Extracted Licenses";
+	protected ExtractedLicenseSheet extractedLicenseSheet;
+	protected static final String FILE_CHECKSUM_SHEET_NAME = "File Checksum";
+	protected FileChecksumSheet fileChecksumSheet;
+	protected static final String FILE_CONCLUDED_SHEET_NAME = "File Concluded";
+	protected FileConcludedSheet fileConcludedSheet;
+	protected static final String FILE_FOUND_SHEET_NAME = "File Found Licenses";
+	protected FileLicenseInfoSheet fileLicenseInfoSheet;
+	protected static final String FILE_LICENSE_COMMENT_SHEET_NAME = "File License Comment";
+	protected FileLicenseCommentsSheet fileLicenseCommentsSheet;
+	protected static final String FILE_COMMENT_SHEET_NAME = "File Comment";
+	protected FileCommentSheet fileCommentSheet;
+	protected static final String FILE_TYPE_SHEET_NAME = "File Type";
+	protected FileTypeSheet fileTypeSheet;
+	protected static final String FILE_CONTRIBUTOR_SHEET_NAME = "File Contributors";
+	protected FileContributorsSheet fileContributorsSheet;
+	protected static final String FILE_ATTRIBUTION_SHEET_NAME = "File Attribution";
+	protected FileAttributionSheet fileAttributionSheet;
+	protected static final String FILE_NOTICE_SHEET_NAME = "File Notices";
+	protected FileNoticeSheet fileNoticeSheet;
+	protected static final String VERIFICATION_SHEET_NAME = "Verification Errors";
 	public static final int MAX_DOCUMENTS = 25;
-	private static final String EXTERNAL_REFERENCES_SHEET_NAME = "Ext. Doc. References";
-	private static final String DOCUMENT_RELATIONSHIP_SHEET_NAME = "Doc. Relationships";
-	private static final String DOCUMENT_ANNOTATION_SHEET_NAME = "Doc. Annotations";
-	private static final String FILE_SPDX_ID_SHEET_NAME = "File IDs";
-	private static final String FILE_COPYRIGHT_SHEET_NAME = "File Copyrights";
-	private static final String FILE_ANNOTATION_SHEET_NAME = "File Annot.";
-	private static final String FILE_RELATIONSHIP_SHEET = "File Relationships";
-	private static final String SNIPPET_SHEET_NAME = "Snippets";
+	protected static final String EXTERNAL_REFERENCES_SHEET_NAME = "Ext. Doc. References";
+	protected static final String DOCUMENT_RELATIONSHIP_SHEET_NAME = "Doc. Relationships";
+	protected static final String DOCUMENT_ANNOTATION_SHEET_NAME = "Doc. Annotations";
+	protected static final String FILE_SPDX_ID_SHEET_NAME = "File IDs";
+	protected static final String FILE_COPYRIGHT_SHEET_NAME = "File Copyrights";
+	protected static final String FILE_ANNOTATION_SHEET_NAME = "File Annot.";
+	protected static final String FILE_RELATIONSHIP_SHEET = "File Relationships";
+	protected static final String SNIPPET_SHEET_NAME = "Snippets";
 
-	private VerificationSheet verificationSheet;
+	protected VerificationSheet verificationSheet;
 
-	private ExternalReferencesSheet externalReferencesSheet;
+	protected ExternalReferencesSheet externalReferencesSheet;
 
-	private DocumentAnnotationSheet documentAnnotationSheet;
+	protected DocumentAnnotationSheet documentAnnotationSheet;
 
-	private DocumentRelationshipSheet documentRelationshipSheet;
+	protected DocumentRelationshipSheet documentRelationshipSheet;
 
-	private FileSpdxIdSheet fileSpdxIdSheet;
+	protected FileSpdxIdSheet fileSpdxIdSheet;
 
-	private FileCopyrightSheet fileCopyrightSheet;
+	protected FileCopyrightSheet fileCopyrightSheet;
 
-	private FileAnnotationSheet fileAnnotationSheet;
+	protected FileAnnotationSheet fileAnnotationSheet;
 
-	private FileRelationshipSheet fileRelationshipSheet;
+	protected FileRelationshipSheet fileRelationshipSheet;
 
-	private SnippetSheet snippetSheet;
+	protected SnippetSheet snippetSheet;
 
 	/**
 	 * @param spreadsheetFile
@@ -457,6 +457,10 @@ public class MultiDocumentSpreadsheet {
 			}
 		}
 
+	}
+
+	public DocumentSheet getDocumentSheet() {
+		return this.documentSheet;
 	}
 
 }

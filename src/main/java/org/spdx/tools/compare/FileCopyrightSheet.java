@@ -16,8 +16,6 @@
 */
 package org.spdx.tools.compare;
 
-import java.util.Objects;
-
 import org.apache.poi.ss.usermodel.Workbook;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.SpdxFile;
@@ -47,7 +45,7 @@ public class FileCopyrightSheet extends AbstractFileCompareSheet {
 	@Override
 	boolean valuesMatch(SpdxComparer comparer, SpdxFile fileA, int docIndexA,
 			SpdxFile fileB, int docIndexB) throws SpdxCompareException, InvalidSPDXAnalysisException {
-        return Objects.equals(fileA.getCopyrightText(),
+        return SpdxComparer.stringsEqual(fileA.getCopyrightText(),
 				fileB.getCopyrightText());
 	}
 
