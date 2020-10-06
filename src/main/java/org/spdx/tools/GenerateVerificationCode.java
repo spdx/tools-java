@@ -17,9 +17,14 @@
 package org.spdx.tools;
 
 import java.io.File;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
+
+import javax.annotation.Nullable;
 
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.SpdxPackageVerificationCode;
@@ -46,30 +51,45 @@ public class GenerateVerificationCode {
 			error("Incorrect number of arguments.");
 			System.exit(1);
 		}
-		File sourceDirectory = new File(args[0]);
-		if (!sourceDirectory.exists()) {
-			error("Source directory "+args[0]+" does not exist.");
-			System.exit(1);
-		}
-		if (!sourceDirectory.isDirectory()) {
-			error("File "+args[0]+" is not a directory.");
-			System.exit(1);
-		}
+		String directoryPath = args[0];
 		String skippedRegex = null;
-		File[] skippedFiles = new File[0];
 		if (args.length > 1) {
 			skippedRegex = args[1];
-			skippedFiles = collectSkippedFiles(skippedRegex, sourceDirectory);
 		}
+
 		try {
-			VerificationCodeGenerator vcg = new VerificationCodeGenerator(new JavaSha1ChecksumGenerator());
-			IModelStore ms = new InMemSpdxStore();
-			
-			SpdxPackageVerificationCode verificationCode = vcg.generatePackageVerificationCode(sourceDirectory, skippedFiles, ms, "https://temp/URI");
+			SpdxPackageVerificationCode verificationCode = generateVerificationCode(directoryPath, skippedRegex);
 			printVerificationCode(verificationCode);
 			System.exit(0);
 		} catch (Exception ex) {
 			error("Error creating verification code: "+ex.getMessage());
+			System.exit(1);
+		}
+	}
+	
+	public static SpdxPackageVerificationCode generateVerificationCode(String directoryPath, @Nullable String skippedRegex) throws OnlineToolException {
+		Objects.requireNonNull(directoryPath, "Directory path must not be null");
+		File sourceDirectory = new File(directoryPath);
+		if (!sourceDirectory.exists()) {
+			throw new OnlineToolException("Source directory "+directoryPath+" does not exist.");
+		}
+		if (!sourceDirectory.isDirectory()) {
+			throw new OnlineToolException("File "+directoryPath+" is not a directory.");
+		}
+		File[] skippedFiles = new File[0];
+		if (Objects.nonNull(skippedRegex)) {
+			skippedFiles = collectSkippedFiles(skippedRegex, sourceDirectory);
+		}
+		try {
+			VerificationCodeGenerator vcg = new VerificationCodeGenerator(new JavaSha1ChecksumGenerator());
+			IModelStore ms = new InMemSpdxStore();		
+			return vcg.generatePackageVerificationCode(sourceDirectory, skippedFiles, ms, "https://temp/URI");
+		} catch (NoSuchAlgorithmException e) {
+			throw new OnlineToolException("Error creating checksum algorithm",e);
+		} catch (IOException e) {
+			throw new OnlineToolException("I/O Error generating verification code",e);
+		} catch (InvalidSPDXAnalysisException e) {
+			throw new OnlineToolException("SPDX Analysis Error generating verification code",e);
 		}
 	}
 
