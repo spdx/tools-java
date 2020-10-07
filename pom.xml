@@ -30,18 +30,18 @@
 		<url>http://spdx.org</url>
 	</organization>
 	<scm>
-		<url>https://github.com/spdx/spdx-tools-java</url>
-		<connection>https://github.com/spdx/spdx-tools-java.git</connection>
-		<developerConnection>https://github.com/spdx/spdx-tools-java.git</developerConnection>
+		<url>https://github.com/spdx/tools-java</url>
+		<connection>https://github.com/spdx/tools-java.git</connection>
+		<developerConnection>https://github.com/spdx/tools-java.git</developerConnection>
 	</scm>
 	<issueManagement>
 		<system>Github</system>
-		<url>https://github.com/spdx/spdx-tools-java/issues</url>
+		<url>https://github.com/spdx/tools-java/issues</url>
 	</issueManagement>
 	<description>SPDX Command Line Tools using the Spdx-Java-Library</description>
 	<ciManagement>
 		<system>Github Actions</system>
-		<url>https://github.com/spdx/spdx-tools-java/actions</url>
+		<url>https://github.com/spdx/tools-java/actions</url>
 	</ciManagement>
     <distributionManagement>
       <repository>
@@ -253,7 +253,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<spdxDocumentNamespace>http://spdx.org/documents/spdx-tools-java-{$version}</spdxDocumentNamespace>					
+					<spdxDocumentNamespace>http://spdx.org/documents/tools-java-{$version}</spdxDocumentNamespace>					
 					<defaultFileCopyright>Copyright (c) 2020 Source Auditor Inc.</defaultFileCopyright>
 					<defaultFileContributors>
 						<param>Gary O'Neall</param>
