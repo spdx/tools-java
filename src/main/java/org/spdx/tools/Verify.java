@@ -119,7 +119,7 @@ public class Verify {
 		} catch (IOException e) {
 			throw new SpdxVerificationException("IO Error reading SPDX file",e);
 		} catch (InvalidSPDXAnalysisException e) {
-			throw new SpdxVerificationException("Analysis exception processing SPDX file",e);
+			throw new SpdxVerificationException("Analysis exception processing SPDX file: "+e.getMessage(),e);
 		}
 		List<String> retval = new ArrayList<String>();
 		if (store instanceof TagValueStore) {

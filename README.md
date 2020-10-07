@@ -1,4 +1,4 @@
-# spdx-tools-java
+# tools-java
 SPDX Command Line Tools using the Spdx-Java-Library
 
 Note: This tools is in development and is partially implemented.  Reviews, suggestions are welcome especially as it relates to the design.  Please enter an issue with any suggestions.
