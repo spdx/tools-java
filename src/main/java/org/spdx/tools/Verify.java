@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.SpdxDocument;
@@ -97,6 +98,8 @@ public class Verify {
 	 * @throws Errors where the SPDX file can not be parsed or the filename is invalid
 	 */
 	public static List<String> verify(String filePath, SerFileType fileType) throws SpdxVerificationException {
+		Objects.requireNonNull(filePath);
+		Objects.requireNonNull(fileType);
 		File file = new File(filePath);
 		if (!file.exists()) {
 			throw new SpdxVerificationException("File "+filePath+" not found.");

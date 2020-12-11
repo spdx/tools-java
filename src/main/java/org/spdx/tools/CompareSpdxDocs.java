@@ -73,7 +73,7 @@ public class CompareSpdxDocs {
 	 * @param args args[0] is the output Excel file name, all other args are SPDX document file names
 	 * @throws OnlineToolException Exception caught by JPype and displayed to the user
 	 */
-	public static void onlineFunction(String[] args) throws OnlineToolException{
+	public static void onlineFunction(String[] args) throws OnlineToolException {
 		// Arguments length( 14>=args length>=3 ) will checked in the Python Code
 		File outputFile = new File(args[0]);
 		// Output File name will be checked in the Python code for no clash, but if still found

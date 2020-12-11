@@ -4,7 +4,7 @@
 	
 	<groupId>org.spdx</groupId>
 	<artifactId>tools-java</artifactId>
-	<version>0.0.4</version>
+	<version>0.0.5</version>
 	<packaging>jar</packaging>
 	
 	<name>tools-java</name>
@@ -99,12 +99,12 @@
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>java-spdx-library</artifactId>
-	  	<version>0.0.4</version>
+	  	<version>0.0.6</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>spdx-rdf-store</artifactId>
-	  	<version>0.0.4</version>
+	  	<version>0.0.6</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
