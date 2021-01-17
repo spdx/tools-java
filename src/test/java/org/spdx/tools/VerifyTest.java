@@ -52,7 +52,7 @@ public class VerifyTest extends TestCase {
 	
 	public void testVerifyWarning() throws SpdxVerificationException {
 		List<String> result = Verify.verify(TEST_WARNING_FILE_PATH, SerFileType.TAG);
-		assertEquals(1, result.size());
+		assertTrue(result.size() > 0);
 		assertTrue(result.get(0).contains("deprecated"));
 	}
 }
