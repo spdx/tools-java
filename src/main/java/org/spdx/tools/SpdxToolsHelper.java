@@ -49,7 +49,7 @@ import org.spdx.tagvaluestore.TagValueStore;
 public class SpdxToolsHelper {
 
 	public enum SerFileType {
-		JSON, RDFXML, XML, XLS, XLSX, YAML, TAG, YML
+		JSON, RDFXML, XML, XLS, XLSX, YAML, TAG
 	}
 
 	static Map<String, SerFileType> EXT_TO_FILETYPE;
@@ -64,7 +64,7 @@ public class SpdxToolsHelper {
 		temp.put("yaml", SerFileType.YAML);
 		temp.put("tag", SerFileType.TAG);
 		temp.put("spdx", SerFileType.TAG);
-		temp.put("yml", SerFileType.YML);
+		temp.put("yml", SerFileType.YAML);
 		EXT_TO_FILETYPE = Collections.unmodifiableMap(temp);
 	}
 
