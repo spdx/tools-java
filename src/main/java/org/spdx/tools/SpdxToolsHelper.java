@@ -2,7 +2,7 @@
  * Copyright (c) 2020 Source Auditor Inc.
  *
  * SPDX-License-Identifier: Apache-2.0
- * 
+ *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
  *   You may obtain a copy of the License at
@@ -42,16 +42,16 @@ import org.spdx.tagvaluestore.TagValueStore;
 
 /**
  * Static helper methods for the various tools
- * 
+ *
  * @author Gary O'Neall
  *
  */
 public class SpdxToolsHelper {
 
 	public enum SerFileType {
-		JSON, RDFXML, XML, XLS, XLSX, YAML, TAG
+		JSON, RDFXML, XML, XLS, XLSX, YAML, TAG, YML
 	}
-	
+
 	static Map<String, SerFileType> EXT_TO_FILETYPE;
 	static {
 		HashMap<String, SerFileType> temp = new HashMap<>();
@@ -64,6 +64,7 @@ public class SpdxToolsHelper {
 		temp.put("yaml", SerFileType.YAML);
 		temp.put("tag", SerFileType.TAG);
 		temp.put("spdx", SerFileType.TAG);
+		temp.put("yml", SerFileType.YML);
 		EXT_TO_FILETYPE = Collections.unmodifiableMap(temp);
 	}
 
@@ -81,7 +82,8 @@ public class SpdxToolsHelper {
 		case XLSX: return new SpreadsheetStore(new InMemSpdxStore(), SpreadsheetFormatType.XLSX);
 		case XML: return new MultiFormatStore(new InMemSpdxStore(), Format.XML, Verbose.COMPACT);
 		case YAML: return new MultiFormatStore(new InMemSpdxStore(), Format.YAML, Verbose.COMPACT);
-		default: throw new InvalidSPDXAnalysisException("Unsupporte file type: "+fileType+".  Check back later.");
+		case YML: return new MultiFormatStore(new InMemSpdxStore(), Format.YAML, Verbose.COMPACT);
+		default: throw new InvalidSPDXAnalysisException("Unsupported file type: "+fileType+".  Check back later.");
 		}
 	}
 
@@ -118,13 +120,13 @@ public class SpdxToolsHelper {
 		String strFileType = str.toUpperCase().trim();
 		return SerFileType.valueOf(strFileType);
 	}
-	
+
 	/**
 	 * @param file file containing an SPDX document with the standard file extension for the serialization formats
 	 * @return the SPDX document stored in the file
 	 * @throws InvalidSPDXAnalysisException
 	 * @throws IOException
-	 * @throws InvalidFileNameException 
+	 * @throws InvalidFileNameException
 	 */
 	public static SpdxDocument deserializeDocument(File file) throws InvalidSPDXAnalysisException, IOException, InvalidFileNameException {
 		ISerializableModelStore store = fileTypeToStore(fileToFileType(file));
