@@ -82,7 +82,6 @@ public class SpdxToolsHelper {
 		case XLSX: return new SpreadsheetStore(new InMemSpdxStore(), SpreadsheetFormatType.XLSX);
 		case XML: return new MultiFormatStore(new InMemSpdxStore(), Format.XML, Verbose.COMPACT);
 		case YAML: return new MultiFormatStore(new InMemSpdxStore(), Format.YAML, Verbose.COMPACT);
-		case YML: return new MultiFormatStore(new InMemSpdxStore(), Format.YAML, Verbose.COMPACT);
 		default: throw new InvalidSPDXAnalysisException("Unsupported file type: "+fileType+".  Check back later.");
 		}
 	}
