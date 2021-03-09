@@ -104,12 +104,12 @@
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>spdx-rdf-store</artifactId>
-	  	<version>0.0.7</version>
+	  	<version>0.0.8-SNAPSHOT</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>spdx-jackson-store</artifactId>
-	  	<version>0.0.5</version>
+	  	<version>0.0.6-SNAPSHOT</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>org.apache.ws.xmlschema</groupId>
@@ -124,7 +124,7 @@
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>spdx-tagvalue-store</artifactId>
-	  	<version>0.0.5</version>
+	  	<version>0.0.6-SNAPSHOT</version>
 	  </dependency>
 	</dependencies>
     <build>
