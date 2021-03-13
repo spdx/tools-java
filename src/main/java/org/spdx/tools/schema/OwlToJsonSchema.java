@@ -2,7 +2,7 @@
  * Copyright (c) 2020 Source Auditor Inc.
  *
  * SPDX-License-Identifier: Apache-2.0
- * 
+ *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
  *   You may obtain a copy of the License at
@@ -44,10 +44,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  * @author Gary O'Neall
  *
  * Converts from RDF/OWL RDF/XML documents to JSON Schema draft 7
- * 
+ *
  */
 public class OwlToJsonSchema extends AbstractOwlRdfConverter {
-	
+
 	private static final String SCHEMA_VERSION_URI = "http://json-schema.org/draft-07/schema#";
 	private static final String RELATIONSHIP_TYPE = SpdxConstants.SPDX_NAMESPACE + SpdxConstants.CLASS_RELATIONSHIP;
 	static ObjectMapper jsonMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
@@ -90,15 +90,14 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 		OntClass relationshipClass = model.getOntClass(SpdxConstants.SPDX_NAMESPACE + SpdxConstants.CLASS_RELATIONSHIP);
 		Objects.requireNonNull(relationshipClass, "Missing SPDX Relationship class in OWL document");
 		docSchemaProperties.set("relationships", toArrayPropertySchema(relationshipClass, 0));
-		
+
 		properties.set("Document", documentClassSchema);
 		root.set("properties", properties);
 		return root;
 	}
-	
+
 	/**
 	 * @param ontClass
-	 * @param jsonMapper
 	 * @param min Minimum number of array items
 	 * @return JSON Schema of an array of item types represented by the ontClass
 	 */
@@ -116,7 +115,7 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 
 	/**
 	 * @param spdxClass RDF ontology class
-	 * @return JSON Schema 
+	 * @return JSON Schema
 	 */
 	private ObjectNode ontClassToJsonSchema(OntClass spdxClass) {
 		ObjectNode retval = jsonMapper.createObjectNode();
@@ -139,7 +138,7 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 			} else {
 				properties.set(checkConvertRenamedPropertyName(property.getLocalName()),	derivePropertySchema(property, restrictions, false));
 			}
-			
+
 		}
 		retval.set("properties", properties);
 		return retval;
