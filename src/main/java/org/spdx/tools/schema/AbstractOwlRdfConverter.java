@@ -433,7 +433,7 @@ public class AbstractOwlRdfConverter {
 	private Optional<Resource> findTypeInCollection(Resource first, Resource rest) {
 		if (Objects.nonNull(first) && first.isURIResource()) {
 			return Optional.of(first);
-		} else if (Objects.isNull(rest) || "http://www.w3.org/1999/02/22-rdf-syntax-ns#nil".equals(rest)) {
+		} else if (Objects.isNull(rest) || "http://www.w3.org/1999/02/22-rdf-syntax-ns#nil".equals(rest.getURI())) {
 			return Optional.empty();
 		} else {
 			return findTypeInCollection(rest.getPropertyResourceValue(firstResource),
