@@ -7,6 +7,10 @@ The Software Package Data Exchange (SPDX) specification is a standard format for
 These tools are published by the SPDX Workgroup
 see [http://spdx.org/](http://spdx.org/)
 
+# Code quality badges
+
+|   [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=tools-java&metric=bugs)](https://sonarcloud.io/dashboard?id=tools-java)    | [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=tools-java&metric=security_rating)](https://sonarcloud.io/dashboard?id=tools-java) | [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=tools-java&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=tools-java) | [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=tools-java&metric=sqale_index)](https://sonarcloud.io/dashboard?id=tools-java) |
+
 ## Getting Starting
 
 The SPDX Tool binaries can be downloaded from the [BinTray SPDX Tools Java](https://bintray.com/spdx/spdx-tools/tools-java) repo under the respective release.  The package is also available in [Maven Central](https://search.maven.org/artifact/org.spdx/tools-java) (organization org.spdx, artifact tools-java).
