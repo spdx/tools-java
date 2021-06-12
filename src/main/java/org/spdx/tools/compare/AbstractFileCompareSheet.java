@@ -207,11 +207,11 @@ public abstract class AbstractFileCompareSheet extends AbstractSheet {
 	 * @throws InvalidSPDXAnalysisException 
 	 */
 	private Optional<String> getNextFileName(List<List<SpdxFile>> files, int[] fileIndexes) throws InvalidSPDXAnalysisException {
-		Optional<String> retval = null;
+		Optional<String> retval = Optional.empty();
 		for (int i = 0; i < files.size(); i++) {
 			if (files.get(i).size() > fileIndexes[i]) {
 				Optional<String> fileName = files.get(i).get(fileIndexes[i]).getName();
-				if (retval == null || normalizedFileNameComparator.compare(retval, fileName) > 0) {
+				if (!retval.isPresent() || normalizedFileNameComparator.compare(retval, fileName) > 0) {
 					retval = fileName;
 				}
 			}

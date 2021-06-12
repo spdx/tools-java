@@ -16,6 +16,8 @@
 */
 package org.spdx.tools.compare;
 
+import java.util.Optional;
+
 import org.apache.poi.ss.usermodel.Workbook;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.SpdxFile;
@@ -48,10 +50,11 @@ public class FileCommentSheet extends AbstractFileCompareSheet {
 	 */
 	@Override
 	String getFileValue(SpdxFile spdxFile) throws InvalidSPDXAnalysisException {
-		if (!spdxFile.getComment().isPresent()) {
+	    Optional<String> comment = spdxFile.getComment();
+		if (!comment.isPresent()) {
 			return "";
 		} else {
-			return spdxFile.getComment().get();
+			return comment.get();
 		}
 	}
 

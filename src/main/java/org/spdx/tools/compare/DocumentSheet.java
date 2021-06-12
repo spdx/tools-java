@@ -18,6 +18,7 @@
 package org.spdx.tools.compare;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -251,8 +252,9 @@ public class DocumentSheet extends AbstractSheet {
 		// data rows
 		for (int i = 0; i < comparer.getNumSpdxDocs(); i++) {
 			cell = sheet.getRow(getFirstDataRow()+i+1).createCell(LICENSE_LIST_VERSION_COL);
-			if (comparer.getSpdxDoc(i).getCreationInfo().getLicenseListVersion().isPresent()) {
-				cell.setCellValue(comparer.getSpdxDoc(i).getCreationInfo().getLicenseListVersion().get());
+			Optional<String> licenseListVersion = comparer.getSpdxDoc(i).getCreationInfo().getLicenseListVersion();
+			if (licenseListVersion.isPresent()) {
+				cell.setCellValue(licenseListVersion.get());
 			}
 		}
 	}
@@ -313,8 +315,9 @@ public class DocumentSheet extends AbstractSheet {
 		// data rows
 		for (int i = 0; i < comparer.getNumSpdxDocs(); i++) {
 			cell = sheet.getRow(getFirstDataRow()+i+1).createCell(DOCUMENT_COMMENT_COL);
-			if (comparer.getSpdxDoc(i).getComment().isPresent()) {
-				cell.setCellValue(comparer.getSpdxDoc(i).getComment().get());
+			Optional<String> comment = comparer.getSpdxDoc(i).getComment();
+			if (comment.isPresent()) {
+				cell.setCellValue(comment.get());
 			}
 		}
 	}
@@ -335,8 +338,9 @@ public class DocumentSheet extends AbstractSheet {
 		// data rows
 		for (int i = 0; i < comparer.getNumSpdxDocs(); i++) {
 			cell = sheet.getRow(getFirstDataRow()+i+1).createCell(CREATOR_COMMENT_COL);
-			if (comparer.getSpdxDoc(i).getCreationInfo().getComment().isPresent()) {
-				cell.setCellValue(comparer.getSpdxDoc(i).getCreationInfo().getComment().get());
+			Optional<String> creatorComment = comparer.getSpdxDoc(i).getCreationInfo().getComment();
+			if (creatorComment.isPresent()) {
+				cell.setCellValue(creatorComment.get());
 			}
 			
 		}
@@ -390,8 +394,9 @@ public class DocumentSheet extends AbstractSheet {
 		// data rows
 		for (int i = 0; i < comparer.getNumSpdxDocs(); i++) {
 			cell = sheet.getRow(getFirstDataRow()+i+1).createCell(DOCUMENT_NAME_COL);
-			if (comparer.getSpdxDoc(i).getName().isPresent()) {
-				cell.setCellValue(comparer.getSpdxDoc(i).getName().get());
+			Optional<String> name = comparer.getSpdxDoc(i).getName();
+			if (name.isPresent()) {
+				cell.setCellValue(name.get());
 			}
 		}
 	}

@@ -344,73 +344,84 @@ public class PackageSheet extends AbstractSheet {
 		for (int i = 0; i < docs.size(); i++) {
 			SpdxPackage pkg = comparer.getDocPackage(docs.get(i));
 			if (pkg != null) {
-				if (pkg.getName().isPresent()) {
-					packageNameRow.createCell(FIRST_DOC_COL+i).setCellValue(pkg.getName().get());
+			    Optional<String> name = pkg.getName();
+				if (name.isPresent()) {
+					packageNameRow.createCell(FIRST_DOC_COL+i).setCellValue(name.get());
 				}
 				idRow.createCell(FIRST_DOC_COL+i).setCellValue(pkg.getId());
 				annotationsRow.createCell(FIRST_DOC_COL+i).setCellValue(CompareHelper.annotationsToString(pkg.getAnnotations()));
 				relationshipsRow.createCell(FIRST_DOC_COL+i).setCellValue(CompareHelper.relationshipsToString(pkg.getRelationships()));
-				if (pkg.getVersionInfo().isPresent()) {
-					versionRow.createCell(FIRST_DOC_COL+i).setCellValue(pkg.getVersionInfo().get());
+				Optional<String> version = pkg.getVersionInfo();
+				if (version.isPresent()) {
+					versionRow.createCell(FIRST_DOC_COL+i).setCellValue(version.get());
 				} else {
 					versionRow.createCell(FIRST_DOC_COL+i).setCellValue("");
 				}
-				if (pkg.getPackageFileName().isPresent()) {
-					fileNameRow.createCell(FIRST_DOC_COL+i).setCellValue(pkg.getPackageFileName().get());
+				Optional<String> packageFileName = pkg.getPackageFileName();
+				if (packageFileName.isPresent()) {
+					fileNameRow.createCell(FIRST_DOC_COL+i).setCellValue(packageFileName.get());
 				} else {
 					fileNameRow.createCell(FIRST_DOC_COL+i).setCellValue("");
 				}
-				if (pkg.getSupplier().isPresent()) {
-					supplierRow.createCell(FIRST_DOC_COL+i).setCellValue(pkg.getSupplier().get());
+				Optional<String> supplier = pkg.getSupplier();
+				if (supplier.isPresent()) {
+					supplierRow.createCell(FIRST_DOC_COL+i).setCellValue(supplier.get());
 				} else {
 					supplierRow.createCell(FIRST_DOC_COL+i).setCellValue("");
 				}
-				if (pkg.getOriginator().isPresent()) {
-					originatorRow.createCell(FIRST_DOC_COL+i).setCellValue(pkg.getOriginator().get());
+				Optional<String> originator = pkg.getOriginator();
+				if (originator.isPresent()) {
+					originatorRow.createCell(FIRST_DOC_COL+i).setCellValue(originator.get());
 				} else {
 					originatorRow.createCell(FIRST_DOC_COL+i).setCellValue("");
 				}
-				if (pkg.getDownloadLocation().isPresent()) {
-					downloadRow.createCell(FIRST_DOC_COL+i).setCellValue(pkg.getDownloadLocation().get());
+				Optional<String> downloadLocation = pkg.getDownloadLocation();
+				if (downloadLocation.isPresent()) {
+					downloadRow.createCell(FIRST_DOC_COL+i).setCellValue(downloadLocation.get());
 				} else {
 					downloadRow.createCell(FIRST_DOC_COL+i).setCellValue("");
 				}
 				Optional<SpdxPackageVerificationCode> verificationCode = pkg.getPackageVerificationCode();
 				if (verificationCode.isPresent()) {
-					verificationRow.createCell(FIRST_DOC_COL+i).setCellValue(pkg.getPackageVerificationCode().get().getValue());
-					verificationExcludedRow.createCell(FIRST_DOC_COL+i).setCellValue(exludeFilesToString(pkg.getPackageVerificationCode().get().getExcludedFileNames()));
+					verificationRow.createCell(FIRST_DOC_COL+i).setCellValue(verificationCode.get().getValue());
+					verificationExcludedRow.createCell(FIRST_DOC_COL+i).setCellValue(exludeFilesToString(verificationCode.get().getExcludedFileNames()));
 				} else {
 					verificationRow.createCell(FIRST_DOC_COL+i).setCellValue(NO_VALUE);
 					verificationExcludedRow.createCell(FIRST_DOC_COL+i).setCellValue(NO_VALUE);
 				}
 				checksumRow.createCell(FIRST_DOC_COL+i).setCellValue(CompareHelper.checksumsToString(pkg.getChecksums()));
-				if (pkg.getHomepage().isPresent()) {
-					homePageRow.createCell(FIRST_DOC_COL+i).setCellValue(pkg.getHomepage().get());
+				Optional<String> homePage = pkg.getHomepage();
+				if (homePage.isPresent()) {
+					homePageRow.createCell(FIRST_DOC_COL+i).setCellValue(homePage.get());
 				} else {
 					homePageRow.createCell(FIRST_DOC_COL+i).setCellValue("");
 				}
-				if (pkg.getSourceInfo().isPresent()) {
-					sourceInfoRow.createCell(FIRST_DOC_COL+i).setCellValue(pkg.getSourceInfo().get());
+				Optional<String> sourceInfo = pkg.getSourceInfo();
+				if (sourceInfo.isPresent()) {
+					sourceInfoRow.createCell(FIRST_DOC_COL+i).setCellValue(sourceInfo.get());
 				} else {
 					sourceInfoRow.createCell(FIRST_DOC_COL+i).setCellValue("");
 				}
 				concludedLicenseRow.createCell(FIRST_DOC_COL+i).setCellValue(pkg.getLicenseConcluded().toString());
 				licenseInfosFromFilesRow.createCell(FIRST_DOC_COL+i).setCellValue(CompareHelper.licenseInfosToString(pkg.getLicenseInfoFromFiles()));
 				declaredLicenseRow.createCell(FIRST_DOC_COL+i).setCellValue(pkg.getLicenseDeclared().toString());
-				if (pkg.getLicenseComments().isPresent()) {
-					licenseCommentRow.createCell(FIRST_DOC_COL+i).setCellValue(pkg.getLicenseComments().get());
+				Optional<String> licenseComments = pkg.getLicenseComments();
+				if (licenseComments.isPresent()) {
+					licenseCommentRow.createCell(FIRST_DOC_COL+i).setCellValue(licenseComments.get());
 				} else {
 					licenseCommentRow.createCell(FIRST_DOC_COL+i).setCellValue("");
 				}
 				copyrightRow.createCell(FIRST_DOC_COL+i).setCellValue(pkg.getCopyrightText());
 				attributionRow.createCell(FIRST_DOC_COL+i).setCellValue(CompareHelper.attributionsToString(pkg.getAttributionText()));
-				if (pkg.getSummary().isPresent()) {
-					summaryRow.createCell(FIRST_DOC_COL+i).setCellValue(pkg.getSummary().get());
+				Optional<String> summary = pkg.getSummary();
+				if (summary.isPresent()) {
+					summaryRow.createCell(FIRST_DOC_COL+i).setCellValue(summary.get());
 				} else {
 					summaryRow.createCell(FIRST_DOC_COL+i).setCellValue("");
 				}
-				if (pkg.getDescription().isPresent()) {
-					descriptionRow.createCell(FIRST_DOC_COL+i).setCellValue(pkg.getDescription().get());
+				Optional<String> description = pkg.getDescription();
+				if (description.isPresent()) {
+					descriptionRow.createCell(FIRST_DOC_COL+i).setCellValue(description.get());
 				} else {
 					descriptionRow.createCell(FIRST_DOC_COL+i).setCellValue("");
 				}

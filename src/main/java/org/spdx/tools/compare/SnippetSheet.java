@@ -231,8 +231,9 @@ public class SnippetSheet extends AbstractSheet {
 		for (int i = 0; i < docs.size(); i++) {
 			SpdxSnippet snippet = comparer.getDocSnippet(docs.get(i));
 			if (snippet != null) {
-				if (snippet.getName().isPresent()) {
-					snippetNameRow.createCell(FIRST_DOC_COL+i).setCellValue(snippet.getName().get());
+			    Optional<String> name = snippet.getName();
+				if (name.isPresent()) {
+					snippetNameRow.createCell(FIRST_DOC_COL+i).setCellValue(name.get());
 				} else {
 					snippetNameRow.createCell(FIRST_DOC_COL+i).setCellValue(NO_VALUE);
 				}
@@ -241,8 +242,9 @@ public class SnippetSheet extends AbstractSheet {
 				relationshipsRow.createCell(FIRST_DOC_COL+i).setCellValue(CompareHelper.relationshipsToString(snippet.getRelationships()));
 				concludedLicenseRow.createCell(FIRST_DOC_COL+i).setCellValue(snippet.getLicenseConcluded().toString());
 				licenseInfosFromFilesRow.createCell(FIRST_DOC_COL+i).setCellValue(CompareHelper.licenseInfosToString(snippet.getLicenseInfoFromFiles()));
-				if (snippet.getLicenseComments().isPresent()) {
-					licenseCommentRow.createCell(FIRST_DOC_COL+i).setCellValue(snippet.getLicenseComments().get());
+				Optional<String> licenseComments = snippet.getLicenseComments();
+				if (licenseComments.isPresent()) {
+					licenseCommentRow.createCell(FIRST_DOC_COL+i).setCellValue(licenseComments.get());
 				} else {
 					licenseCommentRow.createCell(FIRST_DOC_COL+i).setCellValue("");
 				}
