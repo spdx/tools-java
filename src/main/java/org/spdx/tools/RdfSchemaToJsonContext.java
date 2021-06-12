@@ -83,6 +83,10 @@ public class RdfSchemaToJsonContext {
 				}
 			}
 		}
+		if (Objects.isNull(owlToJsonContext)) {
+		    System.err.println("Unable to load ontology from file "+fromFile.getName());
+		    return;
+		}
 		ObjectNode context = owlToJsonContext.convertToContext();
 		OutputStream os = null;
 		try {
