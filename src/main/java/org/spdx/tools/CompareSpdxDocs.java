@@ -24,6 +24,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.SpdxDocument;
 import org.spdx.spreadsheetstore.SpreadsheetException;
@@ -44,6 +46,7 @@ public class CompareSpdxDocs {
 	static final int MIN_ARGS = 3;
 	static final int MAX_ARGS = 14;
 	static final int ERROR_STATUS = 1;
+	static final Logger logger = LoggerFactory.getLogger(CompareSpdxDocs.class);
 
 
 	/**
@@ -116,7 +119,7 @@ public class CompareSpdxDocs {
 				try {
 					outSheet.close();
 				} catch (SpreadsheetException e) {
-					throw new OnlineToolException("Warning - error closing spreadsheet: "+e.getMessage());
+					logger.warn("Warning - error closing spreadsheet: "+e.getMessage());
 				}
 			}
 		}
