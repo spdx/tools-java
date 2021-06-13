@@ -31,6 +31,7 @@ import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.spdx.tools.schema.OwlToJsonSchema;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -88,10 +89,10 @@ public class RdfSchemaToJsonSchema {
 		ObjectNode root = owlToJson.convertToJsonSchema();
 		ObjectMapper jsonMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 
-		OutputStream os = null;
+		JsonGenerator jsonGenerator = null;
 		try {
-			os = new FileOutputStream(toFile);
-			jsonMapper.writeTree(jsonMapper.getFactory().createGenerator(os).useDefaultPrettyPrinter(), 
+		    jsonGenerator = jsonMapper.getFactory().createGenerator(new FileOutputStream(toFile));
+			jsonMapper.writeTree(jsonGenerator.useDefaultPrettyPrinter(), 
 					root);
 		} catch (JsonProcessingException e) {
 			System.err.println("JSON error "+e.getMessage());
@@ -107,9 +108,9 @@ public class RdfSchemaToJsonSchema {
 					System.err.println("Error closing input file stream: "+e.getMessage());
 				}
 			}
-			if (Objects.nonNull(os)) {
+			if (Objects.nonNull(jsonGenerator)) {
 				try {
-					os.close();
+				    jsonGenerator.close();
 				} catch (IOException e) {
 					System.err.println("Error closing output file stream: "+e.getMessage());
 				}
