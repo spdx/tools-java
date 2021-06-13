@@ -45,9 +45,9 @@
 	</ciManagement>
     <distributionManagement>
       <repository>
-        <id>bintray-spdx-spdx-tools</id>
+        <id>ossrh</id>
         <name>spdx-spdx-tools</name>
-        <url>https://api.bintray.com/maven/spdx/spdx-tools/tools-java/;publish=1</url>
+        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
       </repository>
 	</distributionManagement>
     <properties>
