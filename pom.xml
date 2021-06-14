@@ -4,7 +4,7 @@
 	
 	<groupId>org.spdx</groupId>
 	<artifactId>tools-java</artifactId>
-	<version>0.0.7-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 	
 	<name>tools-java</name>
@@ -45,13 +45,16 @@
 	</ciManagement>
     <distributionManagement>
       <repository>
-        <id>bintray-spdx-spdx-tools</id>
+        <id>ossrh</id>
         <name>spdx-spdx-tools</name>
-        <url>https://api.bintray.com/maven/spdx/spdx-tools/tools-java/;publish=1</url>
+        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
       </repository>
 	</distributionManagement>
     <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	  <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+	  <sonar.organization>spdx</sonar.organization>
+	  <sonar.projectKey>tools-java</sonar.projectKey>
     </properties>
 	<profiles>
 		<profile>
@@ -99,17 +102,17 @@
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>java-spdx-library</artifactId>
-	  	<version>1.0.3</version>
+	  	<version>1.0.6</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>spdx-rdf-store</artifactId>
-	  	<version>1.0.0</version>
+	  	<version>1.0.2</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>spdx-jackson-store</artifactId>
-	  	<version>0.0.5</version>
+	  	<version>1.0.0</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>org.apache.ws.xmlschema</groupId>
@@ -119,12 +122,12 @@
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>spdx-spreadsheet-store</artifactId>
-	  	<version>0.0.5</version>
+	  	<version>1.0.0</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>spdx-tagvalue-store</artifactId>
-	  	<version>0.0.5</version>
+	  	<version>1.0.0</version>
 	  </dependency>
 	</dependencies>
     <build>

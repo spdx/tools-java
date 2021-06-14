@@ -23,6 +23,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Objects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.ModelCopyManager;
 import org.spdx.library.SpdxConstants;
@@ -41,7 +43,8 @@ import org.spdx.tools.SpdxToolsHelper.SerFileType;
  *
  */
 public class SpdxConverter {
-	
+    static final Logger logger = LoggerFactory.getLogger(SpdxConverter.class);
+    
 	static final int ERROR_STATUS = 1;
 	
 	static final int MIN_ARGS = 2;
@@ -178,14 +181,14 @@ public class SpdxConverter {
 				try {
 					input.close();
 				} catch (IOException e) {
-					throw new SpdxConverterException("Error closing input file: "+e.getMessage());
+					logger.warn("Error closing input file: "+e.getMessage());
 				}
 			}
 			if (Objects.nonNull(output)) {
 				try {
 					output.close();
 				} catch (IOException e) {
-					throw new SpdxConverterException("Error closing output file: "+e.getMessage());
+					logger.warn("Error closing output file: "+e.getMessage());
 				}
 			}
 		}

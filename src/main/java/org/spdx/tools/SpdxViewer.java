@@ -19,6 +19,7 @@ package org.spdx.tools;
 
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 
 import org.spdx.library.InvalidSPDXAnalysisException;
@@ -57,17 +58,19 @@ public class SpdxViewer {
 			System.out.printf("Warning: Extra arguments will be ignored");
 		}
 		SpdxDocument doc = null;
-		RdfStore store = new RdfStore();
+		RdfStore store = null;
+		PrintWriter writer = null;
 		try {
-			String documentUri = store.loadModelFromFile(args[0], false);
-			doc = new SpdxDocument(store, documentUri, null, false);
-		} catch (Exception ex) {
-			System.out
-					.print("Error creating SPDX Document: " + ex.getMessage());
-			return;
-		}
-		PrintWriter writer = new PrintWriter(System.out);
-		try {
+	      store = new RdfStore();    
+	      try {
+	            String documentUri = store.loadModelFromFile(args[0], false);
+	            doc = new SpdxDocument(store, documentUri, null, false);
+	        } catch (Exception ex) {
+	            System.out
+	                    .print("Error creating SPDX Document: " + ex.getMessage());
+	            return;
+	        }
+	        writer = new PrintWriter(System.out);
 			List<String> verify = doc.verify();
 			if (verify.size() > 0) {
 				System.out.println("This SPDX Document is not valid due to:");
@@ -88,7 +91,16 @@ public class SpdxViewer {
 			System.out.print("Unexpected error displaying SPDX Document: "
 					+ e.getMessage());
 		} finally {
-			writer.close();
+		    if (Objects.nonNull(writer)) {
+		        writer.close();
+		    }
+		    if (Objects.nonNull(store)) {
+    			try {
+                    store.close();
+                } catch (Exception e) {
+                    System.out.println("Warning - unable to close RDF store: "+e.getMessage());
+                }
+		    }
 		}
 	}
 }

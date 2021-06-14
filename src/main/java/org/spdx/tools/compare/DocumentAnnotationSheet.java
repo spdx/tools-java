@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -161,21 +162,23 @@ public class DocumentAnnotationSheet extends AbstractSheet {
 		while (!allAnnotationsExhausted(annotations, annotationIndexes)) {
 			Row currentRow = this.addRow();
 			Annotation nextAnnotation = getNextAnnotation(annotations, annotationIndexes);
-			Cell annotatorCell = currentRow.createCell(ANNOTATOR_COL);
-			annotatorCell.setCellValue(nextAnnotation.getAnnotator());
-			Cell typeCell = currentRow.createCell(TYPE_COL);
-			typeCell.setCellValue(nextAnnotation.getAnnotationType().toString());
-			Cell commentCell = currentRow.createCell(COMMENT_COL);
-			commentCell.setCellValue(nextAnnotation.getComment());
-			for (int i = 0; i < annotations.length; i++) {
-				if (annotations[i].length > annotationIndexes[i]) {
-					Annotation compareAnnotation = annotations[i][annotationIndexes[i]];
-					if (annotationComparator.compare(nextAnnotation, compareAnnotation) == 0) {
-						Cell dateCell = currentRow.createCell(FIRST_DATE_COL+i);
-						dateCell.setCellValue(annotations[i][annotationIndexes[i]].getAnnotationDate());
-						annotationIndexes[i]++;
-					}
-				}
+			if (Objects.nonNull(nextAnnotation)) {
+			    Cell annotatorCell = currentRow.createCell(ANNOTATOR_COL);
+	            annotatorCell.setCellValue(nextAnnotation.getAnnotator());
+	            Cell typeCell = currentRow.createCell(TYPE_COL);
+	            typeCell.setCellValue(nextAnnotation.getAnnotationType().toString());
+	            Cell commentCell = currentRow.createCell(COMMENT_COL);
+	            commentCell.setCellValue(nextAnnotation.getComment());
+	            for (int i = 0; i < annotations.length; i++) {
+	                if (annotations[i].length > annotationIndexes[i]) {
+	                    Annotation compareAnnotation = annotations[i][annotationIndexes[i]];
+	                    if (annotationComparator.compare(nextAnnotation, compareAnnotation) == 0) {
+	                        Cell dateCell = currentRow.createCell(FIRST_DATE_COL+i);
+	                        dateCell.setCellValue(annotations[i][annotationIndexes[i]].getAnnotationDate());
+	                        annotationIndexes[i]++;
+	                    }
+	                }
+	            }
 			}
 		}
 	}

@@ -31,6 +31,7 @@ import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.spdx.tools.schema.OwlToJsonContext;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -75,7 +76,7 @@ public class RdfSchemaToJsonContext {
 			System.err.println("File not found for "+fromFile.getName());
 			return;
 		} finally {
-			if (Objects.nonNull(is)) {
+			if (is != null) {
 				try {
 					is.close();
 				} catch (IOException e) {
@@ -83,11 +84,15 @@ public class RdfSchemaToJsonContext {
 				}
 			}
 		}
+		if (Objects.isNull(owlToJsonContext)) {
+		    System.err.println("Unable to load ontology from file "+fromFile.getName());
+		    return;
+		}
 		ObjectNode context = owlToJsonContext.convertToContext();
-		OutputStream os = null;
+		JsonGenerator jsonGenerator = null;
 		try {
-			os = new FileOutputStream(toFile);
-			OwlToJsonContext.jsonMapper.writeTree(OwlToJsonContext.jsonMapper.getFactory().createGenerator(os).useDefaultPrettyPrinter(), 
+			jsonGenerator = OwlToJsonContext.jsonMapper.getFactory().createGenerator(new FileOutputStream(toFile));
+			OwlToJsonContext.jsonMapper.writeTree(jsonGenerator.useDefaultPrettyPrinter(), 
 					context);
 		} catch (FileNotFoundException e) {
 			System.err.println("File not found for "+fromFile.getName());
@@ -99,9 +104,9 @@ public class RdfSchemaToJsonContext {
 			System.err.println("I/O error: "+e.getMessage());
 			return;
 		} finally {
-			if (Objects.nonNull(os)) {
+			if (Objects.nonNull(jsonGenerator)) {
 				try {
-					os.close();
+				    jsonGenerator.close();
 				} catch (IOException e) {
 					System.err.println("Error closing output file stream: "+e.getMessage());
 				}

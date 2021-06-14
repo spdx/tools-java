@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -28,6 +29,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.spdx.library.InvalidSPDXAnalysisException;
+import org.spdx.library.model.Checksum;
 import org.spdx.library.model.ExternalDocumentRef;
 import org.spdx.utility.compare.SpdxCompareException;
 import org.spdx.utility.compare.SpdxComparer;
@@ -59,14 +61,15 @@ public class ExternalReferencesSheet extends AbstractSheet {
 					try {
 						retval = r1.getSpdxDocumentNamespace().compareTo((r2.getSpdxDocumentNamespace()));
 						if (retval == 0) {
-								if (r1.getChecksum().isPresent() && !r2.getChecksum().isPresent()) {
-									return 1;
-								} else if (r2.getChecksum().isPresent() && !r1.getChecksum().isPresent()) {
-									return -1;
-								} else {
-									return r1.getChecksum().get().getValue().compareTo(r2.getChecksum().get().getValue());
-								}
-	
+						    Optional<Checksum> checksum1 = r1.getChecksum();
+						    Optional<Checksum> checksum2 = r2.getChecksum();
+							if (checksum1.isPresent() && !checksum2.isPresent()) {
+								return 1;
+							} else if (checksum2.isPresent() && !checksum1.isPresent()) {
+								return -1;
+							} else {
+								return checksum1.get().getValue().compareTo(checksum2.get().getValue());
+							}
 						} else {
 							return retval;
 						}
@@ -165,22 +168,24 @@ public class ExternalReferencesSheet extends AbstractSheet {
 		while (!allExternalRefsExhausted(externalRefs, refIndexes)) {
 			Row currentRow = this.addRow();
 			ExternalDocumentRef nextRef = getNextExternalRef(externalRefs, refIndexes);
-			Cell namespaceCell = currentRow.createCell(NAMESPACE_COL);
-			namespaceCell.setCellValue(nextRef.getSpdxDocumentNamespace());
-			Cell checksumCell = currentRow.createCell(CHECKSUM_COL);
-			checksumCell.setCellValue(CompareHelper.checksumToString(nextRef.getChecksum()));
-			for (int i = 0; i < externalRefs.length; i++) {
-				if (externalRefs[i].length > refIndexes[i]) {
-					ExternalDocumentRef compareRef = externalRefs[i][refIndexes[i]];
-                    if (Objects.equals(nextRef.getSpdxDocumentNamespace(),
-							compareRef.getSpdxDocumentNamespace()) &&
-							CompareHelper.equivalent(nextRef.getChecksum(),
-									compareRef.getChecksum())) {
-						Cell docIdCell = currentRow.createCell(FIRST_DOC_ID_COL+i);
-						docIdCell.setCellValue(externalRefs[i][refIndexes[i]].getId());
-						refIndexes[i]++;
-					}
-				}
+			if (Objects.nonNull(nextRef)) {
+			    Cell namespaceCell = currentRow.createCell(NAMESPACE_COL);
+	            namespaceCell.setCellValue(nextRef.getSpdxDocumentNamespace());
+	            Cell checksumCell = currentRow.createCell(CHECKSUM_COL);
+	            checksumCell.setCellValue(CompareHelper.checksumToString(nextRef.getChecksum()));
+	            for (int i = 0; i < externalRefs.length; i++) {
+	                if (externalRefs[i].length > refIndexes[i]) {
+	                    ExternalDocumentRef compareRef = externalRefs[i][refIndexes[i]];
+	                    if (Objects.equals(nextRef.getSpdxDocumentNamespace(),
+	                            compareRef.getSpdxDocumentNamespace()) &&
+	                            CompareHelper.equivalent(nextRef.getChecksum(),
+	                                    compareRef.getChecksum())) {
+	                        Cell docIdCell = currentRow.createCell(FIRST_DOC_ID_COL+i);
+	                        docIdCell.setCellValue(externalRefs[i][refIndexes[i]].getId());
+	                        refIndexes[i]++;
+	                    }
+	                }
+	            }
 			}
 		}
 	}

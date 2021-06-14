@@ -75,7 +75,7 @@ public class RdfSchemaToXsd {
 			System.err.println("File not found for "+fromFile.getName());
 			return;
 		} finally {
-			if (Objects.nonNull(is)) {
+			if (is != null) {
 				try {
 					is.close();
 				} catch (IOException e) {

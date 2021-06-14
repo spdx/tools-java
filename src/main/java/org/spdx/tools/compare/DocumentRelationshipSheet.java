@@ -20,6 +20,8 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -28,6 +30,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.Relationship;
+import org.spdx.library.model.SpdxElement;
 import org.spdx.utility.compare.SpdxCompareException;
 import org.spdx.utility.compare.SpdxComparer;
 
@@ -58,18 +61,24 @@ public class DocumentRelationshipSheet extends AbstractSheet {
 						int retval = r1.getRelationshipType().toString().compareTo(r2.getRelationshipType().toString());
 						if (retval != 0) {
 							return retval;
-						} else if (r1.getRelatedSpdxElement().isPresent() && !r2.getRelatedSpdxElement().isPresent()) {
+						}
+						Optional<SpdxElement> relatedElement1 = r1.getRelatedSpdxElement();
+						Optional<SpdxElement> relatedElement2 = r2.getRelatedSpdxElement();
+						if (relatedElement1.isPresent() && !relatedElement2.isPresent()) {
 							return 1;
-						} else if (!r1.getRelatedSpdxElement().isPresent() && r2.getRelatedSpdxElement().isPresent()) {
+						} else if (!relatedElement1.isPresent() && relatedElement2.isPresent()) {
 							return -1;
-						} else if (r1.getRelatedSpdxElement().get().equivalent(r2.getRelatedSpdxElement().get())) {
+						} else if (relatedElement1.get().equivalent(relatedElement2.get())) {
 							return 0;
-						} else if (r1.getRelatedSpdxElement().get().getName().isPresent() &&
-								r2.getRelatedSpdxElement().get().getName().isPresent()) {
-							return r1.getRelatedSpdxElement().get().getName().get().compareTo(
-									r2.getRelatedSpdxElement().get().getName().get());
+						}
+						Optional<String> name1 = relatedElement1.get().getName();
+						Optional<String> name2 = relatedElement2.get().getName();
+						if (name1.isPresent() &&
+								name2.isPresent()) {
+							return name1.get().compareTo(
+									name2.get());
 						} else {
-							return r1.getRelatedSpdxElement().get().getId().compareTo(r2.getRelatedSpdxElement().get().getId());
+							return relatedElement1.get().getId().compareTo(relatedElement2.get().getId());
 						}
 					} else {
 						return 1;
@@ -149,17 +158,19 @@ public class DocumentRelationshipSheet extends AbstractSheet {
 		while (!allRelationshipsExhausted(relationships, relationshipsIndexes)) {
 			Row currentRow = this.addRow();
 			Relationship nextRelationship = getNexRelationship(relationships, relationshipsIndexes);
-			Cell typeCell = currentRow.createCell(TYPE_COL);
-			typeCell.setCellValue(nextRelationship.getRelationshipType().toString());
-			for (int i = 0; i < relationships.length; i++) {
-				if (relationships[i].length > relationshipsIndexes[i]) {
-					Relationship compareRelationship = relationships[i][relationshipsIndexes[i]];
-					if (relationshipComparator.compare(nextRelationship, compareRelationship) == 0) {
-						Cell relationshipCell = currentRow.createCell(FIRST_RELATIONSHIP_COL+i);
-						relationshipCell.setCellValue(CompareHelper.relationshipToString(relationships[i][relationshipsIndexes[i]]));
-						relationshipsIndexes[i]++;
-					}
-				}
+			if (Objects.nonNull(nextRelationship)) {
+			    Cell typeCell = currentRow.createCell(TYPE_COL);
+	            typeCell.setCellValue(nextRelationship.getRelationshipType().toString());
+	            for (int i = 0; i < relationships.length; i++) {
+	                if (relationships[i].length > relationshipsIndexes[i]) {
+	                    Relationship compareRelationship = relationships[i][relationshipsIndexes[i]];
+	                    if (relationshipComparator.compare(nextRelationship, compareRelationship) == 0) {
+	                        Cell relationshipCell = currentRow.createCell(FIRST_RELATIONSHIP_COL+i);
+	                        relationshipCell.setCellValue(CompareHelper.relationshipToString(relationships[i][relationshipsIndexes[i]]));
+	                        relationshipsIndexes[i]++;
+	                    }
+	                }
+	            }
 			}
 		}
 	}

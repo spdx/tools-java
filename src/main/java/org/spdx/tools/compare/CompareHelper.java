@@ -186,19 +186,22 @@ public class CompareHelper {
 		}
 		StringBuilder sb = new StringBuilder(relationship.getRelationshipType().toString());
 		sb.append(":");
-		if (!relationship.getRelatedSpdxElement().isPresent()) {
+		Optional<SpdxElement> relatedElement = relationship.getRelatedSpdxElement();
+		if (!relatedElement.isPresent()) {
 			sb.append("?NULL");
 		} else {
-			if (relationship.getRelatedSpdxElement().get().getName().isPresent()) {
+		    Optional<String> relatedElementName = relatedElement.get().getName();
+			if (relatedElementName.isPresent()) {
 				sb.append('[');
-				sb.append(relationship.getRelatedSpdxElement().get().getName().get());
+				sb.append(relatedElementName.get());
 				sb.append(']');
 			}
-			sb.append(relationship.getRelatedSpdxElement().get().getId());
+			sb.append(relatedElement.get().getId());
 		}
-		if (relationship.getComment().isPresent() && !relationship.getComment().get().isEmpty()) {
+		Optional<String> comment = relationship.getComment();
+		if (comment.isPresent() && !comment.get().isEmpty()) {
 			sb.append('(');
-			sb.append(relationship.getComment().get());
+			sb.append(comment.get());
 			sb.append(')');
 		}
 		return sb.toString();
@@ -259,9 +262,10 @@ public class CompareHelper {
 			return "[UNKNOWNID]";
 		} else {
 			StringBuilder sb = new StringBuilder(element.getId());
-			if (element.getName().isPresent()) {
+			Optional<String> name = element.getName();
+			if (name.isPresent()) {
 				sb.append('(');
-				sb.append(element.getName().get());
+				sb.append(name.get());
 				sb.append(')');
 			}
 			return sb.toString();
@@ -348,8 +352,9 @@ public class CompareHelper {
 			referenceLocator = "[MISSING]";
 		}
 		String retval = category + " " + referenceType + " " + referenceLocator;
-		if (externalRef.getComment().isPresent() && !externalRef.getComment().get().isEmpty()) {
-			retval = retval + "(" + externalRef.getComment() + ")";
+		Optional<String> comment = externalRef.getComment();
+		if (comment.isPresent() && !comment.get().isEmpty()) {
+			retval = retval + "(" + comment.get() + ")";
 		}
 		return retval;
 	}
