@@ -13,7 +13,7 @@ see [http://spdx.org/](http://spdx.org/)
 
 ## Getting Starting
 
-The SPDX Tool binaries can be downloaded from the [BinTray SPDX Tools Java](https://bintray.com/spdx/spdx-tools/tools-java) repo under the respective release.  The package is also available in [Maven Central](https://search.maven.org/artifact/org.spdx/tools-java) (organization org.spdx, artifact tools-java).
+The SPDX Tool binaries can be downloaded from the [releases page](https://github.com/spdx/tools-java/releases) under the respective release.  The package is also available in [Maven Central](https://search.maven.org/artifact/org.spdx/tools-java) (organization org.spdx, artifact tools-java).
 
 See the Syntax section below for the commands available.
 
