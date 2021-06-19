@@ -4,7 +4,7 @@
 	
 	<groupId>org.spdx</groupId>
 	<artifactId>tools-java</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.1</version>
 	<packaging>jar</packaging>
 	
 	<name>tools-java</name>
@@ -112,7 +112,7 @@
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>spdx-jackson-store</artifactId>
-	  	<version>1.0.0</version>
+	  	<version>1.0.1</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>org.apache.ws.xmlschema</groupId>
@@ -127,7 +127,7 @@
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>spdx-tagvalue-store</artifactId>
-	  	<version>1.0.0</version>
+	  	<version>1.0.1</version>
 	  </dependency>
 	</dependencies>
     <build>
