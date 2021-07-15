@@ -173,7 +173,7 @@ public class SpdxConverter {
 		} catch (Exception ex) {
 			String msg = "Error converting SPDX file: "+ex.getClass().toString();
 			if (Objects.nonNull(ex.getMessage())) {
-				msg = msg + ex.getMessage();
+				msg = msg + " " + ex.getMessage();
 			}
 			throw new SpdxConverterException(msg, ex);
 		} finally {
