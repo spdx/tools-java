@@ -102,7 +102,7 @@
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>java-spdx-library</artifactId>
-	  	<version>1.0.6</version>
+	  	<version>1.0.7</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
@@ -122,12 +122,12 @@
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>spdx-spreadsheet-store</artifactId>
-	  	<version>1.0.0</version>
+	  	<version>1.0.1</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>spdx-tagvalue-store</artifactId>
-	  	<version>1.0.1</version>
+	  	<version>1.0.2</version>
 	  </dependency>
 	</dependencies>
     <build>
