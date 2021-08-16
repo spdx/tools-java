@@ -75,23 +75,27 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 		ObjectNode properties = jsonMapper.createObjectNode();
 		OntClass docClass = model.getOntClass(SpdxConstants.SPDX_NAMESPACE + SpdxConstants.CLASS_SPDX_DOCUMENT);
 		Objects.requireNonNull(docClass, "Missing SpdxDocument class in OWL document");
-		ObjectNode documentClassSchema = ontClassToJsonSchema(docClass);
+		addClassProperties(docClass, properties);
 		// Add in the extra properties
-		ObjectNode docSchemaProperties = (ObjectNode)documentClassSchema.get("properties");
+		ObjectNode namespaceSchemaProperties = jsonMapper.createObjectNode();
+		namespaceSchemaProperties.put("type", "string");
+		namespaceSchemaProperties.put("minItems", 1);
+		namespaceSchemaProperties.put("maxItems", 1);
+		properties.set(SpdxConstants.PROP_DOCUMENT_NAMESPACE, namespaceSchemaProperties);
+        
 		OntClass packageClass = model.getOntClass(SpdxConstants.SPDX_NAMESPACE + SpdxConstants.CLASS_SPDX_PACKAGE);
 		Objects.requireNonNull(packageClass, "Missing SPDX Package class in OWL document");
-		docSchemaProperties.set("packages", toArrayPropertySchema(packageClass, 0));
+		properties.set("packages", toArrayPropertySchema(packageClass, 0));
 		OntClass fileClass = model.getOntClass(SpdxConstants.SPDX_NAMESPACE + SpdxConstants.CLASS_SPDX_FILE);
 		Objects.requireNonNull(fileClass, "Missing SPDX File class in OWL document");
-		docSchemaProperties.set("files", toArrayPropertySchema(fileClass, 0));
+		properties.set("files", toArrayPropertySchema(fileClass, 0));
 		OntClass snippetClass = model.getOntClass(SpdxConstants.SPDX_NAMESPACE + SpdxConstants.CLASS_SPDX_SNIPPET);
 		Objects.requireNonNull(snippetClass, "Missing SPDX Snippet class in OWL document");
-		docSchemaProperties.set("snippets", toArrayPropertySchema(snippetClass, 0));
+		properties.set("snippets", toArrayPropertySchema(snippetClass, 0));
 		OntClass relationshipClass = model.getOntClass(SpdxConstants.SPDX_NAMESPACE + SpdxConstants.CLASS_RELATIONSHIP);
 		Objects.requireNonNull(relationshipClass, "Missing SPDX Relationship class in OWL document");
-		docSchemaProperties.set("relationships", toArrayPropertySchema(relationshipClass, 0));
+		properties.set("relationships", toArrayPropertySchema(relationshipClass, 0));
 
-		properties.set("Document", documentClassSchema);
 		root.set("properties", properties);
 		return root;
 	}
@@ -114,13 +118,24 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 	}
 
 	/**
+     * @param ontClass Ontology class
+     * @return a schema node representing the object
+     */
+    private ObjectNode ontClassToJsonSchema(OntClass ontClass) {
+        ObjectNode retval = jsonMapper.createObjectNode();
+        retval.put("type", "object");
+        ObjectNode properties = jsonMapper.createObjectNode();
+        addClassProperties(ontClass, properties);
+        return retval;
+    }
+
+    /**
+	 * Adds properties from the RDF ontology class the list jsonSchemaProperties
 	 * @param spdxClass RDF ontology class
+	 * @param jsonSchemaProperties properties for the top level JSON schema
 	 * @return JSON Schema
 	 */
-	private ObjectNode ontClassToJsonSchema(OntClass spdxClass) {
-		ObjectNode retval = jsonMapper.createObjectNode();
-		retval.put("type", "object");
-		ObjectNode properties = jsonMapper.createObjectNode();
+	private void addClassProperties(OntClass spdxClass, ObjectNode jsonSchemaProperties) {
 		Collection<OntProperty> ontProperties = propertiesFromClassRestrictions(spdxClass);
 		for (OntProperty property:ontProperties) {
 			if (SKIPPED_PROPERTIES.contains(property.getURI())) {
@@ -132,19 +147,17 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 				continue;
 			}
 			if (restrictions.isListProperty()) {
-				properties.set(MultiFormatStore.propertyNameToCollectionPropertyName(
+			    jsonSchemaProperties.set(MultiFormatStore.propertyNameToCollectionPropertyName(
 						checkConvertRenamedPropertyName(property.getLocalName())),
 						derivePropertySchema(property, restrictions, true));
 			} else {
-				properties.set(checkConvertRenamedPropertyName(property.getLocalName()),	derivePropertySchema(property, restrictions, false));
+			    jsonSchemaProperties.set(checkConvertRenamedPropertyName(property.getLocalName()), derivePropertySchema(property, restrictions, false));
 			}
 
 		}
-		retval.set("properties", properties);
-		return retval;
 	}
 
-	/**
+    /**
 	 * Derive the schema for a property based on the property restrictions
 	 * @param property property for the schema
 	 * @param restrictions OWL restrictions for the property
