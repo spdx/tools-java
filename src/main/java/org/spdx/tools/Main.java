@@ -31,7 +31,9 @@ import org.spdx.library.model.license.ListedLicenses;
  */
 public class Main {
 
-	/**
+	private static final String CURRENT_TOOL_VERSION = "1.0.3";
+
+    /**
 	 * @param args args[0] is the name of the tools with the remaining args being the tool parameters
 	 */
 	public static void main(String[] args) {
@@ -53,7 +55,7 @@ public class Main {
 		} else if ("GenerateVerificationCode".equals(spdxTool)) {
 			GenerateVerificationCode.main(args);
 		} else if ("Version".equals(spdxTool)) {
-			System.out.println("SPDX Tool Version: "+Version.CURRENT_IMPLEMENTATION_VERSION +
+			System.out.println("SPDX Tool Version: "+CURRENT_TOOL_VERSION +
 					"; Specification Version: "+Version.CURRENT_SPDX_VERSION +
 					"; License List Version: "+ListedLicenses.getListedLicenses().getLicenseListVersion());
 		} else if ("MatchingStandardLicenses".equals(spdxTool)) {

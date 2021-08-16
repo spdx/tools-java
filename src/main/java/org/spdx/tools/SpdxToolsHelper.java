@@ -113,7 +113,7 @@ public class SpdxToolsHelper {
 
 	/**
 	 * @param str
-	 * @return the file typbe based on the file extension or string
+	 * @return the file type based on the file extension or string
 	 */
 	public static SerFileType strToFileType(String str) {
 		String strFileType = str.toUpperCase().trim();
