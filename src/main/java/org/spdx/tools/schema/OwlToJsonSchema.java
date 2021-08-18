@@ -18,7 +18,10 @@
 package org.spdx.tools.schema;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
@@ -51,6 +54,17 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 	private static final String SCHEMA_VERSION_URI = "http://json-schema.org/draft-07/schema#";
 	private static final String RELATIONSHIP_TYPE = SpdxConstants.SPDX_NAMESPACE + SpdxConstants.CLASS_RELATIONSHIP;
 	static ObjectMapper jsonMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+	private static final Collection<String> USES_SPDXIDS;
+	static {
+	    Set<String> spdxids = new HashSet<>();
+	    spdxids.add(SpdxConstants.CLASS_SPDX_DOCUMENT);
+	    spdxids.add(SpdxConstants.CLASS_SPDX_ELEMENT);
+	    spdxids.add(SpdxConstants.CLASS_SPDX_FILE);
+	    spdxids.add(SpdxConstants.CLASS_SPDX_ITEM);
+	    spdxids.add(SpdxConstants.CLASS_SPDX_PACKAGE);
+	    spdxids.add(SpdxConstants.CLASS_SPDX_SNIPPET);
+	    USES_SPDXIDS = Collections.unmodifiableCollection(spdxids);
+	}
 
 	public OwlToJsonSchema(OntModel model) {
 		super(model);
@@ -136,6 +150,13 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 	 * @return JSON Schema
 	 */
 	private void addClassProperties(OntClass spdxClass, ObjectNode jsonSchemaProperties) {
+        if (USES_SPDXIDS.contains(spdxClass.getLocalName())) {
+            ObjectNode idProperties = jsonMapper.createObjectNode();
+            idProperties.put("type", "string");
+            idProperties.put("minItems", 1);
+            idProperties.put("maxItems", 1);
+            jsonSchemaProperties.set(SpdxConstants.SPDX_IDENTIFIER, idProperties);
+        }
 		Collection<OntProperty> ontProperties = propertiesFromClassRestrictions(spdxClass);
 		for (OntProperty property:ontProperties) {
 			if (SKIPPED_PROPERTIES.contains(property.getURI())) {
