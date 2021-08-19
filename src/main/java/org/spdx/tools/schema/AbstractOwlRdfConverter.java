@@ -35,6 +35,7 @@ import org.apache.jena.ontology.OntProperty;
 import org.apache.jena.ontology.OntResource;
 import org.apache.jena.ontology.Ontology;
 import org.apache.jena.ontology.Restriction;
+import org.apache.jena.ontology.UnionClass;
 import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
@@ -126,7 +127,6 @@ public class AbstractOwlRdfConverter {
 							}
 						}
 					}
-					
 				} else {
 					// Check for enumeration types as a direct restriction
 					NodeIterator hasValueIter = r.listPropertyValues(hasValueProperty);
@@ -219,7 +219,17 @@ public class AbstractOwlRdfConverter {
 			ExtendedIterator<OntClass> superClasses = ontClass.listSuperClasses();
 			while (superClasses.hasNext()) {
 				OntClass superClass = superClasses.next();
-				if (superClass.isRestriction()) {
+				if (superClass.isUnionClass()) {
+		            UnionClass uClass = superClass.asUnionClass();
+		            ExtendedIterator<? extends OntClass> unionClassiter = uClass.listOperands();
+		            while (unionClassiter.hasNext()) {
+		                OntClass operand = unionClassiter.next();
+		                if (operand.isRestriction() && property.equals(operand.asRestriction().getOnProperty())) {
+		                    // TODO - what do we do about the values NOASSERTION and NONE?
+		                    retval.add(operand.asRestriction());
+		                }
+		            }
+		        } else if (superClass.isRestriction()) {
 					if (property.equals(superClass.asRestriction().getOnProperty())) {
 						retval.add(superClass.asRestriction());
 					}
@@ -455,7 +465,14 @@ public class AbstractOwlRdfConverter {
 			return;
 		}
 		reviewedClasses.add(oClass);
-		if (oClass.isRestriction()) {
+		if (oClass.isUnionClass()) {
+		    UnionClass uClass = oClass.asUnionClass();
+		    ExtendedIterator<? extends OntClass> unionClassiter = uClass.listOperands();
+		    while (unionClassiter.hasNext()) {
+		        collectPropertiesFromRestrictions(unionClassiter.next(), properties, 
+		                reviewedClasses, excludeSuperClassProperties);
+		    }
+		} else if (oClass.isRestriction()) {
 			Restriction r = oClass.asRestriction();
 			OntProperty property = r.getOnProperty();
 			if (Objects.nonNull(property)) {

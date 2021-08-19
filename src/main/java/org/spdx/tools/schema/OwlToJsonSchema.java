@@ -140,6 +140,9 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
         retval.put("type", "object");
         ObjectNode properties = jsonMapper.createObjectNode();
         addClassProperties(ontClass, properties);
+        if (properties.size() > 0) {
+            retval.set("properties", properties);
+        }
         return retval;
     }
 
@@ -170,50 +173,73 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 			if (restrictions.isListProperty()) {
 			    jsonSchemaProperties.set(MultiFormatStore.propertyNameToCollectionPropertyName(
 						checkConvertRenamedPropertyName(property.getLocalName())),
-						derivePropertySchema(property, restrictions, true));
+						deriveListPropertySchema(property, restrictions));
 			} else {
-			    jsonSchemaProperties.set(checkConvertRenamedPropertyName(property.getLocalName()), derivePropertySchema(property, restrictions, false));
+			    jsonSchemaProperties.set(checkConvertRenamedPropertyName(property.getLocalName()), derivePropertySchema(property, restrictions));
 			}
 
 		}
 	}
+	
+    /**
+     * Derive the schema for a property based on the property restrictions
+     * @param property property for the schema
+     * @param restrictions OWL restrictions for the property
+     * @return property schema for the list represented by the property
+     */
+    private ObjectNode deriveListPropertySchema(OntProperty property, PropertyRestrictions restrictions) {
+        ObjectNode propertySchema = jsonMapper.createObjectNode();
+        Statement commentStatement = property.getProperty(commentProperty);
+        if (Objects.nonNull(commentStatement) && Objects.nonNull(commentStatement.getObject())
+                && commentStatement.getObject().isLiteral()) {
+            propertySchema.put("description", commentStatement.getObject().asLiteral().getString());
+        }
+        addCardinalityRestrictions(propertySchema, restrictions);
+        propertySchema.put("type", "array");
+        propertySchema.set("items", derivePropertySchema(property, restrictions));
+        return propertySchema;
+    }
+
+    /**
+     * Add any restrictions based on the Ontology cardinality
+     * @param propertySchema Property schema
+     * @param restrictions Ontology restrictions
+     */
+    private void addCardinalityRestrictions(ObjectNode propertySchema, PropertyRestrictions restrictions) {
+        if (restrictions.getAbsoluteCardinality() > 0) {
+            propertySchema.put("minItems", restrictions.getAbsoluteCardinality());
+            propertySchema.put("maxItems", restrictions.getAbsoluteCardinality());
+        } else {
+            if (restrictions.getMinCardinality() > 0) {
+                propertySchema.put("minItems", restrictions.getMinCardinality());
+            }
+            if (restrictions.getMaxCardinality() > 0) {
+                propertySchema.put("maxItems", restrictions.getMaxCardinality());
+            }
+        }
+    }
 
     /**
 	 * Derive the schema for a property based on the property restrictions
 	 * @param property property for the schema
 	 * @param restrictions OWL restrictions for the property
-	 * @param list true if the schema should be developed for an array (the restrictions isList is not used in this method)
-	 * @return
+	 * @return property schema for the object represented by the property
 	 */
-	private ObjectNode derivePropertySchema(OntProperty property, PropertyRestrictions restrictions,
-			boolean list) {
-		//TODO: refactor - just a bit too complex
+	private ObjectNode derivePropertySchema(OntProperty property, PropertyRestrictions restrictions) {
 		ObjectNode propertySchema = jsonMapper.createObjectNode();
 		Statement commentStatement = property.getProperty(commentProperty);
 		if (Objects.nonNull(commentStatement) && Objects.nonNull(commentStatement.getObject())
 				&& commentStatement.getObject().isLiteral()) {
 			propertySchema.put("description", commentStatement.getObject().asLiteral().getString());
 		}
-		if (list) {
-			propertySchema.put("type", "array");
-			propertySchema.set("items", derivePropertySchema(property, restrictions, false));
-			if (restrictions.getAbsoluteCardinality() > 0) {
-				propertySchema.put("minItems", restrictions.getAbsoluteCardinality());
-				propertySchema.put("maxItems", restrictions.getAbsoluteCardinality());
+		addCardinalityRestrictions(propertySchema, restrictions);
+		if (restrictions.isEnumProperty()) {
+			propertySchema.put("type", "string");
+			ArrayNode enums = jsonMapper.createArrayNode();
+			for (String val:restrictions.getEnumValues()) {
+				enums.add(val);
 			}
-			if (restrictions.getMinCardinality() > 0) {
-				propertySchema.put("minItems", restrictions.getMinCardinality());
-			}
-			if (restrictions.getMaxCardinality() > 0) {
-				propertySchema.put("maxItems", restrictions.getMaxCardinality());
-			}
-		} else if (restrictions.isEnumProperty()) {
-				propertySchema.put("type", "string");
-				ArrayNode enums = jsonMapper.createArrayNode();
-				for (String val:restrictions.getEnumValues()) {
-					enums.add(val);
-				}
-				propertySchema.set("enum", enums);
+			propertySchema.set("enum", enums);
 		} else if (restrictions.getTypeUri().equals("http://www.w3.org/2000/01/rdf-schema#Literal")) {
 			propertySchema.put("type", "string");
 		} else if (restrictions.getTypeUri().startsWith(SpdxConstants.XML_SCHEMA_NAMESPACE)) {
