@@ -225,7 +225,6 @@ public class AbstractOwlRdfConverter {
 		            while (unionClassiter.hasNext()) {
 		                OntClass operand = unionClassiter.next();
 		                if (operand.isRestriction() && property.equals(operand.asRestriction().getOnProperty())) {
-		                    // TODO - what do we do about the values NOASSERTION and NONE?
 		                    retval.add(operand.asRestriction());
 		                }
 		            }

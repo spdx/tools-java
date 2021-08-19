@@ -109,7 +109,6 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 		OntClass relationshipClass = model.getOntClass(SpdxConstants.SPDX_NAMESPACE + SpdxConstants.CLASS_RELATIONSHIP);
 		Objects.requireNonNull(relationshipClass, "Missing SPDX Relationship class in OWL document");
 		properties.set("relationships", toArrayPropertySchema(relationshipClass, 0));
-
 		root.set("properties", properties);
 		return root;
 	}
@@ -139,6 +138,14 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
         ObjectNode retval = jsonMapper.createObjectNode();
         retval.put("type", "object");
         ObjectNode properties = jsonMapper.createObjectNode();
+        if (ontClass.getLocalName().equals(SpdxConstants.CLASS_RELATIONSHIP)) {
+            // Need to add the spdxElementId
+            ObjectNode elementIdProperties = jsonMapper.createObjectNode();
+            elementIdProperties.put("type", "string");
+            elementIdProperties.put("minItems", 1);
+            elementIdProperties.put("maxItems", 1);
+            properties.set(SpdxConstants.PROP_SPDX_ELEMENTID, elementIdProperties);
+        }
         addClassProperties(ontClass, properties);
         if (properties.size() > 0) {
             retval.set("properties", properties);
