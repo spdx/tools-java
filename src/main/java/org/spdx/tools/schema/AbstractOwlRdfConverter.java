@@ -390,10 +390,33 @@ public class AbstractOwlRdfConverter {
 		Collection<OntProperty> properties = new HashSet<>();
 		Collection<OntClass> reviewedClasses = new HashSet<>();
 		collectPropertiesFromRestrictions(oClass, properties, reviewedClasses, excludeSuperClassProperties);
+		removeSuperProperties(properties);
 		return properties;
 	}
 	
 	/**
+	 * Removes and properties which have a sub-property present in the properties list
+     * @param properties
+     */
+    private void removeSuperProperties(Collection<OntProperty> properties) {
+        List<OntProperty> superProperties = new ArrayList<>();
+        for (OntProperty property:properties) {
+            if (property.isProperty()) {
+                OntProperty op = property.asProperty();
+                ExtendedIterator<? extends OntProperty> superIter = op.listSuperProperties();
+                while (superIter.hasNext()) {
+                    superProperties.add(superIter.next());
+                }
+            }
+        }
+        for (OntProperty superProp:superProperties) {
+            if (properties.contains(superProp)) {
+                properties.remove(superProp);
+            }
+        }
+    }
+
+    /**
 	 * @param oClass
 	 * @return collection of all properties which have a restriction on the class or superclasses
 	 */
@@ -459,7 +482,6 @@ public class AbstractOwlRdfConverter {
 	 */
 	private void collectPropertiesFromRestrictions(OntClass oClass, 
 			Collection<OntProperty> properties, Collection<OntClass> reviewedClasses, boolean excludeSuperClassProperties) {
-		//spdxClass.listDeclaredProperties(false);
 		if (reviewedClasses.contains(oClass)) {
 			return;
 		}
