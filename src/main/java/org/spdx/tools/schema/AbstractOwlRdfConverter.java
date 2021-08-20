@@ -59,6 +59,7 @@ public class AbstractOwlRdfConverter {
 		skipped.add("http://www.w3.org/2002/07/owl#qualifiedCardinality");
 		skipped.add("http://www.w3.org/2002/07/owl#deprecatedProperty");
 		skipped.add("http://www.w3.org/2002/07/owl#deprecatedClass");
+		skipped.add(SpdxConstants.SPDX_NAMESPACE + "describesPackage");   // This is an old deprecated field from 1.0 which should be ignored - it was only used in RDF format
 		SKIPPED_PROPERTIES = Collections.unmodifiableSet(skipped);
 	}
 	

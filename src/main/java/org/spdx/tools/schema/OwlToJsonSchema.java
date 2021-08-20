@@ -23,6 +23,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+
 import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntProperty;
@@ -92,10 +94,10 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 		Objects.requireNonNull(docClass, "Missing SpdxDocument class in OWL document");
 		addClassProperties(docClass, properties, required);
 		// Add in the extra properties
-		ObjectNode namespaceSchemaProperties = jsonMapper.createObjectNode();
-		namespaceSchemaProperties.put("type", "string");
-		required.add(SpdxConstants.PROP_DOCUMENT_NAMESPACE);
-		properties.set(SpdxConstants.PROP_DOCUMENT_NAMESPACE, namespaceSchemaProperties);
+		properties.set(SpdxConstants.PROP_DOCUMENT_NAMESPACE, createSimpleTypeSchema("string", 
+		        "The URI provides an unambiguous mechanism for other SPDX documents to reference SPDX elements within this SPDX document."));
+		properties.set(SpdxConstants.PROP_DOCUMENT_DESCRIBES, toArraySchema(createSimpleTypeSchema("string", null), 
+		        "Packages, files and/or Snippets described by this SPDX document", 0));
         
 		OntClass packageClass = model.getOntClass(SpdxConstants.SPDX_NAMESPACE + SpdxConstants.CLASS_SPDX_PACKAGE);
 		Objects.requireNonNull(packageClass, "Missing SPDX Package class in OWL document");
@@ -120,15 +122,26 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 	 * @return JSON Schema of an array of item types represented by the ontClass
 	 */
 	private JsonNode toArrayPropertySchema(OntClass ontClass, int min) {
-		ObjectNode classSchema = ontClassToJsonSchema(ontClass);
-		ObjectNode property = jsonMapper.createObjectNode();
-		property.put("description", checkConvertRenamedPropertyName(ontClass.getLocalName()) + "s referenced in the SPDX document");
-		property.put("type", "array");
-		property.set("items", classSchema);
-		if (min > 0) {
-			property.put("minItems", min);
-		}
-		return property;
+		return toArraySchema(ontClassToJsonSchema(ontClass), 
+		        checkConvertRenamedPropertyName(ontClass.getLocalName()) + "s referenced in the SPDX document",
+		        min);
+	}
+	
+	/**
+	 * @param itemSchema Schema for each item
+	 * @param description Description for the array
+	 * @param min Minimum number of elements for the array
+	 * @return JSON Schema of an array of item types
+	 */
+	private JsonNode toArraySchema(ObjectNode itemSchema, String description, int min) {
+	    ObjectNode property = jsonMapper.createObjectNode();
+        property.put("description", description);
+        property.put("type", "array");
+        property.set("items", itemSchema);
+        if (min > 0) {
+            property.put("minItems", min);
+        }
+        return property;
 	}
 
 	/**
@@ -142,9 +155,8 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
         ArrayNode required = jsonMapper.createArrayNode();
         if (ontClass.getLocalName().equals(SpdxConstants.CLASS_RELATIONSHIP)) {
             // Need to add the spdxElementId
-            ObjectNode elementIdProperties = jsonMapper.createObjectNode();
-            elementIdProperties.put("type", "string");
-            properties.set(SpdxConstants.PROP_SPDX_ELEMENTID, elementIdProperties);
+            properties.set(SpdxConstants.PROP_SPDX_ELEMENTID, createSimpleTypeSchema("string", 
+                    "Id to which the SPDX element is related"));
             required.add(SpdxConstants.PROP_SPDX_ELEMENTID);
         }
         addClassProperties(ontClass, properties, required);
@@ -153,6 +165,22 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
             if (required.size() > 0) {
                 retval.set("required", required);
             }
+        }
+        return retval;
+    }
+    
+    /**
+     * Create a simple schema with just a type and description
+     * @param type JSON type
+     * @param description description of the property
+     * @return JSON schema for a simple property with type and description
+     */
+    private ObjectNode createSimpleTypeSchema(String type, @Nullable String description) {
+        Objects.requireNonNull(type, "Type can not be null");
+        ObjectNode retval = jsonMapper.createObjectNode();
+        retval.put("type", type);
+        if (Objects.nonNull(description) && !description.isEmpty()) {
+            retval.put("description", description);
         }
         return retval;
     }
@@ -167,10 +195,10 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 	private void addClassProperties(OntClass spdxClass, ObjectNode jsonSchemaProperties,
 	        ArrayNode required) {
         if (USES_SPDXIDS.contains(spdxClass.getLocalName())) {
-            ObjectNode idProperties = jsonMapper.createObjectNode();
-            idProperties.put("type", "string");
             required.add(SpdxConstants.SPDX_IDENTIFIER);
-            jsonSchemaProperties.set(SpdxConstants.SPDX_IDENTIFIER, idProperties);
+            jsonSchemaProperties.set(SpdxConstants.SPDX_IDENTIFIER, 
+                    createSimpleTypeSchema("string", 
+                            "Uniquely identify any element in an SPDX document which may be referenced by other elements."));
         }
 		Collection<OntProperty> ontProperties = propertiesFromClassRestrictions(spdxClass);
 		for (OntProperty property:ontProperties) {
