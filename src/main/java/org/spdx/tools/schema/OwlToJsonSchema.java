@@ -62,8 +62,8 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
     
     private static final String JSON_RESTRICTION_TYPE = "type";
     private static final String JSON_RESTRICTION_ITEMS = "items";
-    private static final String JSON_RESTRICTION_MIN_ITEMS = "minitems";
-    private static final String JSON_RESTRICTION_MAXITEMS = "maxitems";
+    private static final String JSON_RESTRICTION_MIN_ITEMS = "minItems";
+    private static final String JSON_RESTRICTION_MAXITEMS = "maxItems";
     
     private static final String SCHEMA_VERSION_URI = "http://json-schema.org/draft-07/schema#";
 	private static final String RELATIONSHIP_TYPE = SpdxConstants.SPDX_NAMESPACE + SpdxConstants.CLASS_RELATIONSHIP;
