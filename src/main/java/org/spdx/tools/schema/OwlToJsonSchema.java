@@ -80,6 +80,8 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 	    spdxids.add(SpdxConstants.CLASS_SPDX_SNIPPET);
 	    USES_SPDXIDS = Collections.unmodifiableSet(spdxids);
 	}
+	
+	static final String SINGLE_POINTER_URI = "http://www.w3.org/2009/pointers#SinglePointer";
 
 	public OwlToJsonSchema(OntModel model) {
 		super(model);
@@ -126,6 +128,7 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 		properties.set("relationships", toArrayPropertySchema(relationshipClass, 0));
 		root.set("properties", properties);
 		root.set("required", required);
+		root.put("additionalProperties", false);
 		return root;
 	}
 
@@ -178,6 +181,7 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
             if (required.size() > 0) {
                 retval.set("required", required);
             }
+            retval.put("additionalProperties", false);
         }
         return retval;
     }
@@ -334,10 +338,6 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 				propertySchema.put(JSON_RESTRICTION_TYPE, JSON_TYPE_STRING);
 			} else if (Objects.nonNull(clazz) && ReferenceType.class.isAssignableFrom(clazz)) {
 				// check for ReferenceType - these are strings URI's and not the full object description
-				JsonNode description = propertySchema.get("description");
-				if (Objects.nonNull(description)) {
-					propertySchema.put("description", description.asText());
-				}
 				propertySchema.put(JSON_RESTRICTION_TYPE, JSON_TYPE_STRING);
 			} else {
 				OntClass typeClass = model.getOntClass(restrictions.getTypeUri());
@@ -360,6 +360,18 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 			}
 			Objects.requireNonNull(typeClass, "No type class found for "+restrictions.getTypeUri());
 			propertySchema = ontClassToJsonSchema(typeClass);
+            if (SINGLE_POINTER_URI.equals(restrictions.getTypeUri())) {
+                // Need to add in the line and offset properties
+                // These are not in the OWL schema since the generic OffsetPointer in the range
+                // does not include these subclass values
+                ObjectNode properties = (ObjectNode) propertySchema.get("properties");
+                if (!properties.has("offset")) {
+                    properties.set("offset", createSimpleTypeSchema(JSON_TYPE_INTEGER, "Byte offset in the file"));
+                }
+                if (!properties.has("lineNumber")) {
+                    properties.set("lineNumber", createSimpleTypeSchema(JSON_TYPE_INTEGER, "line number offset in the file"));
+                }
+            }
 		}
 		return propertySchema;
 	}
