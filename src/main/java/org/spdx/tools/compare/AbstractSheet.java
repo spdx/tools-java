@@ -49,6 +49,7 @@ public abstract class AbstractSheet {
 	static final String CHECKBOX_FONT_NAME = "Wingdings 2";
 	static final String CHECKBOX = "P";
 	private static final short MAX_ROW_LINES = 10;
+	static final int MAX_CELL_LENGTH = 32767;
 	protected CellStyle checkboxStyle;
 	protected CellStyle dateStyle;
 	protected CellStyle greenWrapped;

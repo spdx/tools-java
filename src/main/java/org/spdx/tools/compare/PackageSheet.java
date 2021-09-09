@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -411,7 +412,15 @@ public class PackageSheet extends AbstractSheet {
 				} else {
 					licenseCommentRow.createCell(FIRST_DOC_COL+i).setCellValue("");
 				}
-				copyrightRow.createCell(FIRST_DOC_COL+i).setCellValue(pkg.getCopyrightText());
+				String copyrightText;
+				if (Objects.isNull(pkg.getCopyrightText())) {
+				    copyrightText = "[NONE]";
+				} else if (pkg.getCopyrightText().length() > MAX_CELL_LENGTH) {
+				    copyrightText = pkg.getCopyrightText().substring(0, MAX_CELL_LENGTH - "... [MORE] ".length()) + "... [MORE]";
+				} else {
+				    copyrightText = pkg.getCopyrightText();
+				}
+				copyrightRow.createCell(FIRST_DOC_COL+i).setCellValue(copyrightText);
 				attributionRow.createCell(FIRST_DOC_COL+i).setCellValue(CompareHelper.attributionsToString(pkg.getAttributionText()));
 				Optional<String> summary = pkg.getSummary();
 				if (summary.isPresent()) {
