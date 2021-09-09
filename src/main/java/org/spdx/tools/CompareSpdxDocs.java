@@ -44,7 +44,7 @@ import org.spdx.utility.compare.SpdxComparer;
  */
 public class CompareSpdxDocs {
 	static final int MIN_ARGS = 3;
-	static final int MAX_ARGS = 14;
+	static final int MAX_ARGS = 20;
 	static final int ERROR_STATUS = 1;
 	static final Logger logger = LoggerFactory.getLogger(CompareSpdxDocs.class);
 
