@@ -73,16 +73,9 @@ public class OwlToJsonContext extends AbstractOwlRdfConverter {
 			OntProperty property = iter.next();
 			String propName = uriToPropName(property.getURI());
 			String propNamespace = uriToNamespace(property.getURI());
-			ObjectNode propContext = jsonMapper.createObjectNode();
-			propContext.put("@id", propNamespace + propName);
-			
 			PropertyRestrictions propertyRestrictions = new PropertyRestrictions(property);
 			boolean hasListProperty = propertyRestrictions.isListProperty();
 			String typeUri = propertyRestrictions.getTypeUri();
-			if (Objects.nonNull(typeUri)) {
-				propContext.put("@type", uriToNamespace(typeUri) + uriToPropName(typeUri));
-			}
-			contexts.set(propName, propContext);
 			if (hasListProperty) {
 				String listPropName = MultiFormatStore.propertyNameToCollectionPropertyName(propName);
 				ObjectNode listPropContext = jsonMapper.createObjectNode();
@@ -92,6 +85,13 @@ public class OwlToJsonContext extends AbstractOwlRdfConverter {
 				}
 				listPropContext.put("@container", "@set");
 				contexts.set(listPropName, listPropContext);
+			} if (propertyRestrictions.isSingleProperty()) {
+		        ObjectNode propContext = jsonMapper.createObjectNode();
+		        propContext.put("@id", propNamespace + propName);
+                if (Objects.nonNull(typeUri)) {
+                    propContext.put("@type", uriToNamespace(typeUri) + uriToPropName(typeUri));
+                }
+                contexts.set(propName, propContext);
 			}
 		}
 		// Manually added contexts - specific to the JSON format
