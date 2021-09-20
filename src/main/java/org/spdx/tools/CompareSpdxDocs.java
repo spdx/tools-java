@@ -19,8 +19,6 @@ package org.spdx.tools;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +42,7 @@ import org.spdx.utility.compare.SpdxComparer;
  */
 public class CompareSpdxDocs {
 	static final int MIN_ARGS = 3;
-	static final int MAX_ARGS = 14;
+	static final int MAX_ARGS = MultiDocumentSpreadsheet.MAX_DOCUMENTS + 1;
 	static final int ERROR_STATUS = 1;
 	static final Logger logger = LoggerFactory.getLogger(CompareSpdxDocs.class);
 
@@ -84,7 +82,6 @@ public class CompareSpdxDocs {
 			throw new OnlineToolException("Output file "+args[0]+" already exists. Change the name of the result file.");
 		}
 		List<SpdxDocument> compareDocs = new ArrayList<>();
-		List<String> docNames = new ArrayList<>();
 		List<List<String>> verificationErrors = new ArrayList<>();
 		
 		for (int i = 1; i < args.length; i++) {
@@ -95,12 +92,13 @@ public class CompareSpdxDocs {
 				if (!warnings.isEmpty()) {
 					System.out.println("Verification errors were found in "+args[i].trim()+".  See verification errors sheet for details.");
 				}
-				docNames.add(convertDocName(args[i]));
 				verificationErrors.add(warnings);
 			} catch (InvalidSPDXAnalysisException | IOException | InvalidFileNameException e) {
 				throw new OnlineToolException("Error opening SPDX document "+args[i]+": "+e.getMessage());
 			}
 		}
+		
+		List<String> docNames = convertToDocNames(args, 1);
 		MultiDocumentSpreadsheet outSheet = null;
 		try {
 			outSheet = new MultiDocumentSpreadsheet(outputFile, true, false);
@@ -125,27 +123,43 @@ public class CompareSpdxDocs {
 		}
 	}
 	
-	/**
-	 * Converts a file path or URL to a shorter document name
-	 * @param docPath
-	 * @return
-	 */
-	protected static String convertDocName(String docPath) {
-		if (docPath.contains(File.separator)) {
-			File docFile = new File(docPath);
-			return docFile.getName();
-		} else {
-			try {
-				URI uri = new URI(docPath);
-				String path = uri.getPath();
-				return path;
-			} catch (URISyntaxException e) {
-				return docPath;
-			}
-		}
-	}
+	
 
 	/**
+	 * Converts the list of URI's or file paths to a list of document names by
+	 * removing the common string prefixes
+     * @param args arguments passed into utility
+     * @param startNameIndex index in args where then names start
+     * @return
+     */
+    private static List<String> convertToDocNames(String[] args, int startNameIndex) {
+        List<String> docNames = new ArrayList<>();
+        if (args.length < startNameIndex) {
+            return docNames;
+        }
+        int commonPrefixIndex = args[startNameIndex].length();
+        // first find the minimum index length
+        for (int i = startNameIndex + 1; i < args.length; i++) {
+            if (args[i].length() < commonPrefixIndex) {
+                commonPrefixIndex = args[i].length();
+            }
+        }
+        // look for the smallest common substring
+        for (int i = startNameIndex + 1; i < args.length; i++) {
+            for (int j = 0; j < commonPrefixIndex; j++) {
+                if (args[i-1].charAt(j) != args[i].charAt(j)) {
+                    commonPrefixIndex = j;
+                    break;
+                }
+            }
+        }
+        for (int i = startNameIndex; i < args.length; i++) {
+            docNames.add(args[i].substring(commonPrefixIndex).replace("\\", "/"));
+        }
+        return docNames;
+    }
+
+    /**
 	 *
 	 */
 	private static void usage() {
