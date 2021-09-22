@@ -23,7 +23,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Objects;
 
 import org.apache.jena.ontology.OntModel;
@@ -91,8 +90,8 @@ public class RdfSchemaToJsonContext {
 		ObjectNode context = owlToJsonContext.convertToContext();
 		JsonGenerator jsonGenerator = null;
 		try {
-			jsonGenerator = OwlToJsonContext.jsonMapper.getFactory().createGenerator(new FileOutputStream(toFile));
-			OwlToJsonContext.jsonMapper.writeTree(jsonGenerator.useDefaultPrettyPrinter(), 
+			jsonGenerator = OwlToJsonContext.JSON_MAPPER.getFactory().createGenerator(new FileOutputStream(toFile));
+			OwlToJsonContext.JSON_MAPPER.writeTree(jsonGenerator.useDefaultPrettyPrinter(), 
 					context);
 		} catch (FileNotFoundException e) {
 			System.err.println("File not found for "+fromFile.getName());
