@@ -20,6 +20,7 @@ package org.spdx.tools.schema;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -392,7 +393,16 @@ public class AbstractOwlRdfConverter {
 		Collection<OntClass> reviewedClasses = new HashSet<>();
 		collectPropertiesFromRestrictions(oClass, properties, reviewedClasses, excludeSuperClassProperties);
 		removeSuperProperties(properties);
-		return properties;
+		ArrayList<OntProperty> sorted = new ArrayList<>(properties);
+		Collections.sort(sorted, new Comparator<OntProperty>() {
+
+			@Override
+			public int compare(OntProperty arg0, OntProperty arg1) {
+				return arg0.getLocalName().compareToIgnoreCase(arg1.getLocalName());
+			}
+		    
+		});
+		return sorted;
 	}
 	
 	/**
