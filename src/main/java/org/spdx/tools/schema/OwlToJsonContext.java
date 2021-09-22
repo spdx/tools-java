@@ -7,7 +7,7 @@
  *   you may not use this file except in compliance with the License.
  *   You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  *   Unless required by applicable law or agreed to in writing, software
  *   distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,7 +20,9 @@ package org.spdx.tools.schema;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.TreeMap;
 
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntProperty;
@@ -54,7 +56,8 @@ public class OwlToJsonContext extends AbstractOwlRdfConverter {
 		NAMESPACES = Collections.unmodifiableMap(namespaceMap);
 	}
 	
-	public static ObjectMapper jsonMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+	public static final ObjectMapper JSON_MAPPER = new ObjectMapper()
+			.enable(SerializationFeature.INDENT_OUTPUT);
 	
 	public OwlToJsonContext(OntModel model) {
 		super(model);
@@ -64,19 +67,31 @@ public class OwlToJsonContext extends AbstractOwlRdfConverter {
 	 * @return Object node containing a JSON context for the model
 	 */
 	public ObjectNode convertToContext() {
-		ObjectNode contexts = jsonMapper.createObjectNode();
+		ObjectNode contexts = JSON_MAPPER.createObjectNode();
 		NAMESPACES.forEach((namespace, name) -> {
 			contexts.put(name, namespace);
 		});
+		// Manually added contexts - specific to the JSON format
+		ObjectNode documentContext = JSON_MAPPER.createObjectNode();
+		documentContext.put("@type", "spdx:SpdxDocument");
+		documentContext.put("@id", "spdx:spdxDocument");
+		contexts.set("Document", documentContext);
+		contexts.put(SpdxConstants.SPDX_IDENTIFIER, "@id");
+		contexts.put(SpdxConstants.EXTERNAL_DOCUMENT_REF_IDENTIFIER, "@id");
+		TreeMap<String, OntProperty> sortedOntProperties = new TreeMap<>();
 		ExtendedIterator<OntProperty> iter = model.listAllOntProperties();
 		while (iter.hasNext()) {
 			OntProperty property = iter.next();
 			String propName = uriToPropName(property.getURI());
-			String propNamespace = uriToNamespace(property.getURI());
-			ObjectNode propContext = jsonMapper.createObjectNode();
+			sortedOntProperties.put(propName, property);
+		}
+		for (Entry<String, OntProperty> ontPropEntry:sortedOntProperties.entrySet()) {
+			String propNamespace = uriToNamespace(ontPropEntry.getValue().getURI());
+			String propName = ontPropEntry.getKey();
+			ObjectNode propContext = JSON_MAPPER.createObjectNode();
 			propContext.put("@id", propNamespace + propName);
 			
-			PropertyRestrictions propertyRestrictions = new PropertyRestrictions(property);
+			PropertyRestrictions propertyRestrictions = new PropertyRestrictions(ontPropEntry.getValue());
 			boolean hasListProperty = propertyRestrictions.isListProperty();
 			String typeUri = propertyRestrictions.getTypeUri();
 			if (Objects.nonNull(typeUri)) {
@@ -85,7 +100,7 @@ public class OwlToJsonContext extends AbstractOwlRdfConverter {
 			contexts.set(propName, propContext);
 			if (hasListProperty) {
 				String listPropName = MultiFormatStore.propertyNameToCollectionPropertyName(propName);
-				ObjectNode listPropContext = jsonMapper.createObjectNode();
+				ObjectNode listPropContext = JSON_MAPPER.createObjectNode();
 				listPropContext.put("@id", propNamespace + listPropName);
 				if (Objects.nonNull(typeUri)) {
 					listPropContext.put("@type", uriToNamespace(typeUri) + uriToPropName(typeUri));
@@ -94,14 +109,7 @@ public class OwlToJsonContext extends AbstractOwlRdfConverter {
 				contexts.set(listPropName, listPropContext);
 			}
 		}
-		// Manually added contexts - specific to the JSON format
-		ObjectNode documentContext = jsonMapper.createObjectNode();
-		documentContext.put("@type", "spdx:SpdxDocument");
-		documentContext.put("@id", "spdx:spdxDocument");
-		contexts.set("Document", documentContext);
-		contexts.put(SpdxConstants.SPDX_IDENTIFIER, "@id");
-		contexts.put(SpdxConstants.EXTERNAL_DOCUMENT_REF_IDENTIFIER, "@id");
-		ObjectNode context = jsonMapper.createObjectNode();
+		ObjectNode context = JSON_MAPPER.createObjectNode();
 		context.set("@context", contexts);
 		return context;
 	}
