@@ -102,12 +102,12 @@ public class OwlToJsonContext extends AbstractOwlRdfConverter {
 				listPropContext.put("@container", "@set");
 				contexts.set(listPropName, listPropContext);
 			} if (propertyRestrictions.isSingleProperty()) {
-		        ObjectNode propContext = JSON_MAPPER.createObjectNode();
-		        propContext.put("@id", propNamespace + propName);
-                if (Objects.nonNull(typeUri)) {
-                    propContext.put("@type", uriToNamespace(typeUri) + uriToPropName(typeUri));
-                }
-                contexts.set(propName, propContext);
+				ObjectNode propContext = JSON_MAPPER.createObjectNode();
+				propContext.put("@id", propNamespace + propName);
+				if (Objects.nonNull(typeUri)) {
+					propContext.put("@type", uriToNamespace(typeUri) + uriToPropName(typeUri));
+				}
+				contexts.set(propName, propContext);
 			}
 		}
 		ObjectNode context = JSON_MAPPER.createObjectNode();
