@@ -31,19 +31,19 @@ The command line interface of the spdx tools can be used like this:
     java -jar spdx-tools-jar-with-dependencies.jar <function> <parameters> 
 
 ## SPDX format converters
-The following converter tools are provided by the spdx tools:
+The following converter tools support spdx format:
 
-  * TagToSpreadsheet
-  * TagToRDF
-  * RdfToTag
-  * RdfToHtml
-  * RdfToSpreadsheet
-  * SpreadsheetToRDF
-  * SpreadsheetToTag
+  * Tag
+  * RDF/XML
+  * XLSX Spreadsheet
+  * XLS Spreadsheet
+  * JSON
+  * XML
+  * YAML
 
 Example to convert a SPDX file from tag to rdf format:
 
-    java -jar spdx-tools-jar-with-dependencies.jar TagToRDF Examples/SPDXTagExample.tag TagToRDF.rdf
+    java -jar spdx-tools-jar-with-dependencies.jar Convert Examples/SPDXTagExample.tag TagToRDF.rdf
 
 ## Compare utilities
 The following  tools can be used to compare one or more SPDX documents:
