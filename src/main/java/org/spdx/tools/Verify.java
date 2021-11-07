@@ -142,7 +142,7 @@ public class Verify {
 				JsonNode spdxJsonSchema = JsonLoader.fromResource(JSON_SCHEMA_RESOURCE);
 				final JsonSchema schema = JsonSchemaFactory.byDefault().getJsonSchema(spdxJsonSchema);
 				JsonNode spdxDocJson = JsonLoader.fromFile(file);
-				ProcessingReport report = schema.validate(spdxDocJson);
+				ProcessingReport report = schema.validateUnchecked(spdxDocJson, true);
 				report.spliterator().forEachRemaining(msg -> {
 					JsonNode msgJson = msg.asJson();
 					if (!msg.getMessage().contains("$id")) {	// Known warning - this is in the draft 7 spec - perhaps a bug in the validator?
