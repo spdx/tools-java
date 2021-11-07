@@ -18,6 +18,7 @@ public class VerifyTest extends TestCase {
 	static final String TEST_XML_FILE_PATH = TEST_DIR + File.separator + "SPDXXMLExample-v2.2.spdx.xml";
 	static final String TEST_YAML_FILE_PATH = TEST_DIR + File.separator + "SPDXYAMLExample-2.2.spdx.yaml";
 	static final String TEST_WARNING_FILE_PATH = TEST_DIR + File.separator + "SPDXTagExample-v2.2-warning.spdx";
+    static final String BAD_JSON_FILE_PATH = TEST_DIR + File.separator + "BadJSON.spdx.json";
 	
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -54,5 +55,10 @@ public class VerifyTest extends TestCase {
 		List<String> result = Verify.verify(TEST_WARNING_FILE_PATH, SerFileType.TAG);
 		assertTrue(result.size() > 0);
 		assertTrue(result.get(0).contains("deprecated"));
+	}
+	
+	public void testVerifyBadJSON() throws SpdxVerificationException {
+		List<String> result = Verify.verify(BAD_JSON_FILE_PATH, SerFileType.JSON);
+		assertTrue(result.size() == 4);
 	}
 }

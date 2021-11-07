@@ -31,6 +31,13 @@ import org.spdx.storage.ISerializableModelStore;
 import org.spdx.tagvaluestore.TagValueStore;
 import org.spdx.tools.SpdxToolsHelper.SerFileType;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.github.fge.jackson.JsonLoader;
+import com.github.fge.jsonschema.core.exceptions.ProcessingException;
+import com.github.fge.jsonschema.core.report.ProcessingReport;
+import com.github.fge.jsonschema.main.JsonSchema;
+import com.github.fge.jsonschema.main.JsonSchemaFactory;
+
 /**
  * Verifies an SPDX document and lists any verification errors
  * @author Gary O'Neall
@@ -41,6 +48,7 @@ public class Verify {
 	static final int MIN_ARGS = 1;
 	static final int MAX_ARGS = 2;
 	static final int ERROR_STATUS = 1;
+	private static final String JSON_SCHEMA_RESOURCE = "/resources/spdx-schema.json";
 
 	/**
 	 * @param args args[0] SPDX file path; args[1] [RDFXML|JSON|XLS|XLSX|YAML|TAG] an optional file type - if not present, file type of the to file will be used
@@ -126,8 +134,31 @@ public class Verify {
 		}
 		List<String> retval = new ArrayList<String>();
 		if (store instanceof TagValueStore) {
-			// add in any perser warnings
+			// add in any parser warnings
 			retval.addAll(((TagValueStore)store).getWarnings());
+		}
+		if (SerFileType.JSON.equals(fileType)) {
+			try {
+				JsonNode spdxJsonSchema = JsonLoader.fromResource(JSON_SCHEMA_RESOURCE);
+				final JsonSchema schema = JsonSchemaFactory.byDefault().getJsonSchema(spdxJsonSchema);
+				JsonNode spdxDocJson = JsonLoader.fromFile(file);
+				ProcessingReport report = schema.validateUnchecked(spdxDocJson, true);
+				report.spliterator().forEachRemaining(msg -> {
+					JsonNode msgJson = msg.asJson();
+					if (!msg.getMessage().contains("$id")) {	// Known warning - this is in the draft 7 spec - perhaps a bug in the validator?
+						JsonNode instance = msgJson.findValue("instance");
+						String warningStr = msg.getMessage();
+						if (Objects.nonNull(instance)) {
+							warningStr = warningStr + " for " + instance.toString();
+						}
+						retval.add(warningStr);
+					}
+				});
+			} catch (IOException e) {
+				retval.add("Unable to validate JSON file against schema due to I/O Error");
+			} catch (ProcessingException e) {
+				retval.add("Unable to validate JSON file against schema due to processing exception");
+			}
 		}
 		List<String> verify = doc.verify();
 		
