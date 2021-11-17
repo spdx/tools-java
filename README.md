@@ -17,6 +17,8 @@ The SPDX Tool binaries can be downloaded from the [releases page](https://github
 
 See the Syntax section below for the commands available.
 
+If are a developer, there are examples in the [examples folder](examples/org/spdx/examples).
+
 ## Contributing
 See the file CONTRIBUTING.md for information on making contributions to the SPDX tools.
 
