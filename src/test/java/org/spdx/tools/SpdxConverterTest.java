@@ -26,9 +26,15 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.spdx.library.InvalidSPDXAnalysisException;
+import org.spdx.library.SpdxConstants;
+import org.spdx.library.model.Relationship;
 import org.spdx.library.model.SpdxDocument;
+import org.spdx.library.model.SpdxFile;
+import org.spdx.library.model.SpdxModelFactory;
+import org.spdx.library.model.SpdxPackage;
 import org.spdx.tools.SpdxToolsHelper.SerFileType;
 import org.spdx.utility.compare.SpdxCompareException;
 import org.spdx.utility.compare.SpdxComparer;
@@ -272,7 +278,6 @@ public class SpdxConverterTest extends TestCase {
 		SpdxComparer comparer = new SpdxComparer();
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());
-		
 		// Try with no file types
 		Files.delete(outFilePath);
 		SpdxConverter.convert(TEST_JSON_FILE_PATH, outFilePath.toString());
