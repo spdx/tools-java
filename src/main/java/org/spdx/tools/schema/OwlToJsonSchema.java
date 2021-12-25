@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.annotation.Nullable;
 
@@ -217,7 +218,10 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
                     createSimpleTypeSchema(JSON_TYPE_STRING, 
                             "Uniquely identify any element in an SPDX document which may be referenced by other elements."));
         }
-		Collection<OntProperty> ontProperties = propertiesFromClassRestrictions(spdxClass);
+		Collection<OntProperty> ontPropertyCollection = propertiesFromClassRestrictions(spdxClass);
+		// Sort the ontology properties
+		TreeSet<OntProperty> ontProperties = new TreeSet<OntProperty>(new OntPropertyComparator());
+		ontProperties.addAll(ontPropertyCollection);	
 		for (OntProperty property:ontProperties) {
 			if (SKIPPED_PROPERTIES.contains(property.getURI())) {
 				continue;
