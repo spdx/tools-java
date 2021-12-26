@@ -4,7 +4,7 @@
 	
 	<groupId>org.spdx</groupId>
 	<artifactId>tools-java</artifactId>
-	<version>1.0.4-SNAPSHOT</version>
+	<version>1.0.4</version>
 	<packaging>jar</packaging>
 	
 	<name>tools-java</name>
@@ -102,17 +102,17 @@
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>java-spdx-library</artifactId>
-	  	<version>1.0.9</version>
+	  	<version>1.0.10</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>spdx-rdf-store</artifactId>
-	  	<version>1.0.3</version>
+	  	<version>1.0.4</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>spdx-jackson-store</artifactId>
-	  	<version>1.0.2</version>
+	  	<version>1.0.3</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>org.apache.ws.xmlschema</groupId>
@@ -122,12 +122,12 @@
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>spdx-spreadsheet-store</artifactId>
-	  	<version>1.0.2</version>
+	  	<version>1.0.3</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>spdx-tagvalue-store</artifactId>
-	  	<version>1.0.3</version>
+	  	<version>1.0.4</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>com.github.java-json-tools</groupId>
@@ -250,7 +250,7 @@
 		<plugin>
 			<groupId>org.spdx</groupId>
 				<artifactId>spdx-maven-plugin</artifactId>
-				<version>0.5.3</version>
+				<version>0.5.5</version>
 				<executions>
 					<execution>
 						<id>build-spdx</id>
