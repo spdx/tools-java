@@ -201,7 +201,7 @@ public class SpdxConverter {
 		System.out.println("\tfromFilePath - File path of the file to convert from");
 		System.out.println("\ttoFilePath - output file");
 		System.out.println("\t[fromFileType] - optional file type of the input file.  One of JSON, XLS, XLSX, TAG, RDFXML, YAML or XML.  If not provided the file type will be determined by the file extension");
-		System.out.println("\t[fromFileType] - optional file type of the output file.  One of JSON, XLS, XLSX, TAG, RDFXML, YAML or XML.  If not provided the file type will be determined by the file extension");
+		System.out.println("\t[toFileType] - optional file type of the output file.  One of JSON, XLS, XLSX, TAG, RDFXML, YAML or XML.  If not provided the file type will be determined by the file extension");
 	}
 
 }
