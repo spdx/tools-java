@@ -411,7 +411,12 @@ public class PackageSheet extends AbstractSheet {
 				} else {
 					licenseCommentRow.createCell(FIRST_DOC_COL+i).setCellValue("");
 				}
-				copyrightRow.createCell(FIRST_DOC_COL+i).setCellValue(pkg.getCopyrightText());
+				String copyrightText = pkg.getCopyrightText();
+				if (copyrightText.length() > this.workbook.getSpreadsheetVersion().getMaxTextLength()) {
+					copyrightText = copyrightText.substring(0, this.workbook.getSpreadsheetVersion().getMaxTextLength() - 50);
+					copyrightText = copyrightText + "...[more]";
+				}
+				copyrightRow.createCell(FIRST_DOC_COL+i).setCellValue(copyrightText);
 				attributionRow.createCell(FIRST_DOC_COL+i).setCellValue(CompareHelper.attributionsToString(pkg.getAttributionText()));
 				Optional<String> summary = pkg.getSummary();
 				if (summary.isPresent()) {
