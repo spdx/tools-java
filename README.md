@@ -50,12 +50,6 @@ Example to convert a SPDX file from tag to rdf format:
 ## Compare utilities
 The following  tools can be used to compare one or more SPDX documents:
 
-  * CompareSpdxDocs
-
-    Example to compare two SPDX files provided in rdf format:
-
-        java -jar spdx-tools-jar-with-dependencies.jar CompareSpdxDocs doc1 doc2 [output]
-
   * CompareMultipleSpdxDocs with files
 
     Example to compare multiple SPDX files provided in rdf format and provide a spreadsheet with the results:
