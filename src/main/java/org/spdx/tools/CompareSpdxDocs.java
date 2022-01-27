@@ -18,6 +18,7 @@
 package org.spdx.tools;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,15 +34,16 @@ import org.spdx.utility.compare.SpdxComparer;
 
 /**
  * Compares multiple SPDX documents and stores the results in a spreadsheet
- * Usage: CompareSpdxDoc output.xls doc1 doc2 doc3 ... docN
+ * Usage: CompareSpdxDoc output.xlsx doc1 doc2 doc3 ... docN
  * where output.xls is a file name for the output spreadsheet file
- * and docX are SPDX document files to compare.  Document files can be either in RDF/XML  or tag/value format
+ * and docX are SPDX document files to compare or directories containing SPDX documents.  
+ * Document files can be either in RDF/XML  or tag/value format
  *
  * @author Gary O'Neall
  *
  */
 public class CompareSpdxDocs {
-	static final int MIN_ARGS = 3;
+	static final int MIN_ARGS = 2;
 	static final int MAX_ARGS = MultiDocumentSpreadsheet.MAX_DOCUMENTS + 1;
 	static final int ERROR_STATUS = 1;
 	static final Logger logger = LoggerFactory.getLogger(CompareSpdxDocs.class);
@@ -83,29 +85,22 @@ public class CompareSpdxDocs {
 		}
 		List<SpdxDocument> compareDocs = new ArrayList<>();
 		List<List<String>> verificationErrors = new ArrayList<>();
-		
+		List<String> docNames = new ArrayList<>();
 		for (int i = 1; i < args.length; i++) {
 			try {
-				SpdxDocument doc = SpdxToolsHelper.deserializeDocument(new File(args[i]));
-				compareDocs.add(doc);
-				List<String> warnings = doc.verify();
-				if (!warnings.isEmpty()) {
-					System.out.println("Verification errors were found in "+args[i].trim()+".  See verification errors sheet for details.");
-				}
-				verificationErrors.add(warnings);
+				addDocToComparer(compareDocs, args[i], docNames, verificationErrors);
 			} catch (InvalidSPDXAnalysisException | IOException | InvalidFileNameException e) {
 				throw new OnlineToolException("Error opening SPDX document "+args[i]+": "+e.getMessage());
 			}
 		}
-		
-		List<String> docNames = convertToDocNames(args, 1);
+		List<String> normalizedDocNames = normalizeDocNames(docNames);
 		MultiDocumentSpreadsheet outSheet = null;
 		try {
 			outSheet = new MultiDocumentSpreadsheet(outputFile, true, false);
-			outSheet.importVerificationErrors(verificationErrors, docNames);
+			outSheet.importVerificationErrors(verificationErrors, normalizedDocNames);
 			SpdxComparer comparer = new SpdxComparer();
 			comparer.compare(compareDocs);
-			outSheet.importCompareResults(comparer, docNames);
+			outSheet.importCompareResults(comparer, normalizedDocNames);
 		} catch (SpreadsheetException e) {
 			throw new OnlineToolException("Unable to create output spreadsheet: "+e.getMessage());
 		} catch (InvalidSPDXAnalysisException e) {
@@ -126,35 +121,70 @@ public class CompareSpdxDocs {
 	
 
 	/**
-	 * Converts the list of URI's or file paths to a list of document names by
+	 * Adds all SPDX documents found in the file or directory to the compareDocs list
+	 * @param compareDocs
+	 * @param filePath
+	 * @param verificationErrors
+	 * @throws InvalidFileNameException 
+	 * @throws IOException 
+	 * @throws InvalidSPDXAnalysisException 
+	 */
+	private static void addDocToComparer(List<SpdxDocument> compareDocs,
+			String filePath, List<String> docNames, List<List<String>> verificationErrors) throws InvalidSPDXAnalysisException, IOException, InvalidFileNameException {
+		File spdxDocOrDir = new File(filePath);
+		if (!spdxDocOrDir.exists()) {
+			throw new FileNotFoundException("File "+filePath+" not found");
+		}
+		if (spdxDocOrDir.isFile()) {
+			SpdxDocument doc = SpdxToolsHelper.deserializeDocument(spdxDocOrDir);
+			compareDocs.add(doc);
+			List<String> warnings = doc.verify();
+			if (!warnings.isEmpty()) {
+				System.out.println("Verification errors were found in "+filePath.trim()+".  See verification errors sheet for details.");
+			}
+			verificationErrors.add(warnings);
+			docNames.add(filePath);
+		} else if (spdxDocOrDir.isDirectory()) {
+			for (File file:spdxDocOrDir.listFiles()) {
+				try {
+					addDocToComparer(compareDocs, file.getPath(), docNames, verificationErrors);
+				} catch (InvalidSPDXAnalysisException | IOException | InvalidFileNameException e) {
+					System.out.println("Error deserializing "+file+".  Skipping.");
+					continue;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Converts the URI's or file paths to a list of document names by
 	 * removing the common string prefixes
-     * @param args arguments passed into utility
-     * @param startNameIndex index in args where then names start
-     * @return
+     * @param uriFilePaths Un-normalized file paths or URIs
+     * @return List of normalized doc names
      */
-    private static List<String> convertToDocNames(String[] args, int startNameIndex) {
+    private static List<String> normalizeDocNames(List<String> uriFilePaths) {
         List<String> docNames = new ArrayList<>();
-        if (args.length < startNameIndex) {
-            return docNames;
+        if (uriFilePaths.size() < 1) {
+        	return docNames;
         }
-        int commonPrefixIndex = args[startNameIndex].length();
+        int commonPrefixIndex = uriFilePaths.get(0).length();
         // first find the minimum index length
-        for (int i = startNameIndex + 1; i < args.length; i++) {
-            if (args[i].length() < commonPrefixIndex) {
-                commonPrefixIndex = args[i].length();
+        for (int i = 1; i < uriFilePaths.size(); i++) {
+            if (uriFilePaths.get(i).length() < commonPrefixIndex) {
+                commonPrefixIndex = uriFilePaths.get(i).length();
             }
         }
         // look for the smallest common substring
-        for (int i = startNameIndex + 1; i < args.length; i++) {
+        for (int i = 1; i < uriFilePaths.size(); i++) {
             for (int j = 0; j < commonPrefixIndex; j++) {
-                if (args[i-1].charAt(j) != args[i].charAt(j)) {
+                if (uriFilePaths.get(i-1).charAt(j) != uriFilePaths.get(i).charAt(j)) {
                     commonPrefixIndex = j;
                     break;
                 }
             }
         }
-        for (int i = startNameIndex; i < args.length; i++) {
-            docNames.add(args[i].substring(commonPrefixIndex).replace("\\", "/"));
+        for (String uriFilePath:uriFilePaths) {
+            docNames.add(uriFilePath.substring(commonPrefixIndex).replace("\\", "/"));
         }
         return docNames;
     }
