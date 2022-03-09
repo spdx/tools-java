@@ -111,7 +111,7 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 		// Add in the extra properties
 		properties.set(SpdxConstants.PROP_DOCUMENT_NAMESPACE, createSimpleTypeSchema(JSON_TYPE_STRING, 
 		        "The URI provides an unambiguous mechanism for other SPDX documents to reference SPDX elements within this SPDX document."));
-		properties.set(SpdxConstants.PROP_DOCUMENT_DESCRIBES, toArraySchema(createSimpleTypeSchema(JSON_TYPE_STRING, null), 
+		properties.set(SpdxConstants.PROP_DOCUMENT_DESCRIBES, toArraySchema(createSimpleTypeSchema(JSON_TYPE_STRING, "SPDX ID for each Package, File, or Snippet."), 
 		        "Packages, files and/or Snippets described by this SPDX document", 0));
         
 		OntClass packageClass = model.getOntClass(SpdxConstants.SPDX_NAMESPACE + SpdxConstants.CLASS_SPDX_PACKAGE);
