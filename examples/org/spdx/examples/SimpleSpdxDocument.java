@@ -120,7 +120,23 @@ public class SimpleSpdxDocument {
 			 * example above
 			 */
 					
-			document.getDocumentDescribes().add(pkg);	// Let's add the package as the described element for the document
+			/* Let's add the package relationships to the document
+			 * This step
+			*/
+			// This step will add a relationship between document and pkg as "DESCRIBES".
+			document.getDocumentDescribes().add(pkg);	
+			// Let's create another package
+			pkgId = modelStore.getNextId(IdType.SpdxId, documentUri);
+			SpdxPackage childPkg = document.createPackage(pkgId, "Child Example Package Name", pkgConcludedLicense,
+					"Copyright example.org", pkgDeclaredLicense)
+					.setFilesAnalyzed(false)  // Default is true and we don't want to add all the required fields
+					.setComment("This package is used as an example in creating an SPDX document from scratch")
+					.setDownloadLocation("NOASSERTION")
+					.build();
+			// Then create a DEPEND_ON relation by relationship factory
+			Relationship relationship = pkg.createRelationship(childPkg, RelationshipType.DEPENDS_ON, "");
+			pkg.addRelationship(relationship);
+
 			// That's for creating the simple document.  Let's verify to make sure nothing is out of spec
 			List<String> warnings = document.verify();
 			if (warnings.size() > 0) {
