@@ -42,6 +42,8 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.iterator.ExtendedIterator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spdx.library.SpdxConstants;
 import org.spdx.library.model.enumerations.SpdxEnumFactory;
 
@@ -53,6 +55,7 @@ import org.spdx.library.model.enumerations.SpdxEnumFactory;
  */
 public class AbstractOwlRdfConverter {
 	
+	static final Logger logger = LoggerFactory.getLogger(AbstractOwlRdfConverter.class);
 	static final Set<String> SKIPPED_PROPERTIES;
 	static {
 		Set<String> skipped = new HashSet<>();
@@ -125,6 +128,8 @@ public class AbstractOwlRdfConverter {
 								if (Objects.nonNull(e)) {
 									this.enumValues.add(e.toString());
 									this.enumProperty = true;
+								} else {
+									logger.warn("Missing enum value for " + individual.getLocalName());
 								}
 							}
 						}
