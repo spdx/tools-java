@@ -231,6 +231,9 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 			    jsonSchemaProperties.set(MultiFormatStore.propertyNameToCollectionPropertyName(
 						checkConvertRenamedPropertyName(property.getLocalName())),
 						deriveListPropertySchema(property, restrictions));
+			    if (!restrictions.isOptional() || restrictions.getMinCardinality() > 0) {
+			        required.add(checkConvertRenamedPropertyName(property.getLocalName()));
+			    }
 			} else {
 			    jsonSchemaProperties.set(checkConvertRenamedPropertyName(property.getLocalName()), derivePropertySchema(property, restrictions));
 			    if (!restrictions.isOptional()) {
