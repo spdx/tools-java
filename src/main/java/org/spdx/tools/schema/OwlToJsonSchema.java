@@ -93,7 +93,8 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 		ExtendedIterator<Ontology> ontologyIter = model.listOntologies();
 		if (ontologyIter.hasNext()) {
 			Ontology ont = ontologyIter.next();
-			String ontologyUri = ont.getURI();
+			String version = ont.getVersionInfo();
+			String ontologyUri = version == null ? ont.getURI() : ont.getURI() + "/" + version;
 			if (Objects.nonNull(ontologyUri)) {
 				root.put("$id", ontologyUri);
 			}
@@ -326,9 +327,9 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 				// check for AnyLicenseInfo - these are strings with the exception of the extractedLicensingInfos which are the actual license description
 				JsonNode description = propertySchema.get("description");
 				if (Objects.isNull(description)) {
-					propertySchema.put("description", "License expression");
+					propertySchema.put("description", "License expression.  See SPDX Annex D for the license expression syntax.");
 				} else {
-					propertySchema.put("description", "License expression for "+checkConvertRenamedPropertyName(property.getLocalName())+".  "+description.asText());
+					propertySchema.put("description", "License expression for "+checkConvertRenamedPropertyName(property.getLocalName())+". See SPDX Annex D for the license expression syntax.  "+description.asText());
 				}
 				propertySchema.put(JSON_RESTRICTION_TYPE, JSON_TYPE_STRING);
 			} else if (Objects.nonNull(clazz) && SpdxElement.class.isAssignableFrom(clazz)) {
