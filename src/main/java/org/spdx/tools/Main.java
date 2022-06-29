@@ -31,7 +31,7 @@ import org.spdx.library.model.license.ListedLicenses;
  */
 public class Main {
 
-	private static final String CURRENT_TOOL_VERSION = "1.0.3";
+	private static final String CURRENT_TOOL_VERSION = "1.0.5";
 
     /**
 	 * @param args args[0] is the name of the tools with the remaining args being the tool parameters

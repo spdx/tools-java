@@ -72,8 +72,8 @@ public class CompareSpdxDocsTest extends TestCase {
 	public void testCompareDocuments() throws OnlineToolException, SpreadsheetException {
 		String outputFilePath = tempDirPath + File.separator + "comp.xlsx";
 		String[] params = new String[] {outputFilePath, TEST_JSON_FILE_PATH, 
-				TEST_RDF_FILE_PATH,
-				TEST_SPREADSHEET_XLS_FILE_PATH, TEST_SPREADSHEET_XLSX_FILE_PATH, TEST_TAG_FILE_PATH,
+				TEST_RDF_FILE_PATH,	TEST_SPREADSHEET_XLS_FILE_PATH, 
+				TEST_SPREADSHEET_XLSX_FILE_PATH, TEST_TAG_FILE_PATH,
 				TEST_XML_FILE_PATH, 
 				TEST_YAML_FILE_PATH
 		};
