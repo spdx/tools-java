@@ -160,7 +160,13 @@ public class Verify {
 				retval.add("Unable to validate JSON file against schema due to processing exception");
 			}
 		}
-		List<String> verify = doc.verify();
+		List<String> verify;
+		try {
+			verify = doc.verify(doc.getSpecVersion());
+		} catch (InvalidSPDXAnalysisException e) {
+			retval.add("Error processing verify for the specific version");
+			verify = doc.verify();
+		}
 		
 		if (!verify.isEmpty()) {
 			for (String verifyMsg:verify) {

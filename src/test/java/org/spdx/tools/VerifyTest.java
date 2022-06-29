@@ -10,13 +10,14 @@ import junit.framework.TestCase;
 public class VerifyTest extends TestCase {
 	
 	static final String TEST_DIR = "testResources";
-	static final String TEST_JSON_FILE_PATH = TEST_DIR + File.separator + "SPDXJSONExample-v2.2.spdx.json";
-	static final String TEST_RDF_FILE_PATH = TEST_DIR + File.separator + "SPDXRdfExample-v2.2.spdx.rdf";
-	static final String TEST_SPREADSHEET_XLS_FILE_PATH = TEST_DIR + File.separator + "SPDXSpreadsheetExample-v2.2.xls";
-	static final String TEST_SPREADSHEET_XLSX_FILE_PATH = TEST_DIR + File.separator + "SPDXSpreadsheetExample-v2.2.xlsx";
-	static final String TEST_TAG_FILE_PATH = TEST_DIR + File.separator + "SPDXTagExample-v2.2.spdx";
-	static final String TEST_XML_FILE_PATH = TEST_DIR + File.separator + "SPDXXMLExample-v2.2.spdx.xml";
-	static final String TEST_YAML_FILE_PATH = TEST_DIR + File.separator + "SPDXYAMLExample-2.2.spdx.yaml";
+	static final String TEST_JSON_FILE_PATH = TEST_DIR + File.separator + "SPDXJSONExample-v2.3.spdx.json";
+	static final String TEST_V23_FIELDS_IN_V22_FILE = TEST_DIR + File.separator + "SPDXWrongVersion.spdx.json";
+	static final String TEST_RDF_FILE_PATH = TEST_DIR + File.separator + "SPDXRdfExample-v2.3.spdx.rdf";
+	static final String TEST_SPREADSHEET_XLS_FILE_PATH = TEST_DIR + File.separator + "SPDXSpreadsheetExample-v2.3.xls";
+	static final String TEST_SPREADSHEET_XLSX_FILE_PATH = TEST_DIR + File.separator + "SPDXSpreadsheetExample-v2.3.xlsx";
+	static final String TEST_TAG_FILE_PATH = TEST_DIR + File.separator + "SPDXTagExample-v2.3.spdx";
+	static final String TEST_XML_FILE_PATH = TEST_DIR + File.separator + "SPDXXMLExample-v2.3.spdx.xml";
+	static final String TEST_YAML_FILE_PATH = TEST_DIR + File.separator + "SPDXYAMLExample-2.3.spdx.yaml";
 	static final String TEST_WARNING_FILE_PATH = TEST_DIR + File.separator + "SPDXTagExample-v2.2-warning.spdx";
     static final String BAD_JSON_FILE_PATH = TEST_DIR + File.separator + "BadJSON.spdx.json";
 	
@@ -28,6 +29,11 @@ public class VerifyTest extends TestCase {
 		super.tearDown();
 	}
 
+	public void testUpsupportedVersionFields() throws SpdxVerificationException {
+		List<String> result = Verify.verify(TEST_V23_FIELDS_IN_V22_FILE, SerFileType.JSON);
+		assertTrue(result.size() > 0);
+	}
+	
 	public void testVerifyTagFile() throws SpdxVerificationException {
 		List<String> result = Verify.verifyTagFile(TEST_TAG_FILE_PATH);
 		assertEquals(0, result.size());
@@ -59,6 +65,6 @@ public class VerifyTest extends TestCase {
 	
 	public void testVerifyBadJSON() throws SpdxVerificationException {
 		List<String> result = Verify.verify(BAD_JSON_FILE_PATH, SerFileType.JSON);
-		assertTrue(result.size() == 4);
+		assertTrue(result.size() == 5);
 	}
 }
