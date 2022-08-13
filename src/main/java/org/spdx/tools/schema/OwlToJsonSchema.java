@@ -300,7 +300,11 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 			propertySchema.put(JSON_RESTRICTION_TYPE, JSON_TYPE_STRING);
 			ArrayNode enums = jsonMapper.createArrayNode();
 			for (String val:restrictions.getEnumValues()) {
-				enums.add(val);
+				if (property.getLocalName().equals("algorithm") || property.getLocalName().equals("referenceCategory")) {
+					enums.add(val.replaceAll("_", "-"));
+				} else {
+					enums.add(val);
+				}
 			}
 			propertySchema.set("enum", enums);
 		} else if (restrictions.getTypeUri().equals("http://www.w3.org/2000/01/rdf-schema#Literal")) {
