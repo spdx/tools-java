@@ -54,13 +54,13 @@ The following  tools can be used to compare one or more SPDX documents:
 
     Example to compare multiple SPDX files provided in rdf format and provide a spreadsheet with the results:
 
-        java -jar tools-java-1.1.0-jar-with-dependencies.jar CompareMultipleSpdxDocs output.xlsx doc1 doc2 ... docN
+        java -jar tools-java-1.1.0-jar-with-dependencies.jar CompareDocs output.xlsx doc1 doc2 ... docN
         
   * CompareMultipleSpdxDocs with directory
 
     Example to compare all SPDX documents in a directory "/home/me/spdxdocs" and provide a spreadsheet with the results:
 
-        java -jar tools-java-1.1.0-jar-with-dependencies.jar CompareMultipleSpdxDocs output.xlsx /home/me/spdxdocs
+        java -jar tools-java-1.1.0-jar-with-dependencies.jar CompareDocs output.xlsx /home/me/spdxdocs
 
 ## SPDX Viewer
 The following tool can be used to "Pretty Print" an SPDX document.
