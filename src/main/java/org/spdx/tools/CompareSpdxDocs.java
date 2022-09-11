@@ -183,6 +183,13 @@ public class CompareSpdxDocs {
                 }
             }
         }
+        // Back up looking for the first path separator
+        for (int i = commonPrefixIndex; i >= 0; i--) {
+        	if (uriFilePaths.get(0).charAt(i) == '/' || uriFilePaths.get(0).charAt(i) == '\\') {
+        		commonPrefixIndex = i+1;
+        		break;
+        	}
+        }
         for (String uriFilePath:uriFilePaths) {
             docNames.add(uriFilePath.substring(commonPrefixIndex).replace("\\", "/"));
         }
