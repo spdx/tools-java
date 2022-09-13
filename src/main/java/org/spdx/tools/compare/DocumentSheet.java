@@ -332,7 +332,7 @@ public class DocumentSheet extends AbstractSheet {
 	private void importCreatorComment(SpdxComparer comparer) throws InvalidSPDXAnalysisException, SpdxCompareException {
 		// comparison row
 		Cell cell = sheet.getRow(getFirstDataRow()).createCell(CREATOR_COMMENT_COL);
-		if (comparer.isCreatorInformationEqual()) {
+		if (comparer.isCreatorCommentsEqual()) {
 			setCellEqualValue(cell);
 		} else {
 			setCellDifferentValue(cell);
@@ -356,7 +356,7 @@ public class DocumentSheet extends AbstractSheet {
 	private void importCreationDate(SpdxComparer comparer) throws InvalidSPDXAnalysisException, SpdxCompareException {
 		// comparison row
 		Cell cell = sheet.getRow(getFirstDataRow()).createCell(CREATION_DATE_COL);
-		if (comparer.isCreatorInformationEqual()) {
+		if (comparer.isCreatorDatesEqual()) {
 			setCellEqualValue(cell);
 		} else {
 			setCellDifferentValue(cell);
