@@ -11,6 +11,9 @@ public class VerifyTest extends TestCase {
 	
 	static final String TEST_DIR = "testResources";
 	static final String TEST_JSON_FILE_PATH = TEST_DIR + File.separator + "SPDXJSONExample-v2.3.spdx.json";
+	static final String JSON_V2_3_FILE_PATH = TEST_DIR + File.separator + "SPDXJSONExample-v2.3.spdx.json";
+	static final String JSON_V2_2_FILE_PATH = TEST_DIR + File.separator + "SPDXJSONExample-v2.2.spdx.json";
+	static final String JSON_BAD_VERSION_FILE_PATH = TEST_DIR + File.separator + "SPDXJSONExample-wrongversion.spdx.json";
 	static final String TEST_V23_FIELDS_IN_V22_FILE = TEST_DIR + File.separator + "SPDXWrongVersion.spdx.json";
 	static final String TEST_RDF_FILE_PATH = TEST_DIR + File.separator + "SPDXRdfExample-v2.3.spdx.rdf";
 	static final String TEST_SPREADSHEET_XLS_FILE_PATH = TEST_DIR + File.separator + "SPDXSpreadsheetExample-v2.3.xls";
@@ -66,5 +69,15 @@ public class VerifyTest extends TestCase {
 	public void testVerifyBadJSON() throws SpdxVerificationException {
 		List<String> result = Verify.verify(BAD_JSON_FILE_PATH, SerFileType.JSON);
 		assertTrue(result.size() == 5);
+	}
+	
+	// Test specific spec versions for the JSON format
+	public void testVerifyJSONVersion() throws SpdxVerificationException {
+		List<String> result = Verify.verify(JSON_V2_2_FILE_PATH, SerFileType.JSON);
+		assertTrue(result.size() == 0);
+		result = Verify.verify(JSON_V2_3_FILE_PATH, SerFileType.JSON);
+		assertTrue(result.size() == 0);
+		result = Verify.verify(JSON_BAD_VERSION_FILE_PATH, SerFileType.JSON); // a 2.3 version syntax with a 2.2 specversion
+		assertTrue(result.size() > 0);
 	}
 }
