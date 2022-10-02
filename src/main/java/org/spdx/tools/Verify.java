@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.spdx.library.InvalidSPDXAnalysisException;
+import org.spdx.library.Version;
 import org.spdx.library.model.SpdxDocument;
 import org.spdx.storage.ISerializableModelStore;
 import org.spdx.tagvaluestore.TagValueStore;
@@ -48,8 +49,9 @@ public class Verify {
 	static final int MIN_ARGS = 1;
 	static final int MAX_ARGS = 2;
 	static final int ERROR_STATUS = 1;
-	private static final String JSON_SCHEMA_RESOURCE = "/resources/spdx-schema.json";
-
+	private static final String JSON_SCHEMA_RESOURCE_V2_3 = "/resources/spdx-schema-v2.3.json";
+	private static final String JSON_SCHEMA_RESOURCE_V2_2 = "/resources/spdx-schema-v2.2.json";
+	
 	/**
 	 * @param args args[0] SPDX file path; args[1] [RDFXML|JSON|XLS|XLSX|YAML|TAG] an optional file type - if not present, file type of the to file will be used
 	 */
@@ -139,7 +141,9 @@ public class Verify {
 		}
 		if (SerFileType.JSON.equals(fileType)) {
 			try {
-				JsonNode spdxJsonSchema = JsonLoader.fromResource(JSON_SCHEMA_RESOURCE);
+				String jsonSchemaResource = Version.versionLessThan(Version.TWO_POINT_THREE_VERSION, doc.getSpecVersion()) ? 
+						JSON_SCHEMA_RESOURCE_V2_2 : JSON_SCHEMA_RESOURCE_V2_3;
+				JsonNode spdxJsonSchema = JsonLoader.fromResource(jsonSchemaResource);
 				final JsonSchema schema = JsonSchemaFactory.byDefault().getJsonSchema(spdxJsonSchema);
 				JsonNode spdxDocJson = JsonLoader.fromFile(file);
 				ProcessingReport report = schema.validateUnchecked(spdxDocJson, true);
@@ -156,6 +160,8 @@ public class Verify {
 				});
 			} catch (IOException e) {
 				retval.add("Unable to validate JSON file against schema due to I/O Error");
+			} catch (InvalidSPDXAnalysisException e) {
+				retval.add("Unable to validate JSON file against schema due error in SPDX file");
 			} catch (ProcessingException e) {
 				retval.add("Unable to validate JSON file against schema due to processing exception");
 			}
