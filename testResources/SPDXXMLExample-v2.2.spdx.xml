@@ -171,7 +171,7 @@ THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED WAR
     <annotator>Person: Joe Reviewer</annotator>
     <comment>This is just an example.  Some of the non-standard licenses look like they are actually BSD 3 clause licenses</comment>
   </annotations>
-  <documentNamespace>http://spdx.org/spdxdocs/spdx-example-444504E0-4F89-41D3-9A0C-0305E82C3301</documentNamespace>
+  <documentNamespace>http://spdx.org/spdxdocs/spdx-example-xml-2-2-444504E0-4F89-41D3-9A0C-0305E82C3301</documentNamespace>
   <documentDescribes>SPDXRef-File</documentDescribes>
   <documentDescribes>SPDXRef-Package</documentDescribes>
   <packages>

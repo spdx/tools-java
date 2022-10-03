@@ -137,6 +137,12 @@ public class CompareSpdxDocs {
 		}
 		if (spdxDocOrDir.isFile()) {
 			SpdxDocument doc = SpdxToolsHelper.deserializeDocument(spdxDocOrDir);
+			for (SpdxDocument otherDocs:compareDocs) {
+				if (otherDocs.getDocumentUri().equals(doc.getDocumentUri())) {
+					// Duplicate document URI
+					throw new InvalidSPDXAnalysisException("Duplicate document namespace "+doc.getDocumentUri()+".  Document namespaces must be unique per specification and for a valid comparison.");
+				}
+			}
 			compareDocs.add(doc);
 			List<String> warnings = doc.verify();
 			if (!warnings.isEmpty()) {
@@ -182,6 +188,13 @@ public class CompareSpdxDocs {
                     break;
                 }
             }
+        }
+        // Back up looking for the first path separator
+        for (int i = commonPrefixIndex; i >= 0; i--) {
+        	if (uriFilePaths.get(0).charAt(i) == '/' || uriFilePaths.get(0).charAt(i) == '\\') {
+        		commonPrefixIndex = i+1;
+        		break;
+        	}
         }
         for (String uriFilePath:uriFilePaths) {
             docNames.add(uriFilePath.substring(commonPrefixIndex).replace("\\", "/"));

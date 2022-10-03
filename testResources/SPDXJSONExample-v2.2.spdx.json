@@ -53,7 +53,7 @@
     "annotator" : "Person: Joe Reviewer",
     "comment" : "This is just an example.  Some of the non-standard licenses look like they are actually BSD 3 clause licenses"
   } ],
-  "documentNamespace" : "http://spdx.org/spdxdocs/spdx-example-444504E0-4F89-41D3-9A0C-0305E82C3301",
+  "documentNamespace" : "http://spdx.org/spdxdocs/spdx-example-json-2.2-444504E0-4F89-41D3-9A0C-0305E82C3301",
   "documentDescribes" : [ "SPDXRef-File", "SPDXRef-Package" ],
   "packages" : [ {
     "SPDXID" : "SPDXRef-Package",
