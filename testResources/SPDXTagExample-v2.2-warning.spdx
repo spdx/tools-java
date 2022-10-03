@@ -1,7 +1,7 @@
 # This file will have a single warning about the deprecated LGPL license
 SPDXVersion: SPDX-2.2
 DataLicense: CC0-1.0
-DocumentNamespace: http://spdx.org/spdxdocs/spdx-example-444504E0-4F89-41D3-9A0C-0305E82C3301
+DocumentNamespace: http://spdx.org/spdxdocs/spdx-example-tv-2-2-warnings-444504E0-4F89-41D3-9A0C-0305E82C3301
 DocumentName: SPDX-Tools-v2.0
 SPDXID: SPDXRef-DOCUMENT
 DocumentComment: <text>This document was created using SPDX 2.0 using licenses from the web site.</text>

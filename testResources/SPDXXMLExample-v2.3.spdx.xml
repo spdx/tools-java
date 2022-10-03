@@ -173,7 +173,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</extractedText>
   <documentDescribes>SPDXRef-File</documentDescribes>
   <documentDescribes>SPDXRef-File</documentDescribes>
   <documentDescribes>SPDXRef-Package</documentDescribes>
-  <documentNamespace>http://spdx.org/spdxdocs/spdx-example-444504E0-4F89-41D3-9A0C-0305E82C3301</documentNamespace>
+  <documentNamespace>http://spdx.org/spdxdocs/spdx-example-xml-2-3-444504E0-4F89-41D3-9A0C-0305E82C3301</documentNamespace>
   <packages>
     <SPDXID>SPDXRef-Package</SPDXID>
     <annotations>

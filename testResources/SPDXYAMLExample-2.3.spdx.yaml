@@ -144,7 +144,7 @@ documentDescribes:
 - "SPDXRef-File"
 - "SPDXRef-File"
 - "SPDXRef-Package"
-documentNamespace: "http://spdx.org/spdxdocs/spdx-example-444504E0-4F89-41D3-9A0C-0305E82C3301"
+documentNamespace: "http://spdx.org/spdxdocs/spdx-example-yaml-2-3-444504E0-4F89-41D3-9A0C-0305E82C3301"
 packages:
 - SPDXID: "SPDXRef-Package"
   annotations:
