@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+   <suppress>
+      <notes><![CDATA[
+      The feature referenced in the CVE is not used by this software.
+      file name: guava-28.2-android.jar
+      ]]></notes>
+      <packageUrl regex="true">^pkg:maven/com\.google\.guava/guava@.*$</packageUrl>
+      <cve>CVE-2020-8908</cve>
+   </suppress>
+   <suppress>
+      <notes><![CDATA[
+      The feature referenced in the CVE is not used by this software.
+      file name: poi-4.1.2.jar
+      ]]></notes>
+      <packageUrl regex="true">^pkg:maven/org\.apache\.poi/poi@.*$</packageUrl>
+      <cve>CVE-2022-26336</cve>
+   </suppress>
+   <suppress>
+      <notes><![CDATA[
+      The feature referenced in the CVE is not used by this software.
+      file name: poi-ooxml-4.1.2.jar
+      ]]></notes>
+      <packageUrl regex="true">^pkg:maven/org\.apache\.poi/poi\-ooxml@.*$</packageUrl>
+      <cve>CVE-2022-26336</cve>
+   </suppress>
+   <suppress>
+      <notes><![CDATA[
+      file name: poi-ooxml-schemas-4.1.2.jar
+      ]]></notes>
+      <packageUrl regex="true">^pkg:maven/org\.apache\.poi/poi\-ooxml\-schemas@.*$</packageUrl>
+      <cve>CVE-2022-26336</cve>
+   </suppress>
+</suppressions>
