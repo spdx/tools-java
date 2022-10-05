@@ -322,14 +322,14 @@
                 "referenceCategory" : {
                   "description" : "Category for the external reference",
                   "type" : "string",
-                  "enum" : [ "OTHER", "PERSISTENT-ID", "SECURITY", "PACKAGE-MANAGER" ]
+                  "enum" : [ "OTHER", "PERSISTENT-ID", "PERSISTENT_ID", "SECURITY", "PACKAGE-MANAGER", "PACKAGE_MANAGER" ]
                 },
                 "referenceLocator" : {
                   "description" : "The unique string with no spaces necessary to access the package-specific information, metadata, or content within the target location. The format of the locator is subject to constraints defined by the <type>.",
                   "type" : "string"
                 },
                 "referenceType" : {
-                  "description" : "Type of the external reference. These are definined in an appendix in the SPDX specification.",
+                  "description" : "Type of the external reference. These are defined in an appendix in the SPDX specification.",
                   "type" : "string"
                 }
               },
