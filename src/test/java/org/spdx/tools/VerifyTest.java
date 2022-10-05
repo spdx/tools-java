@@ -68,7 +68,7 @@ public class VerifyTest extends TestCase {
 	
 	public void testVerifyBadJSON() throws SpdxVerificationException {
 		List<String> result = Verify.verify(BAD_JSON_FILE_PATH, SerFileType.JSON);
-		assertTrue(result.size() == 5);
+		assertTrue(result.size() == 4);
 	}
 	
 	// Test specific spec versions for the JSON format
