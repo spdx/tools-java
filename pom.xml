@@ -55,6 +55,7 @@
 	  <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	  <sonar.organization>spdx</sonar.organization>
 	  <sonar.projectKey>tools-java</sonar.projectKey>
+	  <dependency-check-maven.version>7.2.1</dependency-check-maven.version>
     </properties>
 	<profiles>
 		<profile>
@@ -176,117 +177,125 @@
 			</testResource>
 		</testResources>
 		<plugins>
-		<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-compiler-plugin</artifactId>
-			<version>3.6.1</version>
-			<configuration>
-				<source>1.8</source>
-				<target>1.8</target>
-				<encoding>${project.build.sourceEncoding}</encoding>
-				<showDeprecation>true</showDeprecation>
-				<showWarnings>true</showWarnings>
-				<optimize>true</optimize>
-			</configuration>
-		</plugin>
-		<plugin>
-		  <artifactId>maven-assembly-plugin</artifactId>
-		  <configuration>
-		    <archive>
-		      <manifest>
-		        <mainClass>org.spdx.tools.Main</mainClass>
-		      </manifest>
-		    </archive>
-		    <descriptorRefs>
-		      <descriptorRef>jar-with-dependencies</descriptorRef>
-		    </descriptorRefs>
-		  </configuration>
-		  <executions>
-		    <execution>
-		      <id>make-assembly</id>
-		      <phase>package</phase>
-		      <goals>
-		        <goal>single</goal>
-		      </goals>
-		    </execution>
-		  </executions>
-		</plugin>
-		<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-javadoc-plugin</artifactId>
-			<version>2.9</version>
-			<configuration>
-				<quiet>true</quiet>
-				<source>8</source>
-				<javadocExecutable>${env.JAVA_HOME}/bin/javadoc</javadocExecutable>
-				<additionalparam>-Xdoclint:none</additionalparam>
-			</configuration>
-			<executions>
-				<execution>
-					<id>attach-javadocs</id>
-					<configuration>
-						<additionalparam>${javadoc.opts}</additionalparam>
-					</configuration>
-					<goals>
-						<goal>jar</goal>
-					</goals>
-				</execution>
-			</executions>
-		</plugin>
-	   	<plugin>
-	      <groupId>org.apache.maven.plugins</groupId>
-	      <artifactId>maven-source-plugin</artifactId>
-	      <version>3.2.1</version>
-	      <executions>
-	        <execution>
-	          <id>attach-sources</id>
-	          <phase>verify</phase>
-	          <goals>
-	            <goal>jar-no-fork</goal>
-	          </goals>
-	        </execution>
-	      </executions>
-	    </plugin>
-		<plugin>
-			<groupId>org.spdx</groupId>
-				<artifactId>spdx-maven-plugin</artifactId>
-				<version>0.6.0</version>
+			<plugin>
+   				<groupId>org.owasp</groupId>
+   				<artifactId>dependency-check-maven</artifactId>
+   				<version>${dependency-check-maven.version}</version>
+   				<configuration>
+   					<suppressionFiles>dependency-check-supress.xml</suppressionFiles>
+   				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.6.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<showDeprecation>true</showDeprecation>
+					<showWarnings>true</showWarnings>
+					<optimize>true</optimize>
+				</configuration>
+			</plugin>
+			<plugin>
+			  <artifactId>maven-assembly-plugin</artifactId>
+			  <configuration>
+			    <archive>
+			      <manifest>
+			        <mainClass>org.spdx.tools.Main</mainClass>
+			      </manifest>
+			    </archive>
+			    <descriptorRefs>
+			      <descriptorRef>jar-with-dependencies</descriptorRef>
+			    </descriptorRefs>
+			  </configuration>
+			  <executions>
+			    <execution>
+			      <id>make-assembly</id>
+			      <phase>package</phase>
+			      <goals>
+			        <goal>single</goal>
+			      </goals>
+			    </execution>
+			  </executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<quiet>true</quiet>
+					<source>8</source>
+					<javadocExecutable>${env.JAVA_HOME}/bin/javadoc</javadocExecutable>
+					<additionalparam>-Xdoclint:none</additionalparam>
+				</configuration>
 				<executions>
 					<execution>
-						<id>build-spdx</id>
-						<phase>prepare-package</phase>
+						<id>attach-javadocs</id>
+						<configuration>
+							<additionalparam>${javadoc.opts}</additionalparam>
+						</configuration>
 						<goals>
-							<goal>createSPDX</goal>
+							<goal>jar</goal>
 						</goals>
 					</execution>
 				</executions>
-				<configuration>
-					<spdxDocumentNamespace>http://spdx.org/documents/tools-java-{$version}</spdxDocumentNamespace>					
-					<defaultFileCopyright>Copyright (c) 2020 Source Auditor Inc.</defaultFileCopyright>
-					<defaultFileContributors>
-						<param>Gary O'Neall</param>
-					</defaultFileContributors>
-					<defaultLicenseInformationInFile>Apache-2.0</defaultLicenseInformationInFile>
-					<defaultFileConcludedLicense>Apache-2.0</defaultFileConcludedLicense>
-					<defaultFileNotice>Licensed under the Apache License, Version 2.0 (the "License");
-	  you may not use this file except in compliance with the License.
-	  You may obtain a copy of the License at
-	
-	      http://www.apache.org/licenses/LICENSE-2.0
-	
-	  Unless required by applicable law or agreed to in writing, software
-	  distributed under the License is distributed on an "AS IS" BASIS,
-	  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	  See the License for the specific language governing permissions and
-	  limitations under the License.</defaultFileNotice>
-					<licenseDeclared>Apache-2.0</licenseDeclared>
-					<licenseConcluded>Apache-2.0</licenseConcluded>
-					<creators>
-						<param>Person: Gary O'Neall</param>
-					</creators>
-					<originator>Organization: Linux Foundation</originator>
-				</configuration>
-          </plugin>
-	</plugins>
-  </build>
+			</plugin>
+		   	<plugin>
+		      <groupId>org.apache.maven.plugins</groupId>
+		      <artifactId>maven-source-plugin</artifactId>
+		      <version>3.2.1</version>
+		      <executions>
+		        <execution>
+		          <id>attach-sources</id>
+		          <phase>verify</phase>
+		          <goals>
+		            <goal>jar-no-fork</goal>
+		          </goals>
+		        </execution>
+		      </executions>
+		    </plugin>
+			<plugin>
+				<groupId>org.spdx</groupId>
+					<artifactId>spdx-maven-plugin</artifactId>
+					<version>0.6.0</version>
+					<executions>
+						<execution>
+							<id>build-spdx</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>createSPDX</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<spdxDocumentNamespace>http://spdx.org/documents/tools-java-{$version}</spdxDocumentNamespace>					
+						<defaultFileCopyright>Copyright (c) 2020 Source Auditor Inc.</defaultFileCopyright>
+						<defaultFileContributors>
+							<param>Gary O'Neall</param>
+						</defaultFileContributors>
+						<defaultLicenseInformationInFile>Apache-2.0</defaultLicenseInformationInFile>
+						<defaultFileConcludedLicense>Apache-2.0</defaultFileConcludedLicense>
+						<defaultFileNotice>Licensed under the Apache License, Version 2.0 (the "License");
+		  you may not use this file except in compliance with the License.
+		  You may obtain a copy of the License at
+		
+		      http://www.apache.org/licenses/LICENSE-2.0
+		
+		  Unless required by applicable law or agreed to in writing, software
+		  distributed under the License is distributed on an "AS IS" BASIS,
+		  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		  See the License for the specific language governing permissions and
+		  limitations under the License.</defaultFileNotice>
+						<licenseDeclared>Apache-2.0</licenseDeclared>
+						<licenseConcluded>Apache-2.0</licenseConcluded>
+						<creators>
+							<param>Person: Gary O'Neall</param>
+						</creators>
+						<originator>Organization: Linux Foundation</originator>
+					</configuration>
+	          </plugin>
+		</plugins>
+  	</build>
 </project>
