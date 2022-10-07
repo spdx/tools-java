@@ -112,6 +112,7 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 		// Add in the extra properties
 		properties.set(SpdxConstants.PROP_DOCUMENT_NAMESPACE, createSimpleTypeSchema(JSON_TYPE_STRING, 
 		        "The URI provides an unambiguous mechanism for other SPDX documents to reference SPDX elements within this SPDX document."));
+		required.add(SpdxConstants.PROP_DOCUMENT_NAMESPACE);
 		properties.set(SpdxConstants.PROP_DOCUMENT_DESCRIBES, toArraySchema(createSimpleTypeSchema(JSON_TYPE_STRING, "SPDX ID for each Package, File, or Snippet."), 
 		        "Packages, files and/or Snippets described by this SPDX document", 0));
         
@@ -300,8 +301,13 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 			propertySchema.put(JSON_RESTRICTION_TYPE, JSON_TYPE_STRING);
 			ArrayNode enums = jsonMapper.createArrayNode();
 			for (String val:restrictions.getEnumValues()) {
-				if (property.getLocalName().equals("algorithm") || property.getLocalName().equals("referenceCategory")) {
+				if (property.getLocalName().equals("algorithm")) {
 					enums.add(val.replaceAll("_", "-"));
+				} else if (property.getLocalName().equals("referenceCategory")) {
+					if (val.contains("_")) {
+						enums.add(val.replaceAll("_", "-"));
+					}
+					enums.add(val);
 				} else {
 					enums.add(val);
 				}
