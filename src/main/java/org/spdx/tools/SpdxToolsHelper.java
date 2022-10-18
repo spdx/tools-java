@@ -33,6 +33,7 @@ import org.spdx.jacksonstore.MultiFormatStore.Format;
 import org.spdx.jacksonstore.MultiFormatStore.Verbose;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.SpdxDocument;
+import org.spdx.spdxRdfStore.OutputFormat;
 import org.spdx.spdxRdfStore.RdfStore;
 import org.spdx.spreadsheetstore.SpreadsheetStore;
 import org.spdx.spreadsheetstore.SpreadsheetStore.SpreadsheetFormatType;
@@ -49,7 +50,7 @@ import org.spdx.tagvaluestore.TagValueStore;
 public class SpdxToolsHelper {
 
 	public enum SerFileType {
-		JSON, RDFXML, XML, XLS, XLSX, YAML, TAG
+		JSON, RDFXML, XML, XLS, XLSX, YAML, TAG, RDFTTL
 	}
 
 	static Map<String, SerFileType> EXT_TO_FILETYPE;
@@ -65,51 +66,84 @@ public class SpdxToolsHelper {
 		temp.put("tag", SerFileType.TAG);
 		temp.put("spdx", SerFileType.TAG);
 		temp.put("yml", SerFileType.YAML);
+		temp.put("rdf.ttl", SerFileType.RDFTTL);
 		EXT_TO_FILETYPE = Collections.unmodifiableMap(temp);
 	}
 
 	/**
-	 * @param fileType file type for the store
-	 * @return the appropriate in memory based model store which supports serialization for the fileType
+	 * @param fileType
+	 *            file type for the store
+	 * @return the appropriate in memory based model store which supports
+	 *         serialization for the fileType
 	 * @throws InvalidSPDXAnalysisException
 	 */
-	public static ISerializableModelStore fileTypeToStore(SerFileType fileType) throws InvalidSPDXAnalysisException {
-		switch(fileType) {
-		case JSON: return new MultiFormatStore(new InMemSpdxStore(), Format.JSON_PRETTY, Verbose.COMPACT);
-		case RDFXML: return new RdfStore();
-		case TAG: return new TagValueStore(new InMemSpdxStore());
-		case XLS: return new SpreadsheetStore(new InMemSpdxStore(), SpreadsheetFormatType.XLS);
-		case XLSX: return new SpreadsheetStore(new InMemSpdxStore(), SpreadsheetFormatType.XLSX);
-		case XML: return new MultiFormatStore(new InMemSpdxStore(), Format.XML, Verbose.COMPACT);
-		case YAML: return new MultiFormatStore(new InMemSpdxStore(), Format.YAML, Verbose.COMPACT);
-		default: throw new InvalidSPDXAnalysisException("Unsupported file type: "+fileType+".  Check back later.");
+	public static ISerializableModelStore fileTypeToStore(SerFileType fileType)
+			throws InvalidSPDXAnalysisException {
+		switch (fileType) {
+			case JSON :
+				return new MultiFormatStore(new InMemSpdxStore(),
+						Format.JSON_PRETTY, Verbose.COMPACT);
+			case RDFXML : {
+				RdfStore rdfStore = new RdfStore();
+				rdfStore.setOutputFormat(OutputFormat.XML);
+				return rdfStore;
+			}
+			case RDFTTL : {
+				RdfStore rdfStore = new RdfStore();
+				rdfStore.setOutputFormat(OutputFormat.XML);
+				return rdfStore;
+			}
+			case TAG :
+				return new TagValueStore(new InMemSpdxStore());
+			case XLS :
+				return new SpreadsheetStore(new InMemSpdxStore(),
+						SpreadsheetFormatType.XLS);
+			case XLSX :
+				return new SpreadsheetStore(new InMemSpdxStore(),
+						SpreadsheetFormatType.XLSX);
+			case XML :
+				return new MultiFormatStore(new InMemSpdxStore(), Format.XML,
+						Verbose.COMPACT);
+			case YAML :
+				return new MultiFormatStore(new InMemSpdxStore(), Format.YAML,
+						Verbose.COMPACT);
+			default :
+				throw new InvalidSPDXAnalysisException("Unsupported file type: "
+						+ fileType + ".  Check back later.");
 		}
 	}
-
 
 	/**
 	 * @param file
 	 * @return the file type based on the file name and file extension
 	 * @throws InvalidFileNameException
 	 */
-	public static SerFileType fileToFileType(File file) throws InvalidFileNameException {
+	public static SerFileType fileToFileType(File file)
+			throws InvalidFileNameException {
 		String fileName = file.getName();
 		if (!fileName.contains(".")) {
-			throw new InvalidFileNameException("Can not convert file to file type - no file extension");
+			throw new InvalidFileNameException(
+					"Can not convert file to file type - no file extension");
 		}
-		String ext = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+		String ext = fileName.substring(fileName.lastIndexOf(".") + 1)
+				.toLowerCase();
 		if ("xml".equals(ext)) {
 			if (fileName.endsWith("rdf.xml")) {
 				ext = "rdf.xml";
 			}
 		}
+		if ("ttl".equals(ext)) {
+			if (fileName.endsWith("rdf.ttl")) {
+				ext = "rdf.ttl";
+			}
+		}
 		SerFileType retval = EXT_TO_FILETYPE.get(ext);
 		if (Objects.isNull(retval)) {
-			throw new InvalidFileNameException("Unrecognized file extension: "+ext);
+			throw new InvalidFileNameException(
+					"Unrecognized file extension: " + ext);
 		}
 		return retval;
 	}
-
 
 	/**
 	 * @param str
@@ -121,13 +155,17 @@ public class SpdxToolsHelper {
 	}
 
 	/**
-	 * @param file file containing an SPDX document with the standard file extension for the serialization formats
+	 * @param file
+	 *            file containing an SPDX document with the standard file
+	 *            extension for the serialization formats
 	 * @return the SPDX document stored in the file
 	 * @throws InvalidSPDXAnalysisException
 	 * @throws IOException
 	 * @throws InvalidFileNameException
 	 */
-	public static SpdxDocument deserializeDocument(File file) throws InvalidSPDXAnalysisException, IOException, InvalidFileNameException {
+	public static SpdxDocument deserializeDocument(File file)
+			throws InvalidSPDXAnalysisException, IOException,
+			InvalidFileNameException {
 		ISerializableModelStore store = fileTypeToStore(fileToFileType(file));
 		try (InputStream is = new FileInputStream(file)) {
 			String documentUri = store.deSerialize(is, false);
@@ -135,13 +173,18 @@ public class SpdxToolsHelper {
 		}
 	}
 	/**
-	 * @param file file containing an SPDX document in one of the supported SerFileTypes
-	 * @param fileType serialization file type
+	 * @param file
+	 *            file containing an SPDX document in one of the supported
+	 *            SerFileTypes
+	 * @param fileType
+	 *            serialization file type
 	 * @return the SPDX document stored in the file
 	 * @throws InvalidSPDXAnalysisException
 	 * @throws IOException
 	 */
-	public static SpdxDocument deserializeDocument(File file, SerFileType fileType) throws InvalidSPDXAnalysisException, IOException {
+	public static SpdxDocument deserializeDocument(File file,
+			SerFileType fileType)
+			throws InvalidSPDXAnalysisException, IOException {
 		ISerializableModelStore store = fileTypeToStore(fileType);
 		try (InputStream is = new FileInputStream(file)) {
 			String documentUri = store.deSerialize(is, false);

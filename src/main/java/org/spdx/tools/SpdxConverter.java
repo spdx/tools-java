@@ -35,8 +35,8 @@ import org.spdx.tools.SpdxToolsHelper.SerFileType;
  * Converts between various SPDX file types
  * arg[0] from file path
  * arg[1] to file path
- * arg[2] from file type [RDFXML|JSON|XLS|XLSX|YAML|TAG] - if not present, file type of the from file will be used
- * arg[3] to file type [RDFXML|JSON|XLS|XLSX|YAML|TAG] - if not present, file type of the to file will be used
+ * arg[2] from file type [RDFXML|RDFTTL|JSON|XLS|XLSX|YAML|TAG] - if not present, file type of the from file will be used
+ * arg[3] to file type [RDFXML|RDFTTL|JSON|XLS|XLSX|YAML|TAG] - if not present, file type of the to file will be used
  * 
  * the <code>covert(...)</code> methods can be called programmatically to convert files
  * @author Gary O'Neall
@@ -200,8 +200,8 @@ public class SpdxConverter {
 		System.out.println("SpdxConverter fromFilePath toFilePath [fromFileType] [toFileType]");
 		System.out.println("\tfromFilePath - File path of the file to convert from");
 		System.out.println("\ttoFilePath - output file");
-		System.out.println("\t[fromFileType] - optional file type of the input file.  One of JSON, XLS, XLSX, TAG, RDFXML, YAML or XML.  If not provided the file type will be determined by the file extension");
-		System.out.println("\t[toFileType] - optional file type of the output file.  One of JSON, XLS, XLSX, TAG, RDFXML, YAML or XML.  If not provided the file type will be determined by the file extension");
+		System.out.println("\t[fromFileType] - optional file type of the input file.  One of JSON, XLS, XLSX, TAG, RDFXML, RDFTTL, YAML or XML.  If not provided the file type will be determined by the file extension");
+		System.out.println("\t[toFileType] - optional file type of the output file.  One of JSON, XLS, XLSX, TAG, RDFXML, RDFTTL, YAML or XML.  If not provided the file type will be determined by the file extension");
 	}
 
 }
