@@ -90,7 +90,7 @@ public class SpdxToolsHelper {
 			}
 			case RDFTTL : {
 				RdfStore rdfStore = new RdfStore();
-				rdfStore.setOutputFormat(OutputFormat.XML);
+				rdfStore.setOutputFormat(OutputFormat.TURTLE);
 				return rdfStore;
 			}
 			case TAG :
