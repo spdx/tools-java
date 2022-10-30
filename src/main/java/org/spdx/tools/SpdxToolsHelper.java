@@ -123,7 +123,7 @@ public class SpdxToolsHelper {
 		String fileName = file.getName();
 		if (!fileName.contains(".")) {
 			throw new InvalidFileNameException(
-					"Can not convert file to file type - no file extension");
+					"Can not convert file to file type - no file extension for file "+file.getPath());
 		}
 		String ext = fileName.substring(fileName.lastIndexOf(".") + 1)
 				.toLowerCase();
@@ -140,7 +140,7 @@ public class SpdxToolsHelper {
 		SerFileType retval = EXT_TO_FILETYPE.get(ext);
 		if (Objects.isNull(retval)) {
 			throw new InvalidFileNameException(
-					"Unrecognized file extension: " + ext);
+					"Unrecognized file extension: " + ext + " for file "+file.getPath());
 		}
 		return retval;
 	}
