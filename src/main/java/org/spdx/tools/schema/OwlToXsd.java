@@ -71,6 +71,9 @@ public class OwlToXsd extends AbstractOwlRdfConverter {
 	}
 	
 	public XmlSchema convertToXsd() throws XmlSchemaSerializerException, SchemaException {
+		if (!ontology.isURIResource()) {
+			throw new SchemaException("Ontology is not a URI resource");
+		}
 		String nameSpace = ontology.getURI();
 		XmlSchema schema = new XmlSchema(nameSpace, schemas);
 		schema.setSchemaNamespacePrefix(nameSpace);

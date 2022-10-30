@@ -82,10 +82,12 @@ public class OwlToJsonContext extends AbstractOwlRdfConverter {
 		ExtendedIterator<OntProperty> iter = model.listAllOntProperties();
 		while (iter.hasNext()) {
 			OntProperty property = iter.next();
-			String propNamespace = uriToNamespace(property.getURI());
-			String propName = uriToPropName(property.getURI());
-			String id = propNamespace + propName;
-			sortedOntProperties.put(id, property);
+			if (property.isURIResource()) {
+				String propNamespace = uriToNamespace(property.getURI());
+				String propName = uriToPropName(property.getURI());
+				String id = propNamespace + propName;
+				sortedOntProperties.put(id, property);
+			}
 		}
 		for (Entry<String, OntProperty> ontPropEntry:sortedOntProperties.entrySet()) {
 			String propNamespace = uriToNamespace(ontPropEntry.getValue().getURI());

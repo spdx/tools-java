@@ -93,14 +93,16 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 		ExtendedIterator<Ontology> ontologyIter = model.listOntologies();
 		if (ontologyIter.hasNext()) {
 			Ontology ont = ontologyIter.next();
-			String version = ont.getVersionInfo();
-			String ontologyUri = version == null ? ont.getURI() : ont.getURI() + "/" + version;
-			if (Objects.nonNull(ontologyUri)) {
-				root.put("$id", ontologyUri);
-			}
-			String title = ont.getLabel(null);
-			if (Objects.nonNull(title)) {
-				root.put("title", title);
+			if (ont.isURIResource()) {
+				String version = ont.getVersionInfo();
+				String ontologyUri = version == null ? ont.getURI() : ont.getURI() + "/" + version;
+				if (Objects.nonNull(ontologyUri)) {
+					root.put("$id", ontologyUri);
+				}
+				String title = ont.getLabel(null);
+				if (Objects.nonNull(title)) {
+					root.put("title", title);
+				}
 			}
 		}
 		root.put(JSON_RESTRICTION_TYPE,JSON_TYPE_OBJECT);
