@@ -199,28 +199,6 @@
 				</configuration>
 			</plugin>
 			<plugin>
-			  <artifactId>maven-assembly-plugin</artifactId>
-			  <configuration>
-			    <archive>
-			      <manifest>
-			        <mainClass>org.spdx.tools.Main</mainClass>
-			      </manifest>
-			    </archive>
-			    <descriptorRefs>
-			      <descriptorRef>jar-with-dependencies</descriptorRef>
-			    </descriptorRefs>
-			  </configuration>
-			  <executions>
-			    <execution>
-			      <id>make-assembly</id>
-			      <phase>package</phase>
-			      <goals>
-			        <goal>single</goal>
-			      </goals>
-			    </execution>
-			  </executions>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.9</version>
@@ -256,6 +234,42 @@
 		        </execution>
 		      </executions>
 		    </plugin>
+		    <plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-shade-plugin</artifactId>
+			    <configuration>
+			        <shadedArtifactAttached>true</shadedArtifactAttached>
+			        <shadedClassifierName>jar-with-dependencies</shadedClassifierName>
+			        <transformers>
+			            <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+			                <mainClass>org.spdx.tools.Main</mainClass>
+			            </transformer>
+			            <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+			        </transformers>
+			        <filters>
+			            <filter>
+			                <artifact>*:*</artifact>
+			                <excludes>
+			                    <!-- Some jars are signed but shading breaks that.
+			                         Don't include signing files.
+			                    -->
+			                    <exclude>META-INF/*.SF</exclude>
+			                    <exclude>META-INF/*.DSA</exclude>
+			                    <exclude>META-INF/*.RSA</exclude>
+			                </excludes>
+			            </filter>
+			        </filters>
+			    </configuration>
+			    <executions>
+			        <execution>
+			            <phase>package</phase>
+			            <!--<phase /><!- - Switch off -->
+			            <goals>
+			                <goal>shade</goal>
+			            </goals>
+			        </execution>
+			    </executions>
+			</plugin>
 			<plugin>
 				<groupId>org.spdx</groupId>
 					<artifactId>spdx-maven-plugin</artifactId>
@@ -270,7 +284,7 @@
 						</execution>
 					</executions>
 					<configuration>
-						<spdxDocumentNamespace>http://spdx.org/documents/tools-java-{$version}</spdxDocumentNamespace>					
+						<spdxDocumentNamespace>http://spdx.org/documents/tools-java-${project.version}</spdxDocumentNamespace>					
 						<defaultFileCopyright>Copyright (c) 2020 Source Auditor Inc.</defaultFileCopyright>
 						<defaultFileContributors>
 							<param>Gary O'Neall</param>
