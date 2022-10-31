@@ -242,9 +242,8 @@ public abstract class AbstractSheet {
 	 * @param cell
 	 * @return
 	 */
-	@SuppressWarnings("deprecation")
 	private int getNumWrappedLines(Cell cell) {
-		if (cell.getCellTypeEnum() == CellType.STRING) {
+		if (cell.getCellType() == CellType.STRING) {
 			String val = cell.getStringCellValue();
 			if (val == null || val.isEmpty()) {
 				return 1;
