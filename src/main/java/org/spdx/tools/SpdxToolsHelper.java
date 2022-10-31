@@ -21,6 +21,7 @@ package org.spdx.tools;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
@@ -52,6 +53,8 @@ public class SpdxToolsHelper {
 	public enum SerFileType {
 		JSON, RDFXML, XML, XLS, XLSX, YAML, TAG, RDFTTL
 	}
+
+	static final String XML_INPUT_FACTORY_PROPERTY_KEY = "javax.xml.stream.XMLInputFactory";
 
 	static Map<String, SerFileType> EXT_TO_FILETYPE;
 	static {
@@ -167,10 +170,7 @@ public class SpdxToolsHelper {
 			throws InvalidSPDXAnalysisException, IOException,
 			InvalidFileNameException {
 		ISerializableModelStore store = fileTypeToStore(fileToFileType(file));
-		try (InputStream is = new FileInputStream(file)) {
-			String documentUri = store.deSerialize(is, false);
-			return new SpdxDocument(store, documentUri, null, false);
-		}
+		return readDocumentFromFile(store, file);
 	}
 	/**
 	 * @param file
@@ -186,9 +186,43 @@ public class SpdxToolsHelper {
 			SerFileType fileType)
 			throws InvalidSPDXAnalysisException, IOException {
 		ISerializableModelStore store = fileTypeToStore(fileType);
+		return readDocumentFromFile(store, file);
+	}
+	
+	/**
+	 * Reads an SPDX Document from a file
+	 * @param store Store where the document is to be stored
+	 * @param file File to read the store from
+	 * @return SPDX Document from the store
+	 * @throws FileNotFoundException If the file is not found
+	 * @throws IOException If there is an error reading the file
+	 * @throws InvalidSPDXAnalysisException If there is a problem in the SPDX document structure
+	 */
+	public static SpdxDocument readDocumentFromFile(ISerializableModelStore store, File file) throws FileNotFoundException, IOException, InvalidSPDXAnalysisException {
+		String oldXmlInputFactory = null;
+		boolean propertySet = false;
 		try (InputStream is = new FileInputStream(file)) {
+			if (store instanceof RdfStore) {
+				// Setting the property value will avoid the error message
+				// See issue #90 for more information
+				try {
+					oldXmlInputFactory = System.setProperty(XML_INPUT_FACTORY_PROPERTY_KEY, 
+					        "com.sun.xml.internal.stream.XMLInputFactoryImpl");
+					propertySet = true;
+				} catch (SecurityException e) {
+					propertySet = false; // we'll just deal with the extra error message
+				}
+			}
 			String documentUri = store.deSerialize(is, false);
 			return new SpdxDocument(store, documentUri, null, false);
+		} finally {
+			if (propertySet) {
+				if (Objects.isNull(oldXmlInputFactory)) {
+					System.clearProperty(XML_INPUT_FACTORY_PROPERTY_KEY);
+				} else {
+					System.setProperty(XML_INPUT_FACTORY_PROPERTY_KEY, oldXmlInputFactory);
+				}
+			}
 		}
 	}
 }
