@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.ModelCopyManager;
 import org.spdx.library.SpdxConstants;
+import org.spdx.spdxRdfStore.RdfStore;
 import org.spdx.storage.ISerializableModelStore;
 import org.spdx.tools.SpdxToolsHelper.SerFileType;
 
@@ -143,9 +144,22 @@ public class SpdxConverter {
 		}
 		FileInputStream input = null;
 		FileOutputStream output = null;
+		String oldXmlInputFactory = null;
+		boolean propertySet = false;
 		try {
 			ISerializableModelStore fromStore = SpdxToolsHelper.fileTypeToStore(fromFileType);
 			ISerializableModelStore toStore = SpdxToolsHelper.fileTypeToStore(toFileType);
+			if (fromStore instanceof RdfStore || toStore instanceof RdfStore) {
+				// Setting the property value will avoid the error message
+				// See issue #90 for more information
+				try {
+					oldXmlInputFactory = System.setProperty(SpdxToolsHelper.XML_INPUT_FACTORY_PROPERTY_KEY, 
+					        "com.sun.xml.internal.stream.XMLInputFactoryImpl");
+					propertySet = true;
+				} catch (SecurityException e) {
+					propertySet = false; // we'll just deal with the extra error message
+				}
+			}
 			input = new FileInputStream(fromFile);
 			output = new FileOutputStream(toFile);
 			String documentUri = fromStore.deSerialize(input, false);
@@ -177,6 +191,13 @@ public class SpdxConverter {
 			}
 			throw new SpdxConverterException(msg, ex);
 		} finally {
+			if (propertySet) {
+				if (Objects.isNull(oldXmlInputFactory)) {
+					System.clearProperty(SpdxToolsHelper.XML_INPUT_FACTORY_PROPERTY_KEY);
+				} else {
+					System.setProperty(SpdxToolsHelper.XML_INPUT_FACTORY_PROPERTY_KEY, oldXmlInputFactory);
+				}
+			}
 			if (Objects.nonNull(input)) {
 				try {
 					input.close();

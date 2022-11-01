@@ -28,6 +28,7 @@ import java.util.Objects;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.Version;
 import org.spdx.library.model.SpdxDocument;
+import org.spdx.spdxRdfStore.RdfStore;
 import org.spdx.storage.ISerializableModelStore;
 import org.spdx.tagvaluestore.TagValueStore;
 import org.spdx.tools.SpdxToolsHelper.SerFileType;
@@ -124,9 +125,8 @@ public class Verify {
 			throw new SpdxVerificationException("Error converting fileType to store",e);
 		}
 		SpdxDocument doc = null;
-		try (InputStream is = new FileInputStream(file)) {
-			String documentUri = store.deSerialize(is, false);
-			doc = new SpdxDocument(store, documentUri, null, false);
+		try {
+			doc = SpdxToolsHelper.readDocumentFromFile(store, file);
 		} catch (FileNotFoundException e) {
 			throw new SpdxVerificationException("File "+filePath+ " not found.",e);
 		} catch (IOException e) {
