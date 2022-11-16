@@ -161,7 +161,7 @@ public class Verify {
 			} catch (IOException e) {
 				retval.add("Unable to validate JSON file against schema due to I/O Error");
 			} catch (InvalidSPDXAnalysisException e) {
-				retval.add("Unable to validate JSON file against schema due error in SPDX file");
+				retval.add("Unable to validate JSON file against schema due to error in SPDX file");
 			} catch (ProcessingException e) {
 				retval.add("Unable to validate JSON file against schema due to processing exception");
 			}
