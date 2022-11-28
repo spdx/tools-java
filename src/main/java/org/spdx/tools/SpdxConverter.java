@@ -38,6 +38,7 @@ import org.spdx.tools.SpdxToolsHelper.SerFileType;
  * arg[1] to file path
  * arg[2] from file type [RDFXML|RDFTTL|JSON|XLS|XLSX|YAML|TAG] - if not present, file type of the from file will be used
  * arg[3] to file type [RDFXML|RDFTTL|JSON|XLS|XLSX|YAML|TAG] - if not present, file type of the to file will be used
+ * arg[4] excludeLicenseDetails If present, listed license and listed exception properties will not be included in the output file
  * 
  * the <code>covert(...)</code> methods can be called programmatically to convert files
  * @author Gary O'Neall
@@ -49,7 +50,7 @@ public class SpdxConverter {
 	static final int ERROR_STATUS = 1;
 	
 	static final int MIN_ARGS = 2;
-	static final int MAX_ARGS = 4;
+	static final int MAX_ARGS = 5;
 	
 	/**
 	 * @param args
@@ -67,6 +68,10 @@ public class SpdxConverter {
 		}
 		if (args.length == 3) {
 			System.out.printf("Warning: only the input file type specified - it will be ignored");
+		}
+		boolean excludeLicenseDetails = false;
+		if (args.length == 5 && "excludelicensedetails".equals(args[4].toLowerCase())) {
+			excludeLicenseDetails = true;
 		}
 		if (args.length < 4) {
 			try {
@@ -95,7 +100,7 @@ public class SpdxConverter {
 				System.exit(ERROR_STATUS);
 			}
 			try {
-				convert(args[0], args[1], fromFileType, toFileType);
+				convert(args[0], args[1], fromFileType, toFileType, excludeLicenseDetails);
 			} catch (SpdxConverterException e) {
 				System.err.println("Error converting: "+e.getMessage());
 				System.exit(ERROR_STATUS);
@@ -126,14 +131,31 @@ public class SpdxConverter {
 	}
 	
 	/**
+	 * Convert an SPDX file from the fromFilePath to a new file at the toFilePath including listed license property details
+	 * @param fromFilePath Path of the file to convert from
+	 * @param toFilePath Path of output file for the conversion
+	 * @param fromFileType Serialization type of the file to convert from
+	 * @param toFileType Serialization type of the file to convert to
+	 * @param excludeLicenseDetails If true, don't copy over properties of the listed licenses
+	 * @throws SpdxConverterException 
+	 */
+	public static void convert(String fromFilePath, String toFilePath, SerFileType fromFileType, 
+			SerFileType toFileType) throws SpdxConverterException {
+		convert(fromFilePath, toFilePath, fromFileType, toFileType, false);
+		
+	}
+	
+	/**
 	 * Convert an SPDX file from the fromFilePath to a new file at the toFilePath
 	 * @param fromFilePath Path of the file to convert from
 	 * @param toFilePath Path of output file for the conversion
 	 * @param fromFileType Serialization type of the file to convert from
 	 * @param toFileType Serialization type of the file to convert to
+	 * @param excludeLicenseDetails If true, don't copy over properties of the listed licenses
 	 * @throws SpdxConverterException 
 	 */
-	public static void convert(String fromFilePath, String toFilePath, SerFileType fromFileType, SerFileType toFileType) throws SpdxConverterException {
+	public static void convert(String fromFilePath, String toFilePath, SerFileType fromFileType, 
+			SerFileType toFileType, boolean excludeLicenseDetails) throws SpdxConverterException {
 		File fromFile = new File(fromFilePath);
 		if (!fromFile.exists()) {
 			throw new SpdxConverterException("Input file "+fromFilePath+" does not exist.");
@@ -175,9 +197,10 @@ public class SpdxConverter {
 			});
 			fromStore.getAllItems(documentUri, null).forEach(tv -> {
 				try {
-					if (!SpdxConstants.CLASS_EXTERNAL_DOC_REF.equals(tv.getType())) {
+					if (!SpdxConstants.CLASS_EXTERNAL_DOC_REF.equals(tv.getType()) &&
+							!(excludeLicenseDetails && SpdxConstants.CLASS_CROSS_REF.equals(tv.getType()))) {
 						copyManager.copy(toStore, documentUri, fromStore, documentUri, 
-								tv.getId(), tv.getType());
+								tv.getId(), tv.getType(), excludeLicenseDetails);
 					}
 				} catch (InvalidSPDXAnalysisException e) {
 					throw new RuntimeException(e);
@@ -223,6 +246,7 @@ public class SpdxConverter {
 		System.out.println("\ttoFilePath - output file");
 		System.out.println("\t[fromFileType] - optional file type of the input file.  One of JSON, XLS, XLSX, TAG, RDFXML, RDFTTL, YAML or XML.  If not provided the file type will be determined by the file extension");
 		System.out.println("\t[toFileType] - optional file type of the output file.  One of JSON, XLS, XLSX, TAG, RDFXML, RDFTTL, YAML or XML.  If not provided the file type will be determined by the file extension");
+		System.out.println("\t[excludeLicenseDetails] - If present, listed license and listed exception properties will not be included in the output file");
 	}
 
 }
