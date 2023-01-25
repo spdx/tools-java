@@ -17,10 +17,8 @@
 package org.spdx.tools;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +26,6 @@ import java.util.Objects;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.Version;
 import org.spdx.library.model.SpdxDocument;
-import org.spdx.spdxRdfStore.RdfStore;
 import org.spdx.storage.ISerializableModelStore;
 import org.spdx.tagvaluestore.TagValueStore;
 import org.spdx.tools.SpdxToolsHelper.SerFileType;
