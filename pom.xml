@@ -56,17 +56,9 @@
 	  <sonar.organization>spdx</sonar.organization>
 	  <sonar.projectKey>tools-java</sonar.projectKey>
 	  <dependency-check-maven.version>8.0.1</dependency-check-maven.version>
+	  <javadoc.opts>-Xdoclint:none</javadoc.opts>
     </properties>
 	<profiles>
-		<profile>
-			<id>doclint-java8-disable</id>
-			<activation>
-				<jdk>[1.8,11)</jdk>
-			</activation>
-			<properties>
-				<javadoc.opts>-Xdoclint:none</javadoc.opts>
-			</properties>
-		</profile>
 		<profile>
 			<id>gpg-signing</id>
 			<build>
