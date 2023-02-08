@@ -46,6 +46,10 @@ The following converter tools support spdx format:
 Example to convert a SPDX file from tag to rdf format:
 
     java -jar tools-java-1.1.0-jar-with-dependencies.jar Convert ../testResources/SPDXTagExample-v2.2.spdx TagToRDF.rdf
+    
+The file formats can optionally be provided as the 3rd and 4th parameter for the input and output formats respectively.  An optional 5th option `excludeLicenseDetails` will not copy the listed license properties to the output file.  The following example will copy a JSON format to an RDF Turtle format without including the listed license properties:
+
+    java -jar tools-java-1.1.0-jar-with-dependencies.jar Convert ../testResources/SPDXTagExample-v2.2.spdx TagToRDF.ttl TAG RDFTTL excludeLicenseDetails
 
 ## Compare utilities
 The following  tools can be used to compare one or more SPDX documents:

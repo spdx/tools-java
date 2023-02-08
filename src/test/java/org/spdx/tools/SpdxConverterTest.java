@@ -25,8 +25,13 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Objects;
 
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Resource;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.SpdxDocument;
 import org.spdx.tools.SpdxToolsHelper.SerFileType;
@@ -43,6 +48,7 @@ public class SpdxConverterTest extends TestCase {
 	
 	static final String TEST_DIR = "testResources";
 	static final String TEST_JSON_FILE_PATH = TEST_DIR + File.separator + "SPDXJSONExample-v2.3.spdx.json";
+	static final String TEST_WITH_EXCEPTION_FILE_PATH = TEST_DIR + File.separator + "SPDXJSONExample-v2.3-with-exception.spdx.json";
 	static final String TEST_RDF_FILE_PATH = TEST_DIR + File.separator + "SPDXRdfExample-v2.3.spdx.rdf";
 	static final String TEST_SPREADSHEET_XLS_FILE_PATH = TEST_DIR + File.separator + "SPDXSpreadsheetExample-v2.3.xls";
 	static final String TEST_SPREADSHEET_XLSX_FILE_PATH = TEST_DIR + File.separator + "SPDXSpreadsheetExample-v2.3.xlsx";
@@ -354,6 +360,49 @@ public class SpdxConverterTest extends TestCase {
 		comparer = new SpdxComparer();
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());
+	}
+	
+	public void testLicenseDetailsRdf() throws SpdxConverterException, InvalidSPDXAnalysisException, IOException, SpdxCompareException {
+		String detailsRdfFilePath = tempDirPath.resolve("details.rdf.xml").toString();
+		String noDetailsRdfFilePath = tempDirPath.resolve("nodetails.rdf.xml").toString();
+		SpdxConverter.convert(TEST_WITH_EXCEPTION_FILE_PATH, noDetailsRdfFilePath, SerFileType.JSON, SerFileType.RDFXML, true);
+		File noDetailsFile = new File(noDetailsRdfFilePath);
+		assertTrue(noDetailsFile.exists());
+		SpdxConverter.convert(TEST_WITH_EXCEPTION_FILE_PATH, detailsRdfFilePath, SerFileType.JSON, SerFileType.RDFXML, false);
+		File detailsFile = new File(detailsRdfFilePath);
+		assertTrue(detailsFile.exists());
+		File source = new File(TEST_WITH_EXCEPTION_FILE_PATH);
+		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocument(source, SerFileType.JSON);
+		SpdxDocument detailsDoc = SpdxToolsHelper.deserializeDocument(detailsFile, SerFileType.RDFXML);
+		SpdxDocument noDetailsDoc = SpdxToolsHelper.deserializeDocument(noDetailsFile, SerFileType.RDFXML);
+		
+		// Make sure they compare - the inclusion of the details should not impact of the 2 documents match
+		SpdxComparer comparer = new SpdxComparer();
+		comparer.compare(Arrays.asList(new SpdxDocument[] {sourceDoc, detailsDoc, noDetailsDoc}));
+		assertFalse(comparer.isDifferenceFound());
+		
+		String mplLicenseUri = "http://spdx.org/licenses/MPL-1.0";
+		String licenseTextProperty = "http://spdx.org/rdf/terms#licenseText";
+		String exceptionUri = "http://spdx.org/licenses/Autoconf-exception-3.0";
+		String exceptionTextProperty = "http://spdx.org/rdf/terms#licenseExceptionText";
+		
+		// Make sure the details has the details
+		Model detailModel = ModelFactory.createDefaultModel();
+		detailModel.read(detailsFile.toURI().toString());
+		Resource detailMplLicense = detailModel.createResource(mplLicenseUri);
+		Property detailLicenseTextProperty = detailModel.createProperty(licenseTextProperty);
+		assertTrue(detailModel.contains(detailMplLicense, detailLicenseTextProperty));
+		Resource detailException = detailModel.createResource(exceptionUri);
+		Property detailExceptionTextProperty = detailModel.createProperty(exceptionTextProperty);
+		assertTrue(detailModel.contains(detailException, detailExceptionTextProperty));
+		
+		// Make sure the noDetails does not have the listed licenses
+		Model noDetailModel = ModelFactory.createDefaultModel();
+		noDetailModel.read(noDetailsFile.toURI().toString());
+		Resource noDetailMplLicense = noDetailModel.createResource(mplLicenseUri);
+		assertFalse(noDetailModel.contains(noDetailMplLicense, detailLicenseTextProperty));
+		Resource noDetailException = noDetailModel.createResource(exceptionUri);
+		assertFalse(noDetailModel.contains(noDetailException, detailExceptionTextProperty));
 	}
 
 }
