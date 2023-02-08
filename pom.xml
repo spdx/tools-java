@@ -56,17 +56,9 @@
 	  <sonar.organization>spdx</sonar.organization>
 	  <sonar.projectKey>tools-java</sonar.projectKey>
 	  <dependency-check-maven.version>8.0.1</dependency-check-maven.version>
+	  <javadoc.opts>-Xdoclint:none</javadoc.opts>
     </properties>
 	<profiles>
-		<profile>
-			<id>doclint-java8-disable</id>
-			<activation>
-				<jdk>[1.8,)</jdk>
-			</activation>
-			<properties>
-				<javadoc.opts>-Xdoclint:none</javadoc.opts>
-			</properties>
-		</profile>
 		<profile>
 			<id>gpg-signing</id>
 			<build>
@@ -190,8 +182,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.6.1</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<release>11</release>
 					<encoding>${project.build.sourceEncoding}</encoding>
 					<showDeprecation>true</showDeprecation>
 					<showWarnings>true</showWarnings>
