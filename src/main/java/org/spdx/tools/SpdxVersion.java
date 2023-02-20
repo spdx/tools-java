@@ -22,6 +22,9 @@ package org.spdx.tools;
 import org.spdx.library.Version;
 import org.spdx.library.model.license.ListedLicenses;
 
+import java.io.IOException;
+import java.util.Properties;
+
 /**
  * Static helper methods for tools and library version information
  *
@@ -29,15 +32,19 @@ import org.spdx.library.model.license.ListedLicenses;
  */
 public class SpdxVersion {
 
-    private static final String CURRENT_TOOL_VERSION = "1.1.6";
-
     /**
      * Getter for the current tool Version
      *
      * @return Tool version
      */
     public static String getCurrentToolVersion() {
-        return CURRENT_TOOL_VERSION;
+        final Properties properties = new Properties();
+        try {
+            properties.load(SpdxVersion.class.getClassLoader().getResourceAsStream("project.properties"));
+            return properties.getProperty("version");
+        } catch (IOException e) {
+            return "Unknown tool version";
+        }
     }
 
     /**
