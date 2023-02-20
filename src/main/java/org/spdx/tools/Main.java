@@ -20,8 +20,6 @@
 package org.spdx.tools;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.spdx.library.Version;
-import org.spdx.library.model.license.ListedLicenses;
 
 /**
  * Dispatch individual tools
@@ -30,8 +28,6 @@ import org.spdx.library.model.license.ListedLicenses;
  *
  */
 public class Main {
-
-	private static final String CURRENT_TOOL_VERSION = "1.1.6";
 
     /**
 	 * @param args args[0] is the name of the tools with the remaining args being the tool parameters
@@ -55,9 +51,9 @@ public class Main {
 		} else if ("GenerateVerificationCode".equals(spdxTool)) {
 			GenerateVerificationCode.main(args);
 		} else if ("Version".equals(spdxTool)) {
-			System.out.println("SPDX Tool Version: "+CURRENT_TOOL_VERSION +
-					"; Specification Version: "+Version.CURRENT_SPDX_VERSION +
-					"; License List Version: "+ListedLicenses.getListedLicenses().getLicenseListVersion());
+			System.out.println("SPDX Tool Version: " + SpdxVersion.getCurrentToolVersion() +
+					"; Specification Version: " + SpdxVersion.getLibraryVersion() +
+					"; License List Version: " + SpdxVersion.getLicenseListVersion());
 		} else if ("MatchingStandardLicenses".equals(spdxTool)) {
 			MatchingStandardLicenses.main(args);
 		} else {
@@ -66,8 +62,7 @@ public class Main {
 	}
 	
 	private static void usage() {
-		System.out
-				.println(""
+		System.out.println(""
 						+ "Usage: java -jar spdx-tools-jar-with-dependencies.jar <function> <parameters> \n"
 						+ "function                 parameter                         example \n"
 						+ "------------------------------------------------------------------------------------------------------------------- \n"
