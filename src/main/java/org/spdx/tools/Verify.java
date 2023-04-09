@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.Version;
 import org.spdx.library.model.SpdxDocument;
@@ -126,6 +127,8 @@ public class Verify {
 			doc = SpdxToolsHelper.readDocumentFromFile(store, file);
 		} catch (FileNotFoundException e) {
 			throw new SpdxVerificationException("File "+filePath+ " not found.",e);
+		} catch (JsonParseException e) {
+			throw new SpdxVerificationException("Invalid JSON file: "+e.getMessage(), e);
 		} catch (IOException e) {
 			throw new SpdxVerificationException("IO Error reading SPDX file",e);
 		} catch (InvalidSPDXAnalysisException e) {
