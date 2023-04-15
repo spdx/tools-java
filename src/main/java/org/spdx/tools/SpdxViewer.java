@@ -17,6 +17,7 @@ package org.spdx.tools;
  */
 
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Objects;
@@ -25,7 +26,9 @@ import java.util.Properties;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.SpdxDocument;
 import org.spdx.spdxRdfStore.RdfStore;
+import org.spdx.storage.ISerializableModelStore;
 import org.spdx.tag.CommonCode;
+import org.spdx.tools.SpdxToolsHelper.SerFileType;
 
 /**
  * Simple pretty printer for SPDX RDF XML files. Writes output to System.out.
@@ -39,38 +42,64 @@ import org.spdx.tag.CommonCode;
 public class SpdxViewer {
 
 	static final int MIN_ARGS = 1;
-	static final int MAX_ARGS = 1;
+	static final int MAX_ARGS = 2;
+	static final int ERROR_STATUS = 1;
 
 	/**
 	 * Pretty Printer for an SPDX Document
 	 *
-	 * @param args
-	 *            Argument 0 is a the file path name of the SPDX RDF/XML file
+     * @param args args[0] SPDX file path; args[1] [RDFXML|JSON|XLS|XLSX|YAML|TAG] an optional file type - if not present, file type of the to file will be used
+     * 
 	 */
 
 	public static void main(String[] args) {
 		if (args.length < MIN_ARGS) {
 			System.err
-					.println("Usage:\n SPDXViewer file\nwhere file is the file path to a valid SPDX RDF XML file");
+					.println("Usage:\n SPDXViewer file [RDFXML|JSON|XLS|XLSX|YAML|TAG] \n"
+							+ "where file is the file path to a valid SPDX file\n"
+							+ "and [RDFXML|JSON|XLS|XLSX|YAML|TAG] is an optional file type\n"
+							+ "if not present, file type of the to file will be used");
 			return;
 		}
 		if (args.length > MAX_ARGS) {
 			System.out.printf("Warning: Extra arguments will be ignored");
 		}
 		SpdxDocument doc = null;
-		RdfStore store = null;
+		ISerializableModelStore store = null;
 		PrintWriter writer = null;
 		try {
-	      store = new RdfStore();    
-	      try {
-	            String documentUri = store.loadModelFromFile(args[0], false);
-	            doc = new SpdxDocument(store, documentUri, null, false);
-	        } catch (Exception ex) {
-	            System.out
-	                    .print("Error creating SPDX Document: " + ex.getMessage());
-	            return;
-	        }
-	        writer = new PrintWriter(System.out);
+			File file = new File(args[0]);
+			if (!file.exists()) {
+				throw new SpdxVerificationException("File "+args[0]+" not found.");
+			}
+			if (!file.isFile()) {
+				throw new SpdxVerificationException(args[0]+" is not a file.");
+			}
+			SerFileType fileType = null;
+			if (args.length > 1) {
+				try {
+					fileType = SpdxToolsHelper.strToFileType(args[1]);
+				} catch (Exception ex) {
+					System.err.println("Invalid file type: "+args[1]);
+					System.exit(ERROR_STATUS);
+				}
+			} else {
+				fileType = SpdxToolsHelper.fileToFileType(file);
+			}
+			try {
+				store = SpdxToolsHelper.fileTypeToStore(fileType);
+			} catch (InvalidSPDXAnalysisException e) {
+				throw new SpdxVerificationException("Error converting fileType to store",e);
+			}
+			
+			try {
+				doc = SpdxToolsHelper.readDocumentFromFile(store, file);
+			} catch (Exception ex) {
+		        System.out
+		                .print("Error creating SPDX Document: " + ex.getMessage());
+		        return;
+		    }
+		    writer = new PrintWriter(System.out);
 			List<String> verify = doc.verify();
 			if (verify.size() > 0) {
 				System.out.println("This SPDX Document is not valid due to:");
@@ -98,7 +127,7 @@ public class SpdxViewer {
     			try {
                     store.close();
                 } catch (Exception e) {
-                    System.out.println("Warning - unable to close RDF store: "+e.getMessage());
+                    System.out.println("Warning - unable to close SPDX file: "+e.getMessage());
                 }
 		    }
 		}
