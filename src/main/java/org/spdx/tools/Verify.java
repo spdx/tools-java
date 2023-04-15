@@ -149,7 +149,8 @@ public class Verify {
 				ProcessingReport report = schema.validateUnchecked(spdxDocJson, true);
 				report.spliterator().forEachRemaining(msg -> {
 					JsonNode msgJson = msg.asJson();
-					if (!msg.getMessage().contains("$id")) {	// Known warning - this is in the draft 7 spec - perhaps a bug in the validator?
+					if (!msg.getMessage().contains("$id") &&  // Known warning - this is in the draft 7 spec - perhaps a bug in the validator?
+							!msg.getMessage().contains("deprecated]")) { // We ignore deprecated warnings since the schema version is not supported 
 						JsonNode instance = msgJson.findValue("instance");
 						String warningStr = msg.getMessage();
 						if (Objects.nonNull(instance)) {
