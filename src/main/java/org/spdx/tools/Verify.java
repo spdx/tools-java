@@ -84,15 +84,34 @@ public class Verify {
 		} catch (InvalidFileNameException e) {
 			System.err.println("Invalid file name: "+args[0]);
 			System.exit(ERROR_STATUS);
-		} 
-		if (verify.size() > 0) {
-			System.out.println("This SPDX Document is not valid due to:");
-			for (int i = 0; i < verify.size(); i++) {
-				System.out.print("\t" + verify.get(i)+"\n");
+		}
+		// separate out the warning from errors
+		List<String> warnings = new ArrayList<>();
+		List<String> errors = new ArrayList<>();
+		for (String verifyMsg:verify) {
+			if (verifyMsg.contains(" is deprecated.")) {
+				warnings.add(verifyMsg);
+			} else {
+				errors.add(verifyMsg);
 			}
-			System.exit(ERROR_STATUS);
-		} else {
+		}
+		if (errors.size() > 0) {
+			System.out.println("This SPDX Document is not valid due to:");
+			for (String errorMsg:errors) {
+				System.out.print("\t" + errorMsg+"\n");
+			}
+		}
+		if (warnings.size() > 0) {
+			System.out.println("Warning: Deprecated license identifiers were found that should no longer be used.\n"
+					+ "References to the following deprecated license ID's should be updated:");
+			for (String warningMsg:warnings) {
+				System.out.print("\t" + warningMsg+"\n");
+			}
+		}
+		if (errors.size() == 0) {
 			System.out.println("This SPDX Document is valid.");
+		} else {
+			System.exit(ERROR_STATUS);
 		}
 	}
 
@@ -178,6 +197,10 @@ public class Verify {
 		if (!verify.isEmpty()) {
 			for (String verifyMsg:verify) {
 				if (!retval.contains(verifyMsg)) {
+					// Check for deprecated licenses - should be warnings, not errors
+					if (verifyMsg.contains(" is deprecated.")) {
+						verifyMsg = verifyMsg.replaceAll("error:", "warning:");
+					}
 					retval.add(verifyMsg);
 				}
 			}
