@@ -22,12 +22,18 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spdx.library.InvalidSPDXAnalysisException;
+import org.spdx.library.ModelCopyManager;
 import org.spdx.library.model.SpdxDocument;
+import org.spdx.library.model.SpdxModelFactory;
 import org.spdx.spreadsheetstore.SpreadsheetException;
+import org.spdx.storage.IModelStore;
+import org.spdx.storage.simple.InMemSpdxStore;
 import org.spdx.tools.compare.MultiDocumentSpreadsheet;
 import org.spdx.utility.compare.SpdxCompareException;
 import org.spdx.utility.compare.SpdxComparer;
@@ -137,14 +143,25 @@ public class CompareSpdxDocs {
 		}
 		if (spdxDocOrDir.isFile()) {
 			SpdxDocument doc = SpdxToolsHelper.deserializeDocument(spdxDocOrDir);
+			List<String> warnings = doc.verify();
+			boolean dupDocUri = false;
 			for (SpdxDocument otherDocs:compareDocs) {
 				if (otherDocs.getDocumentUri().equals(doc.getDocumentUri())) {
-					// Duplicate document URI
-					throw new InvalidSPDXAnalysisException("Duplicate document namespace "+doc.getDocumentUri()+".  Document namespaces must be unique per specification and for a valid comparison.");
+					dupDocUri = true;
+					break;
 				}
 			}
+			if (dupDocUri) {
+				// Make a unique URI by appending a UUID
+				String newUri = doc.getDocumentUri() + UUID.randomUUID();
+				warnings.add("Duplicate Document URI: " + doc.getDocumentUri() + " changed to " + newUri);
+				IModelStore newStore = new InMemSpdxStore();
+				ModelCopyManager copyManager = new ModelCopyManager();
+				SpdxDocument newDoc = SpdxModelFactory.createSpdxDocument(newStore, newUri, copyManager);
+				newDoc.copyFrom(doc);
+				doc = newDoc;
+			}
 			compareDocs.add(doc);
-			List<String> warnings = doc.verify();
 			if (!warnings.isEmpty()) {
 				System.out.println("Verification errors were found in "+filePath.trim()+".  See verification errors sheet for details.");
 			}
