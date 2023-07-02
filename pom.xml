@@ -133,6 +133,11 @@
 	  	<artifactId>jena-shacl</artifactId>
 	  	<version>4.8.0</version>
 	  </dependency>
+	  <dependency>
+	  	<groupId>com.github.spullara.mustache.java</groupId>
+	  	<artifactId>compiler</artifactId>
+	  	<version>0.7.9</version>
+	  </dependency>
 	</dependencies>
     <build>
   		<resources>
