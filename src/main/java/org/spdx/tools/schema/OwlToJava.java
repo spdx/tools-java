@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -59,9 +60,11 @@ public class OwlToJava {
 	private static final String ELEMENT_TYPE_ANY_LICENSE_INFO = "https://spdx.org/rdf/Licensing/AnyLicenseInfo";
 	static final String TEMPLATE_CLASS_PATH = "resources" + "/" + "javaTemplates";
 	static final String TEMPLATE_ROOT_PATH = "resources" + File.separator + "javaTemplates";
-	private static final String JAVA_CLASS_TEMPLATE = "ModelObjectTemplate";
+	private static final String JAVA_CLASS_TEMPLATE = "ModelObjectTemplate.txt";
+	private static final String ENUM_CLASS_TEMPLATE = "EnumTemplate.txt";
 	private static final String DATE_TIME_TYPE = "https://spdx.org/rdf/Core/DateTime";
 	private static final String ANY_URI_TYPE = "http://www.w3.org/2001/XMLSchema#anyURI";
+	
 	private static Set<String> INTEGER_TYPES = new HashSet<>();
 	static {
 		INTEGER_TYPES.add("http://www.w3.org/2001/XMLSchema#positiveInteger");
@@ -305,6 +308,7 @@ public class OwlToJava {
 		String pkgName = uriToPkg(classUri);
 		File sourceFile = createJavaSourceFile(classUri, dir);
 		Map<String, Object> mustacheMap = new HashMap<>();
+		mustacheMap.put("name", name);
 		mustacheMap.put("elementProperties", findProperties(properties, elementProperties));
 		mustacheMap.put("objectProperties", findProperties(properties, objectProperties));
 		mustacheMap.put("anyLicenseInfoProperties", findProperties(properties, anyLicenseInfoProperties));
@@ -318,7 +322,7 @@ public class OwlToJava {
 		mustacheMap.put("year", "2023"); // TODO - use actual year
 		mustacheMap.put("pkgName", pkgName);
 		List<String> imports = buildImports();
-		mustacheMap.put("imports", imports);
+		mustacheMap.put("imports", imports.toArray(new String[imports.size()]));
 		mustacheMap.put("classComments", toClassComment(comment));
 		String superClass = getSuperClass();
 		mustacheMap.put("superClass", superClass);
@@ -453,7 +457,14 @@ public class OwlToJava {
 	 */
 	private void generateJavaEnum(File dir, String classUri, String name,
 			List<Individual> allIndividuals, String comment) throws IOException {
-		Map<String, String> enumToNameMap = new HashMap<>();
+		Map<String, Object> mustacheMap = new HashMap<>();
+		mustacheMap.put("year", "2023"); // TODO: Implement the actual year
+		mustacheMap.put("pkgName", uriToPkg(classUri));
+		mustacheMap.put("classComment", toClassComment(comment));
+		mustacheMap.put("name", name);
+		mustacheMap.put("classUri", classUri);
+		List<String> enumValues = new ArrayList<>();
+		String lastEnumValue = null;
 		for (Individual individual:allIndividuals) {
 			if (individual.hasRDFType(classUri)) {
 				StringBuilder enumName = new StringBuilder();
@@ -469,57 +480,38 @@ public class OwlToJava {
 						enumName.append(Character.toUpperCase(ch));
 					}
 				}
-				enumToNameMap.put(enumName.toString(), individual.getLocalName());
+				if (Objects.nonNull(lastEnumValue)) {
+					enumValues.add(lastEnumValue + ",");
+				}
+				lastEnumValue = enumName.toString() + "(\"" + individual.getLocalName() + "\")";
 			}
 		}
-		String pkgName = uriToPkg(classUri);
+		if (Objects.nonNull(lastEnumValue)) {
+			enumValues.add(lastEnumValue + ";");
+		}
+		mustacheMap.put("enumValues", enumValues);
 		File sourceFile = createJavaSourceFile(classUri, dir);
-		try (PrintWriter writer = new PrintWriter(new FileOutputStream(sourceFile))) {
-			writeFileHeader(writer);
-			writer.print("package ");
-			writer.print(pkgName);
-			writer.println(";");
-			writer.println();
-//			printClassComment(comment, writer);
-			writer.print("public enum ");
-			writer.print(name);
-			writer.println(" implements IndividualUriValue {");
-			Iterator<Entry<String, String>> iter = enumToNameMap.entrySet().iterator();
-			if (iter.hasNext()) {
-				writer.print(INDENT);
-				writeEnumEntry(iter.next(), writer);
+		
+		String templateDirName = TEMPLATE_ROOT_PATH;
+		File templateDirectoryRoot = new File(templateDirName);
+		if (!(templateDirectoryRoot.exists() && templateDirectoryRoot.isDirectory())) {
+			templateDirName = TEMPLATE_CLASS_PATH;
+		}
+		DefaultMustacheFactory builder = new DefaultMustacheFactory(templateDirName);
+		Mustache mustache = builder.compile(ENUM_CLASS_TEMPLATE);
+		FileOutputStream stream = null;
+		OutputStreamWriter writer = null;
+		try {
+			stream = new FileOutputStream(sourceFile);
+			writer = new OutputStreamWriter(stream, "UTF-8");
+	        mustache.execute(writer, mustacheMap);
+		} finally {
+			if (writer != null) {
+				writer.close();
 			}
-			while (iter.hasNext()) {
-				writer.println(",");
-				writer.print(INDENT);
-				writeEnumEntry(iter.next(), writer);
+			if (stream != null) {
+				stream.close();
 			}
-			writer.println(";");
-			writer.println(INDENT);
-			writer.print(INDENT);
-			writer.println("private String longName;");
-			writer.println(INDENT);
-			writer.print(INDENT);
-			writer.print("private ");
-			writer.print(name);
-			writer.println("(String longName) {");
-			writer.println(INDENT + INDENT + "this.longName = longName;");
-			writer.println(INDENT + "}");
-			writer.println(INDENT);
-			writer.println(INDENT + "@Override");
-			writer.println(INDENT + "public String getIndividualURI() {");
-			writer.println(INDENT + INDENT + "return getNameSpace() + getLongName();");
-			writer.println(INDENT + "}");
-			writer.println(INDENT);
-			writer.println(INDENT + "public String getLongName() {");
-			writer.println(INDENT + INDENT + "return longName;");
-			writer.println(INDENT + "}");
-			writer.println(INDENT);
-			writer.println(INDENT + "public String getNameSpace() {");
-			writer.print(INDENT + INDENT + "return \"");
-			writer.print(classUri);
-			writer.println("\";");
-			writer.println(INDENT + "}");
 		}
 	}
 
@@ -544,7 +536,7 @@ public class OwlToJava {
 			}
 			sb.append("\n");
 		}
-		sb.append(" **/\n");
+		sb.append(" */");
 		return sb.toString();
 	}
 

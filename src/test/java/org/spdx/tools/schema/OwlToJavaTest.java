@@ -8,14 +8,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Objects;
 
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaSerializer.XmlSchemaSerializerException;
 
 import junit.framework.TestCase;
@@ -45,6 +44,20 @@ public class OwlToJavaTest extends TestCase {
 				model.read(is, "", "Turtle");
 				otj = new OwlToJava(model);
 				otj.generateJavaSource(tempDir);
+				Path aIPath = tempDir.toPath().resolve("src")
+					.resolve("main")
+					.resolve("java")
+					.resolve("org")
+					.resolve("spdx")
+					.resolve("library")
+					.resolve("model")
+					.resolve("AI");
+				File classFile = aIPath.resolve("AIPackage.java").toFile();
+				File enumFile = aIPath.resolve("PresenceType.java").toFile();
+				assertTrue(classFile.exists());
+				assertTrue(classFile.isFile());
+				assertTrue(enumFile.exists());
+				assertTrue(enumFile.isFile());
 			}
 		} finally {
 			assertTrue(deleteDirectory(tempDir));

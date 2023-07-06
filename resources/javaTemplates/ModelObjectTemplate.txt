@@ -1,0 +1,280 @@
+/**
+ * Copyright (c) {{{year}}} Source Auditor Inc.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ * 
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
+ 
+package {{{pkgName}}};
+
+{{#imports}}
+{{.}}
+{{/imports}}
+
+{{{classComments}}}
+public class {{{name}}} extends {{{superClass}}} {{#compareUsingProperties}}implements Comparable<{{{name}}}>{{/compareUsingProperties}} {
+
+	{{#objectPropertyValueCollection}}
+	TO BE IMPLEMENTED
+	{{/objectPropertyValueCollection}}
+	{{#stringCollection}}
+	TO BE IMPLEMENTED
+	{{/stringCollection}}
+	{{#objectPropertyValueSet}}
+	TO BE IMPLEMENTED
+	{{/objectPropertyValueSet}}
+	
+	/**
+	 * Create the {{{name}}} with default model store and generated anonymous ID
+	 * @throws InvalidSPDXAnalysisException when unable to create the {{{name}}}
+	 */
+	public {{{name}}}() throws InvalidSPDXAnalysisException {
+		super();
+	}
+
+	/**
+	 * @param objectUri URI or anonymous ID for the {{{name}}}
+	 * @throws InvalidSPDXAnalysisException when unable to create the {{{name}}}
+	 */
+	public {{{name}}}(String objectUri) throws InvalidSPDXAnalysisException {
+		super(objectUri);
+	}
+
+	/**
+	 * @param modelStore Model store where the {{{name}}} is to be stored
+	 * @param objectUri URI or anonymous ID for the {{{name}}}
+	 * @param copyManager Copy manager for the {{{name}}} - can be null if copying is not required
+	 * @param create true if {{{name}}} is to be created
+	 * @throws InvalidSPDXAnalysisException when unable to create the {{{name}}}
+	 */
+	public {{{name}}}(IModelStore modelStore, String objectUri, ModelCopyManager copyManager,
+			boolean create)	throws InvalidSPDXAnalysisException {
+		super(modelStore, objectUri, copyManager, create);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.spdx.library.model.ModelObject#getType()
+	 */
+	@Override
+	public String getType() {
+		return {{{name}}};
+	}
+
+	/* (non-Javadoc)
+	 * @see org.spdx.library.model.ModelObject#_verify(java.util.List)
+	 */
+	@Override
+	protected List<String> _verify(Set<String> verifiedIds, String specVersion) {
+		List<String> retval = new ArrayList<>();
+		{{#verifySuperclass}}
+		retval.addAll(super._verify(verifiedIds, specVersion);
+		{{/verifySuperclass}}
+		{{#elementProperties}}
+		Optional<{{{elementProperties.type}}}> {{{elementProperties.name}}};
+		try {
+			{{{elementProperties.name}}} = {{{elementProperties.getter}}};
+			if ({{{elementProperties.name}}}.isPresent()) {
+				retval.addAll({{{elementProperties.name}}}.get().verify(verifiedIds, specVersion));
+			{{#elementProperties.required}}
+			else {
+				if (getProfile() in {{{elementProperties.requiredProfiles}}}) {
+					retval.add("Missing {{{elementProperties.name}}} in {{{name}}}");
+				}
+			{{/elementProperties.required}}
+			}
+		} catch (InvalidSPDXAnalysisException e) {
+			retval.add("Error getting {{{elementProperties.name}}} for {{{name}}}: "+e.getMessage());
+		}
+		{{/elementProperties}}
+		{{#objectProperties}}
+		Optional<{{{objectProperties.type}}}> {{{objectProperties.name}}};
+		try {
+			{{{objectProperties.name}}} = {{{objectProperties.getter}}};
+			if ({{{objectProperties.name}}}.isPresent()) {
+				retval.addAll({{{objectProperties.name}}}.get().verify(verifiedIds, specVersion));
+			{{#objectProperties.required}}
+			else {
+				if (getProfile() in {{{objectProperties.requiredProfiles}}}) {
+					retval.add("Missing {{{objectProperties.name}}} in {{{name}}}");
+				}
+			{{/objectProperties.required}}
+			}
+		} catch (InvalidSPDXAnalysisException e) {
+			retval.add("Error getting {{{objectProperties.name}}} for {{{name}}}: "+e.getMessage());
+		}
+		{{/objectProperties}}
+		{{#anyLicenseInfoProperties}}
+		Optional<{{{anyLicenseInfoProperties.type}}}> {{{anyLicenseInfoProperties.name}}};
+		try {
+			{{{anyLicenseInfoProperties.name}}} = {{{anyLicenseInfoProperties.getter}}};
+			if ({{{anyLicenseInfoProperties.name}}}.isPresent()) {
+				retval.addAll({{{anyLicenseInfoProperties.name}}}.get().verify(verifiedIds, specVersion));
+			{{#anyLicenseInfoProperties.required}}
+			else {
+				if (getProfile() in {{{anyLicenseInfoProperties.requiredProfiles}}}) {
+					retval.add("Missing {{{anyLicenseInfoProperties.name}}} in {{{name}}}");
+				}
+			{{/anyLicenseInfoProperties.required}}
+			}
+		} catch (InvalidSPDXAnalysisException e) {
+			retval.add("Error getting {{{anyLicenseInfoProperties.name}}} for {{{name}}}: "+e.getMessage());
+		}
+		{{/anyLicenseInfoProperties}}
+		{{#enumerationProperties}}
+		try {
+			Optional<{{{enumerationProperties.type}}}> {{{enumerationProperties.name}}} = {{{enumerationProperties.getter}}};
+			{{#enumerationProperties.required}}
+			if (!{{{enumerationProperties.name}}}.isPresent()) {
+				retval.add("Missing {{{enumerationProperties.name}}} in {{{name}}}");
+			}
+			{{/enumerationProperties.required}}
+		} catch (InvalidSPDXAnalysisException e) {
+			retval.add("Error getting {{{enumerationProperties.name}}} for {{{name}}}: "+e.getMessage());
+		}
+		{{/enumerationProperties}}
+		{{#booleanProperties}}
+		try {
+			Optional<{{{booleanProperties.type}}}> {{{booleanProperties.name}}} = {{{booleanProperties.getter}}};
+			{{#booleanProperties.required}}
+			if (!{{{booleanProperties.name}}}.isPresent()) {
+				retval.add("Missing {{{booleanProperties.name}}} in {{{name}}}");
+			}
+			{{/booleanProperties.required}}
+		} catch (InvalidSPDXAnalysisException e) {
+			retval.add("Error getting {{{booleanProperties.name}}} for {{{name}}}: "+e.getMessage());
+		}
+		{{/booleanProperties}}
+		{{#integerProperties}}
+		try {
+			Optional<{{{integerProperties.type}}}> {{{integerProperties.name}}} = {{{integerProperties.getter}}};
+			{{#integerProperties.required}}
+			if (!{{{integerProperties.name}}}.isPresent()) {
+				retval.add("Missing {{{integerProperties.name}}} in {{{name}}}");
+			}
+			{{/integerProperties.required}}
+			{{#integerProperties.min}}
+			TODO Implement
+			{{/integerProperties.min}}
+			{{#integerProperties.max}}
+			TODO Implement
+			{{/integerProperties.max}}
+		} catch (InvalidSPDXAnalysisException e) {
+			retval.add("Error getting {{{integerProperties.name}}} for {{{name}}}: "+e.getMessage());
+		}
+		{{/integerProperties}}
+		{{#stringProperties}}
+		try {
+			Optional<{{{stringProperties.type}}}> {{{stringProperties.name}}} = {{{stringProperties.getter}}};
+			{{#stringProperties.required}}
+			if (!{{{stringProperties.name}}}.isPresent()) {
+				retval.add("Missing {{{stringProperties.name}}} in {{{name}}}");
+			}
+			{{/stringProperties.required}}
+			{{#stringProperties.pattern}}
+			TODO: Implement Pattern.compile etc
+			{{/stringProperties.pattern}}
+		} catch (InvalidSPDXAnalysisException e) {
+			retval.add("Error getting {{{stringProperties.name}}} for {{{name}}}: "+e.getMessage());
+		}
+		{{/stringProperties}}
+		
+		
+		{{#objectPropertyValueCollection}}
+		TO BE IMPLEMENTED
+		{{/objectPropertyValueCollection}}
+		{{#stringCollection}}
+		TO BE IMPLEMENTED
+		{{/stringCollection}}
+		{{#objectPropertyValueSet}}
+		TO BE IMPLEMENTED
+		{{/objectPropertyValueSet}}
+		return retval;
+	}
+	
+	// Getters and Setters
+	{{#objectPropertyValueCollection}}
+	TO BE IMPLEMENTED
+	{{/objectPropertyValueCollection}}
+	{{#stringCollection}}
+	TO BE IMPLEMENTED
+	{{/stringCollection}}
+	{{#objectPropertyValueSet}}
+	TO BE IMPLEMENTED
+	{{/objectPropertyValueSet}}
+	
+
+	{{#elementProperties}}
+	/**
+	 * @return the {{{elementProperties.name}}}
+	 */
+	public Optional<{{{elementProperties.type}}}> {{{elementProperties.getter}}} throws InvalidSPDXAnalysisException {
+		return getElementPropertyValue({{{elementProperties.propertyConstant}}});
+	}
+	
+	/**
+	 * @param {{{elementProperties.name}}} the {{{elementProperties.name}}} to set
+	 * @return this to chain setters
+	 * @throws InvalidSPDXAnalysisException 
+	 */
+	public {{{name}}} {{{elementProperties.setter}}}({{{elementProperties.type}}} {{{elementProperties.name}}}) throws InvalidSPDXAnalysisException {
+		setPropertyValue({{{elementProperties.uri}}}, {{{elementProperties.propertyConstant}}});
+		return this;
+	}
+	{{/elementProperties}}
+	
+	{{#compareUsingProperties}}
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo({{{name}}} o) {
+		int retval = 0;
+		{{#compareProperties}}
+		Optional<{{{compareWithProperties.type}}}> my{{{compareWithProperties.name}}} = {{{compareWithProperties.getter}}};
+		Optional<{{{compareWithProperties.type}}}> compare{{{compareWithProperties.name}}} = o.{{{compareWithProperties.getter}}};
+		retval = compareOptional(my{{{compareWithProperties.name}}}, compare{{{compareWithProperties.name}}});
+		if (retval != 0) {
+			return retval;
+		}
+		{{/compareProperties}}
+		return retval;
+	}
+	{{/compareUsingProperties}}
+	
+	@Override
+	public String toString() {
+		{{^usePropertiesForToString}}
+		return "{{{name}}}: "+getObjectUri();
+		{{/usePropertiesForToString}}
+		{{#usePropertiesForToString}}
+		try {
+			StringBuilder sb = new StringBuilder();
+			{{#toStringProperties}}
+			Optional<{{{toStringProperties.type}}}> {{{toStringProperties.name}}} = {{{toStringProperties.getter}}};
+			if ({{{toStringProperties.name}}}.isPresent()) {
+				sb.append({{{toStringProperties.name}}}.get().toString());
+			} else {
+				sb.append("{{{toStringProperties.type}}}-Missing");
+			}
+			sb.append(" ");
+			{{/toStringProperties}}
+			sb.setLenght(sb.length() == 0 ? 0 : sb.length()-1);
+			return sb.toString();
+		} catch (InvalidSPDXAnalysisException e) {
+			logger.error("Error in toString: ",e);
+			return "Error: "+e.getMessage();
+		}
+		{{/usePropertiesForToString}}
+	}
+}
