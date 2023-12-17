@@ -65,7 +65,7 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
     private static final String JSON_RESTRICTION_MIN_ITEMS = "minItems";
     private static final String JSON_RESTRICTION_MAXITEMS = "maxItems";
     
-    private static final String SCHEMA_VERSION_URI = "http://json-schema.org/draft-07/schema#";
+    private static final String SCHEMA_VERSION_URI = "https://json-schema.org/draft/2019-09/schema#";
 	private static final String RELATIONSHIP_TYPE = SpdxConstants.SPDX_NAMESPACE + SpdxConstants.CLASS_RELATIONSHIP;
 	static ObjectMapper jsonMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 	private static final Set<String> USES_SPDXIDS;
@@ -91,10 +91,11 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 		ObjectNode root = jsonMapper.createObjectNode();
 		root.put("$schema", SCHEMA_VERSION_URI);
 		ExtendedIterator<Ontology> ontologyIter = model.listOntologies();
+		String version = null;
 		if (ontologyIter.hasNext()) {
 			Ontology ont = ontologyIter.next();
 			if (ont.isURIResource()) {
-				String version = ont.getVersionInfo();
+				version = ont.getVersionInfo();
 				String ontologyUri = version == null ? ont.getURI() : ont.getURI() + "/" + version;
 				if (Objects.nonNull(ontologyUri)) {
 					root.put("$id", ontologyUri);
@@ -108,6 +109,16 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 		root.put(JSON_RESTRICTION_TYPE,JSON_TYPE_OBJECT);
 		ObjectNode properties = jsonMapper.createObjectNode();
 		ArrayNode required = jsonMapper.createArrayNode();
+		ObjectNode schemaProp = jsonMapper.createObjectNode();
+		schemaProp.put(JSON_RESTRICTION_TYPE, JSON_TYPE_STRING);
+		String schemaRefDescription = "Reference the SPDX ";
+		if (Objects.nonNull(version)) {
+			schemaRefDescription = schemaRefDescription + "version " + version + " ";
+		}
+		schemaRefDescription = schemaRefDescription + "JSON Schema.";
+		schemaProp.put("description", schemaRefDescription);
+		properties.set("$schema", schemaProp);
+		
 		OntClass docClass = model.getOntClass(SpdxConstants.SPDX_NAMESPACE + SpdxConstants.CLASS_SPDX_DOCUMENT);
 		Objects.requireNonNull(docClass, "Missing SpdxDocument class in OWL document");
 		addClassProperties(docClass, properties, required);
@@ -115,8 +126,11 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 		properties.set(SpdxConstants.PROP_DOCUMENT_NAMESPACE, createSimpleTypeSchema(JSON_TYPE_STRING, 
 		        "The URI provides an unambiguous mechanism for other SPDX documents to reference SPDX elements within this SPDX document."));
 		required.add(SpdxConstants.PROP_DOCUMENT_NAMESPACE);
-		properties.set(SpdxConstants.PROP_DOCUMENT_DESCRIBES, toArraySchema(createSimpleTypeSchema(JSON_TYPE_STRING, "SPDX ID for each Package, File, or Snippet."), 
-		        "Packages, files and/or Snippets described by this SPDX document", 0));
+		ObjectNode describesProperty = toArraySchema(createSimpleTypeSchema(JSON_TYPE_STRING, "SPDX ID for each Package, File, or Snippet."), 
+		        "DEPRECATED: use relationships instead of this field. Packages, files and/or Snippets described by this SPDX document", 0);
+		describesProperty.put("deprecated", true);
+		describesProperty.put("$comment", "This field has been deprecated as it is a duplicate of using the SPDXRef-DOCUMENT DESCRIBES relationship");
+		properties.set(SpdxConstants.PROP_DOCUMENT_DESCRIBES, describesProperty);
         
 		OntClass packageClass = model.getOntClass(SpdxConstants.SPDX_NAMESPACE + SpdxConstants.CLASS_SPDX_PACKAGE);
 		Objects.requireNonNull(packageClass, "Missing SPDX Package class in OWL document");
@@ -153,7 +167,7 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 	 * @param min Minimum number of elements for the array
 	 * @return JSON Schema of an array of item types
 	 */
-	private JsonNode toArraySchema(ObjectNode itemSchema, String description, int min) {
+	private ObjectNode toArraySchema(ObjectNode itemSchema, String description, int min) {
 	    ObjectNode property = jsonMapper.createObjectNode();
         property.put("description", description);
         property.put(JSON_RESTRICTION_TYPE, JSON_TYPE_ARRAY);
@@ -223,21 +237,22 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
         }
 		Collection<OntProperty> ontProperties = propertiesFromClassRestrictions(spdxClass);
 		for (OntProperty property:ontProperties) {
+			String propName = property.getLocalName();
 			if (SKIPPED_PROPERTIES.contains(property.getURI())) {
 				continue;
 			}
 			PropertyRestrictions restrictions = getPropertyRestrictions(spdxClass, property);
-			Objects.requireNonNull(restrictions.getTypeUri(), "Missing type for property "+property.getLocalName());
+			Objects.requireNonNull(restrictions.getTypeUri(), "Missing type for property "+propName);
 			if (restrictions.getTypeUri().equals(RELATIONSHIP_TYPE)) {
 				continue;
 			}
 			if (restrictions.isListProperty()) {
 			    jsonSchemaProperties.set(MultiFormatStore.propertyNameToCollectionPropertyName(
-						checkConvertRenamedPropertyName(property.getLocalName())),
+						checkConvertRenamedPropertyName(propName)),
 						deriveListPropertySchema(property, restrictions));
 			    if (!restrictions.isOptional() || restrictions.getMinCardinality() > 0) {
 			        required.add(MultiFormatStore.propertyNameToCollectionPropertyName(
-			        		checkConvertRenamedPropertyName(property.getLocalName())));
+			        		checkConvertRenamedPropertyName(propName)));
 			    }
 			} else {
 			    jsonSchemaProperties.set(checkConvertRenamedPropertyName(property.getLocalName()), derivePropertySchema(property, restrictions));
@@ -264,6 +279,16 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
         addCardinalityRestrictions(propertySchema, restrictions);
         propertySchema.put(JSON_RESTRICTION_TYPE, JSON_TYPE_ARRAY);
         propertySchema.set(JSON_RESTRICTION_ITEMS, derivePropertySchema(property, restrictions));
+		// Check for deprecated properties
+        String propName = property.getLocalName();
+        if ("hasFile".equals(propName)) {
+        	// Add deprecated information
+        	propertySchema.put("description", "DEPRECATED: use relationships instead of this field. Indicates that a particular file belongs to a package.");
+        	propertySchema.put("deprecated", true);
+        	propertySchema.put("$comment", "This field has been deprecated as it is a duplicate of using SPDXRef-<package-id> CONTAINS SPDXRef-<file-id> relationships");
+        } else if ("reviewed".equals(propName) || "fileDependency".equals(propName)) {
+        	propertySchema.put("deprecated", true);
+        } 
         return propertySchema;
     }
 
