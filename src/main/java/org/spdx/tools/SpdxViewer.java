@@ -25,7 +25,6 @@ import java.util.Properties;
 
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.SpdxDocument;
-import org.spdx.spdxRdfStore.RdfStore;
 import org.spdx.storage.ISerializableModelStore;
 import org.spdx.tag.CommonCode;
 import org.spdx.tools.SpdxToolsHelper.SerFileType;
