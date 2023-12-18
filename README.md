@@ -7,6 +7,9 @@ The Software Package Data Exchange (SPDX) specification is a standard format for
 These tools are published by the SPDX Workgroup
 see [http://spdx.org/](http://spdx.org/)
 
+## Versions Supported
+This utility supports versions 2.0, 2.1, 2.2 and 2.3 of the SPDX specification.
+
 # Code quality badges
 
 |   [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=tools-java&metric=bugs)](https://sonarcloud.io/dashboard?id=tools-java)    | [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=tools-java&metric=security_rating)](https://sonarcloud.io/dashboard?id=tools-java) | [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=tools-java&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=tools-java) | [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=tools-java&metric=sqale_index)](https://sonarcloud.io/dashboard?id=tools-java) |
