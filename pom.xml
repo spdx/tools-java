@@ -61,12 +61,12 @@
     </properties>
 	<profiles>
 		<profile>
-			<id>gpg-signing</id>
+			<id>release</id>
 			<build>
 				<plugins>
 					<plugin>
 		      			<groupId>org.apache.maven.plugins</groupId>
-		      			<artifactId>maven-gpg-plugin</artifactId>
+		      			<artifactId>maven-release-plugin</artifactId>
 		      			<version>1.6</version>
 		      			<executions>
 		        			<execution>
@@ -204,7 +204,7 @@
 		    </plugin>	
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
+				<artifactId>maven-release-plugin</artifactId>
 				<version>3.6.1</version>
 				<configuration>
 					<encoding>${project.build.sourceEncoding}</encoding>
@@ -237,7 +237,7 @@
 			</plugin>
 		   	<plugin>
 		      <groupId>org.apache.maven.plugins</groupId>
-		      <artifactId>maven-source-plugin</artifactId>
+		      <artifactId>maven-release-plugin</artifactId>
 		      <version>3.2.1</version>
 		      <executions>
 		        <execution>
