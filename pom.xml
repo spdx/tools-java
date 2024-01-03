@@ -33,6 +33,7 @@
 		<url>https://github.com/spdx/tools-java</url>
 		<connection>https://github.com/spdx/tools-java.git</connection>
 		<developerConnection>https://github.com/spdx/tools-java.git</developerConnection>
+		<tag>master</tag>
 	</scm>
 	<issueManagement>
 		<system>Github</system>
@@ -61,9 +62,23 @@
     </properties>
 	<profiles>
 		<profile>
-			<id>gpg-signing</id>
+			<id>release</id>
 			<build>
 				<plugins>
+				   	<plugin>
+				      <groupId>org.apache.maven.plugins</groupId>
+				      <artifactId>maven-source-plugin</artifactId>
+				      <version>3.2.1</version>
+				      <executions>
+				        <execution>
+				          <id>attach-sources</id>
+				          <phase>verify</phase>
+				          <goals>
+				            <goal>jar-no-fork</goal>
+				          </goals>
+				        </execution>
+				      </executions>
+				    </plugin>
 					<plugin>
 		      			<groupId>org.apache.maven.plugins</groupId>
 		      			<artifactId>maven-gpg-plugin</artifactId>
@@ -205,7 +220,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.6.1</version>
+				<version>3.11.0</version>
 				<configuration>
 					<encoding>${project.build.sourceEncoding}</encoding>
 					<showDeprecation>true</showDeprecation>
@@ -235,20 +250,6 @@
 					</execution>
 				</executions>
 			</plugin>
-		   	<plugin>
-		      <groupId>org.apache.maven.plugins</groupId>
-		      <artifactId>maven-source-plugin</artifactId>
-		      <version>3.2.1</version>
-		      <executions>
-		        <execution>
-		          <id>attach-sources</id>
-		          <phase>verify</phase>
-		          <goals>
-		            <goal>jar-no-fork</goal>
-		          </goals>
-		        </execution>
-		      </executions>
-		    </plugin>
 		    <plugin>
 			    <groupId>org.apache.maven.plugins</groupId>
 			    <artifactId>maven-shade-plugin</artifactId>
@@ -288,7 +289,7 @@
 			<plugin>
 				<groupId>org.spdx</groupId>
 					<artifactId>spdx-maven-plugin</artifactId>
-					<version>0.6.0</version>
+					<version>0.7.2</version>
 					<executions>
 						<execution>
 							<id>build-spdx</id>
@@ -300,7 +301,7 @@
 					</executions>
 					<configuration>
 						<spdxDocumentNamespace>http://spdx.org/documents/tools-java-${project.version}</spdxDocumentNamespace>					
-						<defaultFileCopyright>Copyright (c) 2020 Source Auditor Inc.</defaultFileCopyright>
+						<defaultFileCopyright>Copyright (c) 2024 Source Auditor Inc.</defaultFileCopyright>
 						<defaultFileContributors>
 							<param>Gary O'Neall</param>
 						</defaultFileContributors>
@@ -325,6 +326,16 @@
 						<originator>Organization: Linux Foundation</originator>
 					</configuration>
 	          </plugin>
+			  <plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-release-plugin</artifactId>
+			    <version>3.0.1</version>
+			    <configuration>
+			      <tagNameFormat>v@{project.version}</tagNameFormat>
+			      <releaseProfiles>release</releaseProfiles>
+			      <goals>deploy</goals>
+			    </configuration>
+			  </plugin>
 		</plugins>
   	</build>
 </project>
