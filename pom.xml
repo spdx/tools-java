@@ -31,8 +31,8 @@
 	</organization>
 	<scm>
 		<url>https://github.com/spdx/tools-java</url>
-		<connection>https://github.com/spdx/tools-java.git</connection>
-		<developerConnection>https://github.com/spdx/tools-java.git</developerConnection>
+		<connection>scm:git:git@github.com:spdx/tools-java.git</connection>
+		<developerConnection>scm:git:git@github.com:spdx/tools-java.git</developerConnection>
 		<tag>master</tag>
 	</scm>
 	<issueManagement>
