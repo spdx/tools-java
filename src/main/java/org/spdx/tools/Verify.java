@@ -24,9 +24,9 @@ import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.core.JsonParseException;
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.Version;
-import org.spdx.library.model.SpdxDocument;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.library.model.v2.SpdxDocument;
+import org.spdx.library.model.v2.Version;
 import org.spdx.storage.ISerializableModelStore;
 import org.spdx.tagvaluestore.TagValueStore;
 import org.spdx.tools.SpdxToolsHelper.SerFileType;
@@ -63,6 +63,7 @@ public class Verify {
 		if (args.length > MAX_ARGS) {
 			System.out.printf("Warning: Extra arguments will be ignored");
 		}
+		SpdxToolsHelper.initialize();
 		List<String> verify = null;
 		try {
 			SerFileType fileType = null;

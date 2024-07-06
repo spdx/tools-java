@@ -26,8 +26,8 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
 
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.model.SpdxPackageVerificationCode;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.library.model.v2.SpdxPackageVerificationCode;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.simple.InMemSpdxStore;
 import org.spdx.utility.verificationcode.JavaSha1ChecksumGenerator;
@@ -57,6 +57,7 @@ public class GenerateVerificationCode {
 			skippedRegex = args[1];
 		}
 
+		SpdxToolsHelper.initialize();
 		try {
 			SpdxPackageVerificationCode verificationCode = generateVerificationCode(directoryPath, skippedRegex);
 			printVerificationCode(verificationCode);

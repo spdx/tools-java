@@ -15,22 +15,21 @@ import java.util.List;
 
 import org.spdx.jacksonstore.MultiFormatStore;
 import org.spdx.jacksonstore.MultiFormatStore.Format;
-import org.spdx.library.InvalidSPDXAnalysisException;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.library.LicenseInfoFactory;
 import org.spdx.library.ModelCopyManager;
-import org.spdx.library.SpdxConstants;
-import org.spdx.library.model.Relationship;
-import org.spdx.library.model.SpdxDocument;
-import org.spdx.library.model.SpdxModelFactory;
-import org.spdx.library.model.SpdxPackage;
-import org.spdx.library.model.enumerations.RelationshipType;
-import org.spdx.library.model.license.AnyLicenseInfo;
-import org.spdx.library.model.license.LicenseInfoFactory;
+import org.spdx.library.model.v2.Relationship;
+import org.spdx.library.model.v2.SpdxConstantsCompatV2;
+import org.spdx.library.model.v2.SpdxDocument;
+import org.spdx.library.model.v2.SpdxPackage;
+import org.spdx.library.model.v2.enumerations.RelationshipType;
+import org.spdx.library.model.v2.license.AnyLicenseInfo;
 import org.spdx.storage.IModelStore.IdType;
 import org.spdx.storage.ISerializableModelStore;
 import org.spdx.storage.simple.InMemSpdxStore;
 
 /**
- * This example demonstrate programmatically creating an SPDX document, adding document, files
+ * This example demonstrate programmatically creating an SPDX spec version 2.X document, adding document, files
  * and saving the document in a JSON file format
  * 
  * This example depends on the Spdx-Java-Library and the spdx-java-jackson store libraries
@@ -38,7 +37,7 @@ import org.spdx.storage.simple.InMemSpdxStore;
  * @author Gary O'Neall
  *
  */
-public class SimpleSpdxDocument {
+public class SimpleSpdxDocumentV2Compat {
 
 	/**
 	 * @param args args[0] is the file path to store the resultant JSON file
@@ -83,9 +82,9 @@ public class SimpleSpdxDocument {
 		ModelCopyManager copyManager = new ModelCopyManager();
 		try {
 			// Time to create the document
-			SpdxDocument document = SpdxModelFactory.createSpdxDocument(modelStore, documentUri, copyManager);
+			SpdxDocument document = new SpdxDocument(modelStore, documentUri, copyManager, false);
 			// Let's add a few required fields to the document
-			SimpleDateFormat dateFormat = new SimpleDateFormat(SpdxConstants.SPDX_DATE_FORMAT);
+			SimpleDateFormat dateFormat = new SimpleDateFormat(SpdxConstantsCompatV2.SPDX_DATE_FORMAT);
 			String creationDate = dateFormat.format(new Date());
 			document.setCreationInfo(document.createCreationInfo(
 					Arrays.asList(new String[] {"Tool: Simple SPDX Document Example"}),
@@ -96,7 +95,7 @@ public class SimpleSpdxDocument {
 			 * above.  These helper functions will use the same Document URI, Model Store and Model Copy Manager
 			 * as the document element.
 			 */
-			AnyLicenseInfo dataLicense = LicenseInfoFactory.parseSPDXLicenseString("CC0-1.0");
+			AnyLicenseInfo dataLicense = LicenseInfoFactory.parseSPDXLicenseStringCompatV2("CC0-1.0");
 			/*
 			 * Note that by passing in the modelStore and documentUri, the parsed license information is stored
 			 * in the same model store we are using for the document
@@ -106,9 +105,9 @@ public class SimpleSpdxDocument {
 			document.setSpecVersion("SPDX-2.2");
 			
 			// Now that we have the basic document information filled in, let's create a package
-			AnyLicenseInfo pkgConcludedLicense = LicenseInfoFactory.parseSPDXLicenseString("Apache-2.0 AND MIT");
-			AnyLicenseInfo pkgDeclaredLicense = LicenseInfoFactory.parseSPDXLicenseString("Apache-2.0");
-			String pkgId = modelStore.getNextId(IdType.SpdxId, documentUri);
+			AnyLicenseInfo pkgConcludedLicense = LicenseInfoFactory.parseSPDXLicenseStringCompatV2("Apache-2.0 AND MIT");
+			AnyLicenseInfo pkgDeclaredLicense = LicenseInfoFactory.parseSPDXLicenseStringCompatV2("Apache-2.0");
+			String pkgId = modelStore.getNextId(IdType.SpdxId);
 			// The ID's used for SPDX elements must be unique.  Calling the model store getNextId function is a
 			// convenient and safe method to make sure you have a correctly formatted and unique ID
 			SpdxPackage pkg = document.createPackage(pkgId, "Example Package Name", pkgConcludedLicense,
@@ -128,7 +127,7 @@ public class SimpleSpdxDocument {
 			// This step will add a relationship between document and pkg as "DESCRIBES".
 			document.getDocumentDescribes().add(pkg);	
 			// Let's create another package
-			pkgId = modelStore.getNextId(IdType.SpdxId, documentUri);
+			pkgId = modelStore.getNextId(IdType.SpdxId);
 			SpdxPackage childPkg = document.createPackage(pkgId, "Child Example Package Name", pkgConcludedLicense,
 					"Copyright example.org", pkgDeclaredLicense)
 					.setFilesAnalyzed(false)  // Default is true and we don't want to add all the required fields
@@ -150,7 +149,7 @@ public class SimpleSpdxDocument {
 			}
 			// Last step is to serialize
 			try (OutputStream outputStream = new FileOutputStream(outFile)) {
-				modelStore.serialize(documentUri, outputStream);
+				modelStore.serialize(outputStream);
 			}
 			System.out.println("Example document written to "+args[0]);
 			System.exit(0);

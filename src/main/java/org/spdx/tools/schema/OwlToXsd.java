@@ -50,7 +50,7 @@ import org.apache.ws.commons.schema.XmlSchemaSimpleType;
 import org.apache.ws.commons.schema.XmlSchemaSimpleTypeRestriction;
 import org.apache.ws.commons.schema.XmlSchemaType;
 import org.apache.ws.commons.schema.utils.NamespaceMap;
-import org.spdx.library.SpdxConstants;
+import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
@@ -95,7 +95,7 @@ public class OwlToXsd extends AbstractOwlRdfConverter {
 		// Add the top level element
 		XmlSchemaElement documentElement = new XmlSchemaElement(schema, true);
 		documentElement.setName("Document");
-		documentElement.setSchemaTypeName(new QName(SpdxConstants.SPDX_NAMESPACE.substring(0, SpdxConstants.SPDX_NAMESPACE.length()-1), "SpdxDocument"));
+		documentElement.setSchemaTypeName(new QName(SpdxConstantsCompatV2.SPDX_NAMESPACE.substring(0, SpdxConstantsCompatV2.SPDX_NAMESPACE.length()-1), "SpdxDocument"));
 		addDocumentation(schema, documentElement, "Top level element for the SPDX document");
 		return schema;
 	}
@@ -123,7 +123,7 @@ public class OwlToXsd extends AbstractOwlRdfConverter {
 		if (superClassIter.hasNext()) {
 			OntClass superClass = superClassIter.next();
 			schemaExtension = new XmlSchemaComplexContentExtension();
-			schemaExtension.setBaseTypeName(new QName(SpdxConstants.SPDX_NAMESPACE.substring(0, SpdxConstants.SPDX_NAMESPACE.length()-1), superClass.getLocalName()));
+			schemaExtension.setBaseTypeName(new QName(SpdxConstantsCompatV2.SPDX_NAMESPACE.substring(0, SpdxConstantsCompatV2.SPDX_NAMESPACE.length()-1), superClass.getLocalName()));
 		}
 		if (superClassIter.hasNext()) {
 			throw new SchemaException("Ambiguous superclasses for "+type.getLocalName());
@@ -141,9 +141,9 @@ public class OwlToXsd extends AbstractOwlRdfConverter {
 			Optional<Resource> rdfType = getPropertyType(property);
 			if (rdfType.isPresent()) {
 				String typeNamespace;
-				if (rdfType.get().getNameSpace().equals(SpdxConstants.RDF_POINTER_NAMESPACE) || 
-						rdfType.get().getNameSpace().equals(SpdxConstants.DOAP_NAMESPACE)) {
-					typeNamespace = SpdxConstants.SPDX_NAMESPACE.substring(0, SpdxConstants.SPDX_NAMESPACE.length()-1);
+				if (rdfType.get().getNameSpace().equals(SpdxConstantsCompatV2.RDF_POINTER_NAMESPACE) || 
+						rdfType.get().getNameSpace().equals(SpdxConstantsCompatV2.DOAP_NAMESPACE)) {
+					typeNamespace = SpdxConstantsCompatV2.SPDX_NAMESPACE.substring(0, SpdxConstantsCompatV2.SPDX_NAMESPACE.length()-1);
 				} else {
 					typeNamespace = rdfType.get().getNameSpace().substring(0, rdfType.get().getNameSpace().length()-1);
 				}
@@ -171,7 +171,7 @@ public class OwlToXsd extends AbstractOwlRdfConverter {
 			//TODO: Change the propertyMember to ref=
 			sequence.getItems().add(propertyMember);
 		}
-		if (type.getLocalName().equals(SpdxConstants.CLASS_SPDX_ELEMENT)) {
+		if (type.getLocalName().equals(SpdxConstantsCompatV2.CLASS_SPDX_ELEMENT)) {
 			// Manually add in SPDXID
 			XmlSchemaElement propertyMember = new XmlSchemaElement(schema, false);
 			propertyMember.setName("SPDXID");

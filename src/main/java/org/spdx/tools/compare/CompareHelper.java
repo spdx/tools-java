@@ -26,15 +26,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.model.Annotation;
-import org.spdx.library.model.Checksum;
-import org.spdx.library.model.ExternalRef;
-import org.spdx.library.model.ModelObject;
-import org.spdx.library.model.Relationship;
-import org.spdx.library.model.SpdxElement;
-import org.spdx.library.model.enumerations.FileType;
-import org.spdx.library.model.license.AnyLicenseInfo;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.library.model.v2.Annotation;
+import org.spdx.library.model.v2.Checksum;
+import org.spdx.library.model.v2.ExternalRef;
+import org.spdx.library.model.v2.ModelObjectV2;
+import org.spdx.library.model.v2.Relationship;
+import org.spdx.library.model.v2.SpdxElement;
+import org.spdx.library.model.v2.enumerations.FileType;
+import org.spdx.library.model.v2.license.AnyLicenseInfo;
 import org.spdx.library.referencetype.ListedReferenceTypes;
 
 /**
@@ -367,7 +367,7 @@ public class CompareHelper {
 		}
 	}
 
-	public static boolean equivalent(Optional<? extends ModelObject> c1, Optional<? extends ModelObject> c2) throws InvalidSPDXAnalysisException {
+	public static boolean equivalent(Optional<? extends ModelObjectV2> c1, Optional<? extends ModelObjectV2> c2) throws InvalidSPDXAnalysisException {
 		if (!c1.isPresent()) {
 			return !c2.isPresent();
 		}
@@ -378,7 +378,7 @@ public class CompareHelper {
 		}
 	}
 
-	public static boolean equivalent(Collection<? extends ModelObject> collection1, Collection<? extends ModelObject> collection2) throws InvalidSPDXAnalysisException {
+	public static boolean equivalent(Collection<? extends ModelObjectV2> collection1, Collection<? extends ModelObjectV2> collection2) throws InvalidSPDXAnalysisException {
 		if (Objects.isNull(collection1)) {
 			return Objects.isNull(collection2);
 		}
@@ -388,9 +388,9 @@ public class CompareHelper {
 		if (collection1.size() != collection2.size()) {
 			return false;
 		}
-		for (ModelObject o1:collection1) {
+		for (ModelObjectV2 o1:collection1) {
 			boolean found = false;
-			for (ModelObject o2:collection2) {
+			for (ModelObjectV2 o2:collection2) {
 				if (o1.equivalent(o2)) {
 					found = true;
 					break;

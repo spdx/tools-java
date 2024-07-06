@@ -24,13 +24,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spdx.library.InvalidSPDXAnalysisException;
+import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.library.ModelCopyManager;
-import org.spdx.library.model.SpdxDocument;
-import org.spdx.library.model.SpdxModelFactory;
+import org.spdx.library.model.v2.SpdxDocument;
 import org.spdx.spreadsheetstore.SpreadsheetException;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.simple.InMemSpdxStore;
@@ -69,6 +67,7 @@ public class CompareSpdxDocs {
 			usage();
 			System.exit(ERROR_STATUS);
 		}
+		SpdxToolsHelper.initialize();
 		try {
 			onlineFunction(args);
 		} catch (OnlineToolException e){
@@ -157,7 +156,7 @@ public class CompareSpdxDocs {
 				warnings.add("Duplicate Document URI: " + doc.getDocumentUri() + " changed to " + newUri);
 				IModelStore newStore = new InMemSpdxStore();
 				ModelCopyManager copyManager = new ModelCopyManager();
-				SpdxDocument newDoc = SpdxModelFactory.createSpdxDocument(newStore, newUri, copyManager);
+				SpdxDocument newDoc = new SpdxDocument(newStore, newUri, copyManager, false);
 				newDoc.copyFrom(doc);
 				doc = newDoc;
 			}

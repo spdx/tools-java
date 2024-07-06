@@ -3,6 +3,12 @@ package org.spdx.tools;
 import java.io.File;
 import java.util.List;
 
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.ModelRegistry;
+import org.spdx.library.ModelCopyManager;
+import org.spdx.library.model.v2.SpdxModelInfoV2_X;
+import org.spdx.library.model.v3.SpdxModelInfoV3_0;
+import org.spdx.storage.simple.InMemSpdxStore;
 import org.spdx.tools.SpdxToolsHelper.SerFileType;
 
 import junit.framework.TestCase;
@@ -26,6 +32,9 @@ public class VerifyTest extends TestCase {
 	
 	protected void setUp() throws Exception {
 		super.setUp();
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV3_0());
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV2_X());
+		DefaultModelStore.initialize(new InMemSpdxStore(), "http://default/namespace", new ModelCopyManager());
 	}
 
 	protected void tearDown() throws Exception {

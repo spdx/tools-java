@@ -25,9 +25,9 @@ import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spdx.library.InvalidSPDXAnalysisException;
+import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.library.ModelCopyManager;
-import org.spdx.library.SpdxConstants;
+import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.spdxRdfStore.RdfStore;
 import org.spdx.storage.ISerializableModelStore;
 import org.spdx.tools.SpdxToolsHelper.SerFileType;
@@ -56,6 +56,8 @@ public class SpdxConverter {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		
+		SpdxToolsHelper.initialize();
 		if (args.length < MIN_ARGS) {
 			
 			System.err
@@ -184,29 +186,33 @@ public class SpdxConverter {
 			}
 			input = new FileInputStream(fromFile);
 			output = new FileOutputStream(toFile);
-			String documentUri = fromStore.deSerialize(input, false);
+			fromStore.deSerialize(input, false);
+			String documentUri = SpdxToolsHelper.getDocFromStore(fromStore).getDocumentUri();
+			if (toStore instanceof RdfStore) {
+				((RdfStore) toStore).setDocumentUri(documentUri, false);
+				((RdfStore) toStore).setDontStoreLicenseDetails(excludeLicenseDetails);
+			}
 			ModelCopyManager copyManager = new ModelCopyManager();
 			// Need to copy the external document refs first so that they line up with the references
-			fromStore.getAllItems(documentUri, SpdxConstants.CLASS_EXTERNAL_DOC_REF).forEach(tv -> {
+			fromStore.getAllItems(documentUri, SpdxConstantsCompatV2.CLASS_EXTERNAL_DOC_REF).forEach(tv -> {
 				try {
-					copyManager.copy(toStore, documentUri, fromStore, documentUri, 
-							tv.getId(), tv.getType());
+					copyManager.copy(toStore, fromStore, tv.getObjectUri(), tv.getType(), 
+							tv.getSpecVersion(), documentUri + "#");
 				} catch (InvalidSPDXAnalysisException e) {
 					throw new RuntimeException(e);
 				}
 			});
 			fromStore.getAllItems(documentUri, null).forEach(tv -> {
 				try {
-					if (!SpdxConstants.CLASS_EXTERNAL_DOC_REF.equals(tv.getType()) &&
-							!(excludeLicenseDetails && SpdxConstants.CLASS_CROSS_REF.equals(tv.getType()))) {
-						copyManager.copy(toStore, documentUri, fromStore, documentUri, 
-								tv.getId(), tv.getType(), excludeLicenseDetails);
+					if (!SpdxConstantsCompatV2.CLASS_EXTERNAL_DOC_REF.equals(tv.getType()) &&
+							!(excludeLicenseDetails && SpdxConstantsCompatV2.CLASS_CROSS_REF.equals(tv.getType()))) {
+						copyManager.copy(toStore, fromStore, tv.getObjectUri(), tv.getType(), tv.getSpecVersion(), documentUri);
 					}
 				} catch (InvalidSPDXAnalysisException e) {
 					throw new RuntimeException(e);
 				}
 			});
-			toStore.serialize(documentUri, output);
+			toStore.serialize(output);
 		} catch (Exception ex) {
 			String msg = "Error converting SPDX file: "+ex.getClass().toString();
 			if (Objects.nonNull(ex.getMessage())) {

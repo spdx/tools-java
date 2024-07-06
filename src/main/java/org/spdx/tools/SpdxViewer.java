@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.model.SpdxDocument;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.library.model.v2.SpdxDocument;
 import org.spdx.storage.ISerializableModelStore;
 import org.spdx.tag.CommonCode;
 import org.spdx.tools.SpdxToolsHelper.SerFileType;
@@ -63,6 +63,7 @@ public class SpdxViewer {
 		if (args.length > MAX_ARGS) {
 			System.out.printf("Warning: Extra arguments will be ignored");
 		}
+		SpdxToolsHelper.initialize();
 		SpdxDocument doc = null;
 		ISerializableModelStore store = null;
 		PrintWriter writer = null;

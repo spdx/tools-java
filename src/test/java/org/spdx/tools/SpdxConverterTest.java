@@ -32,8 +32,14 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.model.SpdxDocument;
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.ModelRegistry;
+import org.spdx.library.ModelCopyManager;
+import org.spdx.library.model.v2.SpdxDocument;
+import org.spdx.library.model.v2.SpdxModelInfoV2_X;
+import org.spdx.library.model.v3.SpdxModelInfoV3_0;
+import org.spdx.storage.simple.InMemSpdxStore;
 import org.spdx.tools.SpdxToolsHelper.SerFileType;
 import org.spdx.utility.compare.SpdxCompareException;
 import org.spdx.utility.compare.SpdxComparer;
@@ -62,6 +68,9 @@ public class SpdxConverterTest extends TestCase {
 	 */
 	protected void setUp() throws Exception {
 		super.setUp();
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV3_0());
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV2_X());
+		DefaultModelStore.initialize(new InMemSpdxStore(), "http://default/namespace", new ModelCopyManager());
 		tempDirPath = Files.createTempDirectory("spdx-tools-test-");
 	}
 
@@ -275,6 +284,7 @@ public class SpdxConverterTest extends TestCase {
 		assertTrue(result.exists());
 		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocument(source, SerFileType.JSON);
 		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.TAG);
+
 		SpdxComparer comparer = new SpdxComparer();
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());

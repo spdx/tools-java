@@ -26,14 +26,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.spdx.jacksonstore.MultiFormatStore;
 import org.spdx.jacksonstore.MultiFormatStore.Format;
 import org.spdx.jacksonstore.MultiFormatStore.Verbose;
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.model.SpdxDocument;
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.ModelRegistry;
+import org.spdx.library.ModelCopyManager;
+import org.spdx.library.SpdxModelFactory;
+import org.spdx.library.model.v2.SpdxConstantsCompatV2;
+import org.spdx.library.model.v2.SpdxDocument;
+import org.spdx.library.model.v2.SpdxModelInfoV2_X;
+import org.spdx.library.model.v3.SpdxModelInfoV3_0;
 import org.spdx.spdxRdfStore.OutputFormat;
 import org.spdx.spdxRdfStore.RdfStore;
 import org.spdx.spreadsheetstore.SpreadsheetStore;
@@ -213,8 +222,8 @@ public class SpdxToolsHelper {
 					propertySet = false; // we'll just deal with the extra error message
 				}
 			}
-			String documentUri = store.deSerialize(is, false);
-			return new SpdxDocument(store, documentUri, null, false);
+			store.deSerialize(is, false);
+			return getDocFromStore(store);
 		} finally {
 			if (propertySet) {
 				if (Objects.isNull(oldXmlInputFactory)) {
@@ -224,5 +233,27 @@ public class SpdxToolsHelper {
 				}
 			}
 		}
+	}
+	
+	public static SpdxDocument getDocFromStore(ISerializableModelStore store) throws InvalidSPDXAnalysisException {
+		@SuppressWarnings("unchecked")
+		List<SpdxDocument> docs = (List<SpdxDocument>)SpdxModelFactory.getSpdxObjects(store, null, SpdxConstantsCompatV2.CLASS_SPDX_DOCUMENT, null, null)
+				.collect(Collectors.toList());
+		if (docs.isEmpty()) {
+			throw new InvalidSPDXAnalysisException("No SPDX documents in model store");
+		}
+		if (docs.size() > 1) {
+			throw new InvalidSPDXAnalysisException("Multiple SPDX documents in modelSTore.  There can only be one SPDX document.");
+		}
+		return docs.get(0);
+	}
+
+	/**
+	 * Initializes the model registry and default model stores
+	 */
+	public static void initialize() {
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV2_X());
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV3_0());
+		DefaultModelStore.initialize(new InMemSpdxStore(), "https://spdx.org/documents/default", new ModelCopyManager());
 	}
 }
