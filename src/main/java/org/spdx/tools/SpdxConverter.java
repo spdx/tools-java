@@ -196,8 +196,8 @@ public class SpdxConverter {
 			// Need to copy the external document refs first so that they line up with the references
 			fromStore.getAllItems(documentUri, SpdxConstantsCompatV2.CLASS_EXTERNAL_DOC_REF).forEach(tv -> {
 				try {
-					copyManager.copy(toStore, fromStore, tv.getObjectUri(), tv.getType(), 
-							tv.getSpecVersion(), documentUri + "#");
+					copyManager.copy(toStore, fromStore, tv.getObjectUri(), tv.getSpecVersion(),
+							documentUri + "#");
 				} catch (InvalidSPDXAnalysisException e) {
 					throw new RuntimeException(e);
 				}
@@ -206,7 +206,7 @@ public class SpdxConverter {
 				try {
 					if (!SpdxConstantsCompatV2.CLASS_EXTERNAL_DOC_REF.equals(tv.getType()) &&
 							!(excludeLicenseDetails && SpdxConstantsCompatV2.CLASS_CROSS_REF.equals(tv.getType()))) {
-						copyManager.copy(toStore, fromStore, tv.getObjectUri(), tv.getType(), tv.getSpecVersion(), documentUri);
+						copyManager.copy(toStore, fromStore, tv.getObjectUri(), tv.getSpecVersion(), documentUri);
 					}
 				} catch (InvalidSPDXAnalysisException e) {
 					throw new RuntimeException(e);
