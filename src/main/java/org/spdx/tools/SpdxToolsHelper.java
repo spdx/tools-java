@@ -36,13 +36,10 @@ import org.spdx.jacksonstore.MultiFormatStore.Format;
 import org.spdx.jacksonstore.MultiFormatStore.Verbose;
 import org.spdx.core.DefaultModelStore;
 import org.spdx.core.InvalidSPDXAnalysisException;
-import org.spdx.core.ModelRegistry;
 import org.spdx.library.ModelCopyManager;
 import org.spdx.library.SpdxModelFactory;
 import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.library.model.v2.SpdxDocument;
-import org.spdx.library.model.v2.SpdxModelInfoV2_X;
-import org.spdx.library.model.v3.SpdxModelInfoV3_0;
 import org.spdx.spdxRdfStore.OutputFormat;
 import org.spdx.spdxRdfStore.RdfStore;
 import org.spdx.spreadsheetstore.SpreadsheetStore;
@@ -50,6 +47,7 @@ import org.spdx.spreadsheetstore.SpreadsheetStore.SpreadsheetFormatType;
 import org.spdx.storage.ISerializableModelStore;
 import org.spdx.storage.simple.InMemSpdxStore;
 import org.spdx.tagvaluestore.TagValueStore;
+import org.spdx.v3jsonldstore.JsonLDStore;
 
 /**
  * Static helper methods for the various tools
@@ -60,7 +58,7 @@ import org.spdx.tagvaluestore.TagValueStore;
 public class SpdxToolsHelper {
 
 	public enum SerFileType {
-		JSON, RDFXML, XML, XLS, XLSX, YAML, TAG, RDFTTL
+		JSON, RDFXML, XML, XLS, XLSX, YAML, TAG, RDFTTL, JSONLD
 	}
 
 	static final String XML_INPUT_FACTORY_PROPERTY_KEY = "javax.xml.stream.XMLInputFactory";
@@ -68,6 +66,8 @@ public class SpdxToolsHelper {
 	static Map<String, SerFileType> EXT_TO_FILETYPE;
 	static {
 		HashMap<String, SerFileType> temp = new HashMap<>();
+		temp.put("jsonld.json", SerFileType.JSONLD);
+		temp.put("jsonld", SerFileType.JSONLD);
 		temp.put("json", SerFileType.JSON);
 		temp.put("rdf.xml", SerFileType.RDFXML);
 		temp.put("rdf", SerFileType.RDFXML);
@@ -119,6 +119,8 @@ public class SpdxToolsHelper {
 			case YAML :
 				return new MultiFormatStore(new InMemSpdxStore(), Format.YAML,
 						Verbose.COMPACT);
+			case JSONLD :
+				return new JsonLDStore(new InMemSpdxStore());
 			default :
 				throw new InvalidSPDXAnalysisException("Unsupported file type: "
 						+ fileType + ".  Check back later.");
@@ -147,6 +149,10 @@ public class SpdxToolsHelper {
 		if ("ttl".equals(ext)) {
 			if (fileName.endsWith("rdf.ttl")) {
 				ext = "rdf.ttl";
+			}
+		}if ("json".equals(ext)) {
+			if (fileName.endsWith("jsonld.json")) {
+				ext = "jsonld.json";
 			}
 		}
 		SerFileType retval = EXT_TO_FILETYPE.get(ext);
@@ -179,7 +185,7 @@ public class SpdxToolsHelper {
 			throws InvalidSPDXAnalysisException, IOException,
 			InvalidFileNameException {
 		ISerializableModelStore store = fileTypeToStore(fileToFileType(file));
-		return readDocumentFromFile(store, file);
+		return readDocumentFromFileCompatV2(store, file);
 	}
 	/**
 	 * @param file
@@ -195,7 +201,7 @@ public class SpdxToolsHelper {
 			SerFileType fileType)
 			throws InvalidSPDXAnalysisException, IOException {
 		ISerializableModelStore store = fileTypeToStore(fileType);
-		return readDocumentFromFile(store, file);
+		return readDocumentFromFileCompatV2(store, file);
 	}
 	
 	/**
@@ -207,7 +213,7 @@ public class SpdxToolsHelper {
 	 * @throws IOException If there is an error reading the file
 	 * @throws InvalidSPDXAnalysisException If there is a problem in the SPDX document structure
 	 */
-	public static SpdxDocument readDocumentFromFile(ISerializableModelStore store, File file) throws FileNotFoundException, IOException, InvalidSPDXAnalysisException {
+	public static SpdxDocument readDocumentFromFileCompatV2(ISerializableModelStore store, File file) throws FileNotFoundException, IOException, InvalidSPDXAnalysisException {
 		String oldXmlInputFactory = null;
 		boolean propertySet = false;
 		try (InputStream is = new FileInputStream(file)) {
@@ -223,7 +229,7 @@ public class SpdxToolsHelper {
 				}
 			}
 			store.deSerialize(is, false);
-			return getDocFromStore(store);
+			return getDocFromStoreCompatV2(store);
 		} finally {
 			if (propertySet) {
 				if (Objects.isNull(oldXmlInputFactory)) {
@@ -235,15 +241,15 @@ public class SpdxToolsHelper {
 		}
 	}
 	
-	public static SpdxDocument getDocFromStore(ISerializableModelStore store) throws InvalidSPDXAnalysisException {
+	public static SpdxDocument getDocFromStoreCompatV2(ISerializableModelStore store) throws InvalidSPDXAnalysisException {
 		@SuppressWarnings("unchecked")
 		List<SpdxDocument> docs = (List<SpdxDocument>)SpdxModelFactory.getSpdxObjects(store, null, SpdxConstantsCompatV2.CLASS_SPDX_DOCUMENT, null, null)
 				.collect(Collectors.toList());
 		if (docs.isEmpty()) {
-			throw new InvalidSPDXAnalysisException("No SPDX documents in model store");
+			throw new InvalidSPDXAnalysisException("No SPDX version 2 documents in model store");
 		}
 		if (docs.size() > 1) {
-			throw new InvalidSPDXAnalysisException("Multiple SPDX documents in modelSTore.  There can only be one SPDX document.");
+			throw new InvalidSPDXAnalysisException("Multiple SPDX version 2 documents in modelSTore.  There can only be one SPDX document.");
 		}
 		return docs.get(0);
 	}
@@ -252,8 +258,7 @@ public class SpdxToolsHelper {
 	 * Initializes the model registry and default model stores
 	 */
 	public static void initialize() {
-		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV2_X());
-		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV3_0());
+		SpdxModelFactory.init();
 		DefaultModelStore.initialize(new InMemSpdxStore(), "https://spdx.org/documents/default", new ModelCopyManager());
 	}
 }

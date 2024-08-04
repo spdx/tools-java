@@ -93,7 +93,7 @@ public class SpdxViewer {
 			}
 			
 			try {
-				doc = SpdxToolsHelper.readDocumentFromFile(store, file);
+				doc = SpdxToolsHelper.readDocumentFromFileCompatV2(store, file);
 			} catch (Exception ex) {
 		        System.out
 		                .print("Error creating SPDX Document: " + ex.getMessage());

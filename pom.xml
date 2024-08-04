@@ -148,6 +148,11 @@
 	  	<version>2.0.13</version>
 	  	<optional>true</optional>
 	  </dependency>
+	  <dependency>
+	  	<groupId>org.spdx</groupId>
+	  	<artifactId>spdx-v3jsonld-store</artifactId>
+	  	<version>0.0.1-SNAPSHOT</version>
+	  </dependency>
 	</dependencies>
     <build>
   		<resources>

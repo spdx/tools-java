@@ -144,7 +144,7 @@ public class Verify {
 		}
 		SpdxDocument doc = null;
 		try {
-			doc = SpdxToolsHelper.readDocumentFromFile(store, file);
+			doc = SpdxToolsHelper.readDocumentFromFileCompatV2(store, file);
 		} catch (FileNotFoundException e) {
 			throw new SpdxVerificationException("File "+filePath+ " not found.",e);
 		} catch (JsonParseException e) {
