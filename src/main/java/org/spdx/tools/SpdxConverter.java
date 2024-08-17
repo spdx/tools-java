@@ -25,13 +25,13 @@ import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spdx.conversion.Spdx2to3Converter;
 import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.library.ModelCopyManager;
 import org.spdx.library.SpdxModelFactory;
+import org.spdx.library.conversion.Spdx2to3Converter;
 import org.spdx.library.model.v2.SpdxConstantsCompatV2;
-import org.spdx.library.model.v3.SpdxConstantsV3.SpdxMajorVersion;
-import org.spdx.library.model.v3.core.CreationInfo;
+import org.spdx.library.model.v3_0_0.SpdxConstantsV3.SpdxMajorVersion;
+import org.spdx.library.model.v3_0_0.core.CreationInfo;
 import org.spdx.spdxRdfStore.RdfStore;
 import org.spdx.storage.ISerializableModelStore;
 import org.spdx.tools.SpdxToolsHelper.SerFileType;
@@ -195,6 +195,9 @@ public class SpdxConverter {
 				} catch (SecurityException e) {
 					propertySet = false; // we'll just deal with the extra error message
 				}
+			}
+			if (toStore instanceof JsonLDStore) {
+				((JsonLDStore)toStore).setUseExternalListedElements(true);
 			}
 			input = new FileInputStream(fromFile);
 			output = new FileOutputStream(toFile);

@@ -141,7 +141,7 @@ public class CompareSpdxDocs {
 			throw new FileNotFoundException("File "+filePath+" not found");
 		}
 		if (spdxDocOrDir.isFile()) {
-			SpdxDocument doc = SpdxToolsHelper.deserializeDocument(spdxDocOrDir);
+			SpdxDocument doc = SpdxToolsHelper.deserializeDocumentCompatV2(spdxDocOrDir);
 			List<String> warnings = doc.verify();
 			boolean dupDocUri = false;
 			for (SpdxDocument otherDocs:compareDocs) {

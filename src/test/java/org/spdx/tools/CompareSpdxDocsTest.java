@@ -32,7 +32,7 @@ import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.core.ModelRegistry;
 import org.spdx.library.ModelCopyManager;
 import org.spdx.library.model.v2.SpdxModelInfoV2_X;
-import org.spdx.library.model.v3.SpdxModelInfoV3_0;
+import org.spdx.library.model.v3_0_0.SpdxModelInfoV3_0;
 import org.spdx.spreadsheetstore.SpreadsheetException;
 import org.spdx.storage.simple.InMemSpdxStore;
 import org.spdx.tools.compare.DocumentSheet;
@@ -86,7 +86,7 @@ public class CompareSpdxDocsTest extends TestCase {
 	 */
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		SpdxConverterTest.deleteDirAndFiles(tempDirPath);
+		SpdxConverterTestV2.deleteDirAndFiles(tempDirPath);
 	}
 	
 	public void testCompareDocumentsv23() throws OnlineToolException, InvalidSPDXAnalysisException, IOException, InvalidFileNameException {

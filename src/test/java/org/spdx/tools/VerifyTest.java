@@ -7,7 +7,7 @@ import org.spdx.core.DefaultModelStore;
 import org.spdx.core.ModelRegistry;
 import org.spdx.library.ModelCopyManager;
 import org.spdx.library.model.v2.SpdxModelInfoV2_X;
-import org.spdx.library.model.v3.SpdxModelInfoV3_0;
+import org.spdx.library.model.v3_0_0.SpdxModelInfoV3_0;
 import org.spdx.storage.simple.InMemSpdxStore;
 import org.spdx.tools.SpdxToolsHelper.SerFileType;
 
