@@ -16,6 +16,7 @@ import junit.framework.TestCase;
 public class VerifyTest extends TestCase {
 	
 	static final String TEST_DIR = "testResources";
+	static final String TEST_JSONLD_FILE_PATH = TEST_DIR + File.separator + "SPDXJsonLDExample-v3.0.1.json";
 	static final String TEST_JSON_FILE_PATH = TEST_DIR + File.separator + "SPDXJSONExample-v2.3.spdx.json";
 	static final String JSON_V2_3_FILE_PATH = TEST_DIR + File.separator + "SPDXJSONExample-v2.3.spdx.json";
 	static final String JSON_V2_2_FILE_PATH = TEST_DIR + File.separator + "SPDXJSONExample-v2.2.spdx.json";
@@ -78,6 +79,11 @@ public class VerifyTest extends TestCase {
 	public void testVerifyBadJSON() throws SpdxVerificationException {
 		List<String> result = Verify.verify(BAD_JSON_FILE_PATH, SerFileType.JSON);
 		assertTrue(result.size() == 4);
+	}
+	
+	public void testVerifyJsonLD() throws SpdxVerificationException {
+		List<String> result = Verify.verify(TEST_JSONLD_FILE_PATH, SerFileType.JSONLD);
+		assertTrue(result.isEmpty());
 	}
 	
 	// Test specific spec versions for the JSON format

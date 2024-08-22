@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 import org.spdx.jacksonstore.MultiFormatStore;
 import org.spdx.jacksonstore.MultiFormatStore.Format;
 import org.spdx.jacksonstore.MultiFormatStore.Verbose;
+import org.spdx.core.CoreModelObject;
 import org.spdx.core.DefaultModelStore;
 import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.library.ModelCopyManager;
@@ -227,7 +228,7 @@ public class SpdxToolsHelper {
 		if (!supportsV3(store)) {
 			throw new RuntimeException("Store does not support SPDX version 3");
 		}
-		return readDocumentFromFile(store, file);
+		return readDocumentFromFileV3(store, file);
 	}
 	/**
 	 * @param file
@@ -246,7 +247,7 @@ public class SpdxToolsHelper {
 		if (!supportsV3(store)) {
 			throw new RuntimeException("Store does not support SPDX version 3");
 		}
-		return readDocumentFromFile(store, file);
+		return readDocumentFromFileV3(store, file);
 	}
 	
 	/**
@@ -309,12 +310,29 @@ public class SpdxToolsHelper {
 	 * @throws IOException If there is an error reading the file
 	 * @throws InvalidSPDXAnalysisException If there is a problem in the SPDX document structure
 	 */
-	public static org.spdx.library.model.v3_0_0.core.SpdxDocument readDocumentFromFile(ISerializableModelStore store, File file) throws FileNotFoundException, IOException, InvalidSPDXAnalysisException {
+	public static org.spdx.library.model.v3_0_0.core.SpdxDocument readDocumentFromFileV3(ISerializableModelStore store, File file) throws FileNotFoundException, IOException, InvalidSPDXAnalysisException {
 		if (!supportsV3(store)) {
 			throw new RuntimeException("Store does not support SPDX version 3");
 		}
 		deserializeFile(store, file);
 		return getDocFromStore(store);
+	}
+	
+	/**
+	 * Reads an SPDX Document from a file
+	 * @param store Store where the document is to be stored
+	 * @param file File to read the store from
+	 * @return SPDX Document from the store
+	 * @throws FileNotFoundException If the file is not found
+	 * @throws IOException If there is an error reading the file
+	 * @throws InvalidSPDXAnalysisException If there is a problem in the SPDX document structure
+	 */
+	public static CoreModelObject readDocumentFromFile(ISerializableModelStore store, File file) throws FileNotFoundException, IOException, InvalidSPDXAnalysisException {
+		if (store instanceof JsonLDStore) {
+			return readDocumentFromFileV3(store, file);
+		} else {
+			return readDocumentFromFileCompatV2(store, file);
+		}
 	}
 	
 	/**
