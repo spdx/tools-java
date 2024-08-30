@@ -41,7 +41,7 @@ import org.spdx.library.ModelCopyManager;
 import org.spdx.library.SpdxModelFactory;
 import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.library.model.v2.SpdxDocument;
-import org.spdx.library.model.v3_0_0.SpdxConstantsV3;
+import org.spdx.library.model.v3_0_1.SpdxConstantsV3;
 import org.spdx.spdxRdfStore.OutputFormat;
 import org.spdx.spdxRdfStore.RdfStore;
 import org.spdx.spreadsheetstore.SpreadsheetStore;
@@ -221,7 +221,7 @@ public class SpdxToolsHelper {
 	 * @throws IOException
 	 * @throws InvalidFileNameException
 	 */
-	public static org.spdx.library.model.v3_0_0.core.SpdxDocument deserializeDocumentCompat(File file)
+	public static org.spdx.library.model.v3_0_1.core.SpdxDocument deserializeDocumentCompat(File file)
 			throws InvalidSPDXAnalysisException, IOException,
 			InvalidFileNameException {
 		ISerializableModelStore store = fileTypeToStore(fileToFileType(file));
@@ -240,7 +240,7 @@ public class SpdxToolsHelper {
 	 * @throws InvalidSPDXAnalysisException
 	 * @throws IOException
 	 */
-	public static org.spdx.library.model.v3_0_0.core.SpdxDocument deserializeDocument(File file,
+	public static org.spdx.library.model.v3_0_1.core.SpdxDocument deserializeDocument(File file,
 			SerFileType fileType)
 			throws InvalidSPDXAnalysisException, IOException {
 		ISerializableModelStore store = fileTypeToStore(fileType);
@@ -310,7 +310,7 @@ public class SpdxToolsHelper {
 	 * @throws IOException If there is an error reading the file
 	 * @throws InvalidSPDXAnalysisException If there is a problem in the SPDX document structure
 	 */
-	public static org.spdx.library.model.v3_0_0.core.SpdxDocument readDocumentFromFileV3(ISerializableModelStore store, File file) throws FileNotFoundException, IOException, InvalidSPDXAnalysisException {
+	public static org.spdx.library.model.v3_0_1.core.SpdxDocument readDocumentFromFileV3(ISerializableModelStore store, File file) throws FileNotFoundException, IOException, InvalidSPDXAnalysisException {
 		if (!supportsV3(store)) {
 			throw new RuntimeException("Store does not support SPDX version 3");
 		}
@@ -357,10 +357,10 @@ public class SpdxToolsHelper {
 	 * @return returns a document if a single document is found in the model store
 	 * @throws InvalidSPDXAnalysisException
 	 */
-	public static org.spdx.library.model.v3_0_0.core.SpdxDocument getDocFromStore(ISerializableModelStore store) throws InvalidSPDXAnalysisException {
+	public static org.spdx.library.model.v3_0_1.core.SpdxDocument getDocFromStore(ISerializableModelStore store) throws InvalidSPDXAnalysisException {
 		@SuppressWarnings("unchecked")
-		List<org.spdx.library.model.v3_0_0.core.SpdxDocument> docs = 
-		(List<org.spdx.library.model.v3_0_0.core.SpdxDocument>)SpdxModelFactory.getSpdxObjects(store, null, SpdxConstantsV3.CORE_SPDX_DOCUMENT, null, null)
+		List<org.spdx.library.model.v3_0_1.core.SpdxDocument> docs = 
+		(List<org.spdx.library.model.v3_0_1.core.SpdxDocument>)SpdxModelFactory.getSpdxObjects(store, null, SpdxConstantsV3.CORE_SPDX_DOCUMENT, null, null)
 				.collect(Collectors.toList());
 		if (docs.isEmpty()) {
 			// TODO: We could construct an SPDX document just from the serialization information
