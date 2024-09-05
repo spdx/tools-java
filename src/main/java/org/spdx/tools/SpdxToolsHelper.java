@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import org.spdx.jacksonstore.MultiFormatStore;
@@ -158,6 +159,29 @@ public class SpdxToolsHelper {
 			}
 		}
 		SerFileType retval = EXT_TO_FILETYPE.get(ext);
+		if (SerFileType.JSON.equals(retval)) {
+			// we need to check for a JSON-LD file type
+			try (Scanner scanner = new Scanner(file)) {
+				scanner.useDelimiter("\"");
+				boolean foundContext = false;
+				boolean foundRdfUri = false;
+				while (scanner.hasNext()) {
+					String line = scanner.next().toLowerCase();
+					if (line.contains("https://spdx.org/rdf/3.")) {
+						foundRdfUri = true;
+					}
+					if (line.contains("@context")) {
+						foundContext = true;
+					}
+					if (foundContext && foundRdfUri) {
+						retval = SerFileType.JSONLD;
+						break;
+					}
+				}
+			} catch (FileNotFoundException e) {
+				// We'll assume it is just a JSON file
+			}
+		}
 		if (Objects.isNull(retval)) {
 			throw new InvalidFileNameException(
 					"Unrecognized file extension: " + ext + " for file "+file.getPath());
