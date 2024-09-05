@@ -36,7 +36,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNodeOrIRI" },
+                        "spdxId": { "$ref": "#/$defs/BlankNodeOrIRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "http://spdx.invalid./AbstractClass" }
@@ -74,7 +74,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNode" },
+                        "spdxId": { "$ref": "#/$defs/BlankNode" },
                         "type": {
                             "oneOf": [
                                 { "const": "ai_EnergyConsumption" }
@@ -151,7 +151,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNode" },
+                        "spdxId": { "$ref": "#/$defs/BlankNode" },
                         "type": {
                             "oneOf": [
                                 { "const": "ai_EnergyConsumptionDescription" }
@@ -217,7 +217,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNodeOrIRI" },
+                        "spdxId": { "$ref": "#/$defs/BlankNodeOrIRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "ai_EnergyUnitType" }
@@ -237,8 +237,8 @@
                         { "$ref": "#/$defs/ai_EnergyUnitType" }
                     ]
                 },
-                { "const": "spdx:AI/EnergyUnitType/kilowattHour" },
                 { "const": "spdx:AI/EnergyUnitType/megajoule" },
+                { "const": "spdx:AI/EnergyUnitType/kilowattHour" },
                 { "const": "spdx:AI/EnergyUnitType/other" },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
             ]
@@ -258,7 +258,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNodeOrIRI" },
+                        "spdxId": { "$ref": "#/$defs/BlankNodeOrIRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "ai_SafetyRiskAssessmentType" }
@@ -278,9 +278,9 @@
                         { "$ref": "#/$defs/ai_SafetyRiskAssessmentType" }
                     ]
                 },
-                { "const": "spdx:AI/SafetyRiskAssessmentType/high" },
-                { "const": "spdx:AI/SafetyRiskAssessmentType/low" },
                 { "const": "spdx:AI/SafetyRiskAssessmentType/medium" },
+                { "const": "spdx:AI/SafetyRiskAssessmentType/low" },
+                { "const": "spdx:AI/SafetyRiskAssessmentType/high" },
                 { "const": "spdx:AI/SafetyRiskAssessmentType/serious" },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
             ]
@@ -300,7 +300,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNodeOrIRI" },
+                        "spdxId": { "$ref": "#/$defs/BlankNodeOrIRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "AnnotationType" }
@@ -437,7 +437,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNode" },
+                        "spdxId": { "$ref": "#/$defs/BlankNode" },
                         "type": {
                             "oneOf": [
                                 { "const": "DictionaryEntry" }
@@ -495,10 +495,8 @@
                         { "$ref": "#/$defs/build_Build" },
                         { "$ref": "#/$defs/Agent" },
                         { "$ref": "#/$defs/Annotation" },
-                        { "$ref": "#/$defs/Artifact" },
                         { "$ref": "#/$defs/Bom" },
                         { "$ref": "#/$defs/Bundle" },
-                        { "$ref": "#/$defs/ElementCollection" },
                         { "$ref": "#/$defs/LifecycleScopedRelationship" },
                         { "$ref": "#/$defs/Organization" },
                         { "$ref": "#/$defs/Person" },
@@ -511,10 +509,7 @@
                         { "$ref": "#/$defs/expandedlicensing_CustomLicense" },
                         { "$ref": "#/$defs/expandedlicensing_CustomLicenseAddition" },
                         { "$ref": "#/$defs/expandedlicensing_DisjunctiveLicenseSet" },
-                        { "$ref": "#/$defs/expandedlicensing_ExtendableLicense" },
                         { "$ref": "#/$defs/expandedlicensing_IndividualLicensingInfo" },
-                        { "$ref": "#/$defs/expandedlicensing_License" },
-                        { "$ref": "#/$defs/expandedlicensing_LicenseAddition" },
                         { "$ref": "#/$defs/expandedlicensing_ListedLicense" },
                         { "$ref": "#/$defs/expandedlicensing_ListedLicenseException" },
                         { "$ref": "#/$defs/expandedlicensing_OrLaterOperator" },
@@ -529,24 +524,19 @@
                         { "$ref": "#/$defs/security_VexFixedVulnAssessmentRelationship" },
                         { "$ref": "#/$defs/security_VexNotAffectedVulnAssessmentRelationship" },
                         { "$ref": "#/$defs/security_VexUnderInvestigationVulnAssessmentRelationship" },
-                        { "$ref": "#/$defs/security_VexVulnAssessmentRelationship" },
-                        { "$ref": "#/$defs/security_VulnAssessmentRelationship" },
                         { "$ref": "#/$defs/security_Vulnerability" },
-                        { "$ref": "#/$defs/simplelicensing_AnyLicenseInfo" },
                         { "$ref": "#/$defs/simplelicensing_LicenseExpression" },
                         { "$ref": "#/$defs/simplelicensing_SimpleLicensingText" },
                         { "$ref": "#/$defs/software_File" },
                         { "$ref": "#/$defs/software_Package" },
                         { "$ref": "#/$defs/software_Sbom" },
-                        { "$ref": "#/$defs/software_Snippet" },
-                        { "$ref": "#/$defs/software_SoftwareArtifact" },
-                        { "$ref": "#/$defs/Element" }
+                        { "$ref": "#/$defs/software_Snippet" }
                     ]
                 },
                 { "const": "spdx:ExpandedLicensing/NoAssertionLicense" },
                 { "const": "spdx:ExpandedLicensing/NoneLicense" },
-                { "const": "spdx:Core/NoAssertionElement" },
                 { "const": "spdx:Core/NoneElement" },
+                { "const": "spdx:Core/NoAssertionElement" },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
             ]
         },
@@ -726,7 +716,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNode" },
+                        "spdxId": { "$ref": "#/$defs/BlankNode" },
                         "type": {
                             "oneOf": [
                                 { "const": "ExternalIdentifier" }
@@ -817,7 +807,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNodeOrIRI" },
+                        "spdxId": { "$ref": "#/$defs/BlankNodeOrIRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "ExternalIdentifierType" }
@@ -837,17 +827,17 @@
                         { "$ref": "#/$defs/ExternalIdentifierType" }
                     ]
                 },
-                { "const": "spdx:Core/ExternalIdentifierType/cpe22" },
+                { "const": "spdx:Core/ExternalIdentifierType/swhid" },
                 { "const": "spdx:Core/ExternalIdentifierType/cpe23" },
-                { "const": "spdx:Core/ExternalIdentifierType/cve" },
-                { "const": "spdx:Core/ExternalIdentifierType/email" },
-                { "const": "spdx:Core/ExternalIdentifierType/gitoid" },
                 { "const": "spdx:Core/ExternalIdentifierType/other" },
                 { "const": "spdx:Core/ExternalIdentifierType/packageUrl" },
-                { "const": "spdx:Core/ExternalIdentifierType/securityOther" },
-                { "const": "spdx:Core/ExternalIdentifierType/swhid" },
-                { "const": "spdx:Core/ExternalIdentifierType/swid" },
+                { "const": "spdx:Core/ExternalIdentifierType/cpe22" },
+                { "const": "spdx:Core/ExternalIdentifierType/gitoid" },
+                { "const": "spdx:Core/ExternalIdentifierType/cve" },
+                { "const": "spdx:Core/ExternalIdentifierType/email" },
                 { "const": "spdx:Core/ExternalIdentifierType/urlScheme" },
+                { "const": "spdx:Core/ExternalIdentifierType/securityOther" },
+                { "const": "spdx:Core/ExternalIdentifierType/swid" },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
             ]
         },
@@ -866,7 +856,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNode" },
+                        "spdxId": { "$ref": "#/$defs/BlankNode" },
                         "type": {
                             "oneOf": [
                                 { "const": "ExternalMap" }
@@ -938,7 +928,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNode" },
+                        "spdxId": { "$ref": "#/$defs/BlankNode" },
                         "type": {
                             "oneOf": [
                                 { "const": "ExternalRef" }
@@ -1055,7 +1045,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNodeOrIRI" },
+                        "spdxId": { "$ref": "#/$defs/BlankNodeOrIRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "ExternalRefType" }
@@ -1075,52 +1065,52 @@
                         { "$ref": "#/$defs/ExternalRefType" }
                     ]
                 },
-                { "const": "spdx:Core/ExternalRefType/altDownloadLocation" },
+                { "const": "spdx:Core/ExternalRefType/mailingList" },
+                { "const": "spdx:Core/ExternalRefType/support" },
+                { "const": "spdx:Core/ExternalRefType/securityOther" },
+                { "const": "spdx:Core/ExternalRefType/securityFix" },
+                { "const": "spdx:Core/ExternalRefType/staticAnalysisReport" },
+                { "const": "spdx:Core/ExternalRefType/eolNotice" },
+                { "const": "spdx:Core/ExternalRefType/qualityAssessmentReport" },
+                { "const": "spdx:Core/ExternalRefType/issueTracker" },
+                { "const": "spdx:Core/ExternalRefType/purchaseOrder" },
+                { "const": "spdx:Core/ExternalRefType/license" },
+                { "const": "spdx:Core/ExternalRefType/securityAdvisory" },
+                { "const": "spdx:Core/ExternalRefType/vulnerabilityExploitabilityAssessment" },
+                { "const": "spdx:Core/ExternalRefType/certificationReport" },
+                { "const": "spdx:Core/ExternalRefType/vulnerabilityDisclosureReport" },
+                { "const": "spdx:Core/ExternalRefType/runtimeAnalysisReport" },
+                { "const": "spdx:Core/ExternalRefType/chat" },
+                { "const": "spdx:Core/ExternalRefType/vcs" },
+                { "const": "spdx:Core/ExternalRefType/other" },
+                { "const": "spdx:Core/ExternalRefType/cwe" },
+                { "const": "spdx:Core/ExternalRefType/releaseHistory" },
+                { "const": "spdx:Core/ExternalRefType/metrics" },
+                { "const": "spdx:Core/ExternalRefType/bower" },
+                { "const": "spdx:Core/ExternalRefType/securityThreatModel" },
+                { "const": "spdx:Core/ExternalRefType/exportControlAssessment" },
+                { "const": "spdx:Core/ExternalRefType/npm" },
+                { "const": "spdx:Core/ExternalRefType/buildSystem" },
                 { "const": "spdx:Core/ExternalRefType/altWebPage" },
                 { "const": "spdx:Core/ExternalRefType/binaryArtifact" },
-                { "const": "spdx:Core/ExternalRefType/bower" },
-                { "const": "spdx:Core/ExternalRefType/buildMeta" },
-                { "const": "spdx:Core/ExternalRefType/buildSystem" },
-                { "const": "spdx:Core/ExternalRefType/certificationReport" },
-                { "const": "spdx:Core/ExternalRefType/chat" },
-                { "const": "spdx:Core/ExternalRefType/componentAnalysisReport" },
-                { "const": "spdx:Core/ExternalRefType/cwe" },
-                { "const": "spdx:Core/ExternalRefType/documentation" },
-                { "const": "spdx:Core/ExternalRefType/dynamicAnalysisReport" },
-                { "const": "spdx:Core/ExternalRefType/eolNotice" },
-                { "const": "spdx:Core/ExternalRefType/exportControlAssessment" },
-                { "const": "spdx:Core/ExternalRefType/funding" },
-                { "const": "spdx:Core/ExternalRefType/issueTracker" },
-                { "const": "spdx:Core/ExternalRefType/license" },
-                { "const": "spdx:Core/ExternalRefType/mailingList" },
-                { "const": "spdx:Core/ExternalRefType/mavenCentral" },
-                { "const": "spdx:Core/ExternalRefType/metrics" },
-                { "const": "spdx:Core/ExternalRefType/npm" },
-                { "const": "spdx:Core/ExternalRefType/nuget" },
-                { "const": "spdx:Core/ExternalRefType/other" },
-                { "const": "spdx:Core/ExternalRefType/privacyAssessment" },
-                { "const": "spdx:Core/ExternalRefType/productMetadata" },
-                { "const": "spdx:Core/ExternalRefType/purchaseOrder" },
-                { "const": "spdx:Core/ExternalRefType/qualityAssessmentReport" },
-                { "const": "spdx:Core/ExternalRefType/releaseHistory" },
                 { "const": "spdx:Core/ExternalRefType/releaseNotes" },
-                { "const": "spdx:Core/ExternalRefType/riskAssessment" },
-                { "const": "spdx:Core/ExternalRefType/runtimeAnalysisReport" },
-                { "const": "spdx:Core/ExternalRefType/secureSoftwareAttestation" },
-                { "const": "spdx:Core/ExternalRefType/securityAdversaryModel" },
-                { "const": "spdx:Core/ExternalRefType/securityAdvisory" },
-                { "const": "spdx:Core/ExternalRefType/securityFix" },
-                { "const": "spdx:Core/ExternalRefType/securityOther" },
-                { "const": "spdx:Core/ExternalRefType/securityPenTestReport" },
-                { "const": "spdx:Core/ExternalRefType/securityPolicy" },
-                { "const": "spdx:Core/ExternalRefType/securityThreatModel" },
+                { "const": "spdx:Core/ExternalRefType/dynamicAnalysisReport" },
                 { "const": "spdx:Core/ExternalRefType/socialMedia" },
+                { "const": "spdx:Core/ExternalRefType/funding" },
+                { "const": "spdx:Core/ExternalRefType/privacyAssessment" },
+                { "const": "spdx:Core/ExternalRefType/riskAssessment" },
+                { "const": "spdx:Core/ExternalRefType/altDownloadLocation" },
+                { "const": "spdx:Core/ExternalRefType/productMetadata" },
+                { "const": "spdx:Core/ExternalRefType/mavenCentral" },
+                { "const": "spdx:Core/ExternalRefType/buildMeta" },
+                { "const": "spdx:Core/ExternalRefType/securityPenTestReport" },
+                { "const": "spdx:Core/ExternalRefType/nuget" },
+                { "const": "spdx:Core/ExternalRefType/componentAnalysisReport" },
                 { "const": "spdx:Core/ExternalRefType/sourceArtifact" },
-                { "const": "spdx:Core/ExternalRefType/staticAnalysisReport" },
-                { "const": "spdx:Core/ExternalRefType/support" },
-                { "const": "spdx:Core/ExternalRefType/vcs" },
-                { "const": "spdx:Core/ExternalRefType/vulnerabilityDisclosureReport" },
-                { "const": "spdx:Core/ExternalRefType/vulnerabilityExploitabilityAssessment" },
+                { "const": "spdx:Core/ExternalRefType/documentation" },
+                { "const": "spdx:Core/ExternalRefType/secureSoftwareAttestation" },
+                { "const": "spdx:Core/ExternalRefType/securityPolicy" },
+                { "const": "spdx:Core/ExternalRefType/securityAdversaryModel" },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
             ]
         },
@@ -1139,7 +1129,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNodeOrIRI" },
+                        "spdxId": { "$ref": "#/$defs/BlankNodeOrIRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "HashAlgorithm" }
@@ -1159,28 +1149,28 @@
                         { "$ref": "#/$defs/HashAlgorithm" }
                     ]
                 },
-                { "const": "spdx:Core/HashAlgorithm/adler32" },
-                { "const": "spdx:Core/HashAlgorithm/blake2b256" },
-                { "const": "spdx:Core/HashAlgorithm/blake2b384" },
-                { "const": "spdx:Core/HashAlgorithm/blake2b512" },
-                { "const": "spdx:Core/HashAlgorithm/blake3" },
-                { "const": "spdx:Core/HashAlgorithm/crystalsDilithium" },
-                { "const": "spdx:Core/HashAlgorithm/crystalsKyber" },
-                { "const": "spdx:Core/HashAlgorithm/falcon" },
-                { "const": "spdx:Core/HashAlgorithm/md2" },
-                { "const": "spdx:Core/HashAlgorithm/md4" },
-                { "const": "spdx:Core/HashAlgorithm/md5" },
-                { "const": "spdx:Core/HashAlgorithm/md6" },
-                { "const": "spdx:Core/HashAlgorithm/other" },
-                { "const": "spdx:Core/HashAlgorithm/sha1" },
-                { "const": "spdx:Core/HashAlgorithm/sha224" },
-                { "const": "spdx:Core/HashAlgorithm/sha256" },
-                { "const": "spdx:Core/HashAlgorithm/sha384" },
-                { "const": "spdx:Core/HashAlgorithm/sha3_224" },
-                { "const": "spdx:Core/HashAlgorithm/sha3_256" },
-                { "const": "spdx:Core/HashAlgorithm/sha3_384" },
-                { "const": "spdx:Core/HashAlgorithm/sha3_512" },
                 { "const": "spdx:Core/HashAlgorithm/sha512" },
+                { "const": "spdx:Core/HashAlgorithm/md4" },
+                { "const": "spdx:Core/HashAlgorithm/sha224" },
+                { "const": "spdx:Core/HashAlgorithm/sha3_224" },
+                { "const": "spdx:Core/HashAlgorithm/blake2b384" },
+                { "const": "spdx:Core/HashAlgorithm/sha1" },
+                { "const": "spdx:Core/HashAlgorithm/blake2b256" },
+                { "const": "spdx:Core/HashAlgorithm/md2" },
+                { "const": "spdx:Core/HashAlgorithm/sha256" },
+                { "const": "spdx:Core/HashAlgorithm/sha3_512" },
+                { "const": "spdx:Core/HashAlgorithm/md6" },
+                { "const": "spdx:Core/HashAlgorithm/crystalsKyber" },
+                { "const": "spdx:Core/HashAlgorithm/crystalsDilithium" },
+                { "const": "spdx:Core/HashAlgorithm/sha3_256" },
+                { "const": "spdx:Core/HashAlgorithm/falcon" },
+                { "const": "spdx:Core/HashAlgorithm/adler32" },
+                { "const": "spdx:Core/HashAlgorithm/blake3" },
+                { "const": "spdx:Core/HashAlgorithm/sha384" },
+                { "const": "spdx:Core/HashAlgorithm/sha3_384" },
+                { "const": "spdx:Core/HashAlgorithm/other" },
+                { "const": "spdx:Core/HashAlgorithm/md5" },
+                { "const": "spdx:Core/HashAlgorithm/blake2b512" },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
             ]
         },
@@ -1202,8 +1192,7 @@
                     "anyOf": [
                         { "$ref": "#/$defs/Hash" },
                         { "$ref": "#/$defs/PackageVerificationCode" },
-                        { "$ref": "#/$defs/software_ContentIdentifier" },
-                        { "$ref": "#/$defs/IntegrityMethod" }
+                        { "$ref": "#/$defs/software_ContentIdentifier" }
                     ]
                 },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
@@ -1230,7 +1219,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNodeOrIRI" },
+                        "spdxId": { "$ref": "#/$defs/BlankNodeOrIRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "LifecycleScopeType" }
@@ -1251,11 +1240,11 @@
                     ]
                 },
                 { "const": "spdx:Core/LifecycleScopeType/build" },
+                { "const": "spdx:Core/LifecycleScopeType/other" },
+                { "const": "spdx:Core/LifecycleScopeType/test" },
                 { "const": "spdx:Core/LifecycleScopeType/design" },
                 { "const": "spdx:Core/LifecycleScopeType/development" },
-                { "const": "spdx:Core/LifecycleScopeType/other" },
                 { "const": "spdx:Core/LifecycleScopeType/runtime" },
-                { "const": "spdx:Core/LifecycleScopeType/test" },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
             ]
         },
@@ -1274,7 +1263,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNode" },
+                        "spdxId": { "$ref": "#/$defs/BlankNode" },
                         "type": {
                             "oneOf": [
                                 { "const": "NamespaceMap" }
@@ -1328,7 +1317,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNode" },
+                        "spdxId": { "$ref": "#/$defs/BlankNode" },
                         "type": {
                             "oneOf": [
                                 { "const": "PackageVerificationCode" }
@@ -1418,7 +1407,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNode" },
+                        "spdxId": { "$ref": "#/$defs/BlankNode" },
                         "type": {
                             "oneOf": [
                                 { "const": "PositiveIntegerRange" }
@@ -1474,7 +1463,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNodeOrIRI" },
+                        "spdxId": { "$ref": "#/$defs/BlankNodeOrIRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "PresenceType" }
@@ -1494,9 +1483,9 @@
                         { "$ref": "#/$defs/PresenceType" }
                     ]
                 },
+                { "const": "spdx:Core/PresenceType/yes" },
                 { "const": "spdx:Core/PresenceType/no" },
                 { "const": "spdx:Core/PresenceType/noAssertion" },
-                { "const": "spdx:Core/PresenceType/yes" },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
             ]
         },
@@ -1515,7 +1504,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNodeOrIRI" },
+                        "spdxId": { "$ref": "#/$defs/BlankNodeOrIRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "ProfileIdentifierType" }
@@ -1535,16 +1524,16 @@
                         { "$ref": "#/$defs/ProfileIdentifierType" }
                     ]
                 },
-                { "const": "spdx:Core/ProfileIdentifierType/ai" },
-                { "const": "spdx:Core/ProfileIdentifierType/build" },
                 { "const": "spdx:Core/ProfileIdentifierType/core" },
                 { "const": "spdx:Core/ProfileIdentifierType/dataset" },
-                { "const": "spdx:Core/ProfileIdentifierType/expandedLicensing" },
-                { "const": "spdx:Core/ProfileIdentifierType/extension" },
                 { "const": "spdx:Core/ProfileIdentifierType/lite" },
-                { "const": "spdx:Core/ProfileIdentifierType/security" },
-                { "const": "spdx:Core/ProfileIdentifierType/simpleLicensing" },
+                { "const": "spdx:Core/ProfileIdentifierType/expandedLicensing" },
                 { "const": "spdx:Core/ProfileIdentifierType/software" },
+                { "const": "spdx:Core/ProfileIdentifierType/simpleLicensing" },
+                { "const": "spdx:Core/ProfileIdentifierType/build" },
+                { "const": "spdx:Core/ProfileIdentifierType/ai" },
+                { "const": "spdx:Core/ProfileIdentifierType/extension" },
+                { "const": "spdx:Core/ProfileIdentifierType/security" },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
             ]
         },
@@ -1563,14 +1552,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "Relationship" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/Relationship_props" }
             ]
@@ -1744,7 +1733,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNodeOrIRI" },
+                        "spdxId": { "$ref": "#/$defs/BlankNodeOrIRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "RelationshipCompleteness" }
@@ -1764,8 +1753,8 @@
                         { "$ref": "#/$defs/RelationshipCompleteness" }
                     ]
                 },
-                { "const": "spdx:Core/RelationshipCompleteness/complete" },
                 { "const": "spdx:Core/RelationshipCompleteness/incomplete" },
+                { "const": "spdx:Core/RelationshipCompleteness/complete" },
                 { "const": "spdx:Core/RelationshipCompleteness/noAssertion" },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
             ]
@@ -1785,7 +1774,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNodeOrIRI" },
+                        "spdxId": { "$ref": "#/$defs/BlankNodeOrIRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "RelationshipType" }
@@ -1805,65 +1794,65 @@
                         { "$ref": "#/$defs/RelationshipType" }
                     ]
                 },
-                { "const": "spdx:Core/RelationshipType/affects" },
-                { "const": "spdx:Core/RelationshipType/amendedBy" },
-                { "const": "spdx:Core/RelationshipType/ancestorOf" },
-                { "const": "spdx:Core/RelationshipType/availableFrom" },
-                { "const": "spdx:Core/RelationshipType/configures" },
-                { "const": "spdx:Core/RelationshipType/contains" },
-                { "const": "spdx:Core/RelationshipType/coordinatedBy" },
-                { "const": "spdx:Core/RelationshipType/copiedTo" },
-                { "const": "spdx:Core/RelationshipType/delegatedTo" },
-                { "const": "spdx:Core/RelationshipType/dependsOn" },
-                { "const": "spdx:Core/RelationshipType/descendantOf" },
-                { "const": "spdx:Core/RelationshipType/describes" },
-                { "const": "spdx:Core/RelationshipType/doesNotAffect" },
-                { "const": "spdx:Core/RelationshipType/expandsTo" },
-                { "const": "spdx:Core/RelationshipType/exploitCreatedBy" },
-                { "const": "spdx:Core/RelationshipType/fixedBy" },
-                { "const": "spdx:Core/RelationshipType/fixedIn" },
-                { "const": "spdx:Core/RelationshipType/foundBy" },
-                { "const": "spdx:Core/RelationshipType/generates" },
-                { "const": "spdx:Core/RelationshipType/hasAddedFile" },
                 { "const": "spdx:Core/RelationshipType/hasAssessmentFor" },
-                { "const": "spdx:Core/RelationshipType/hasAssociatedVulnerability" },
-                { "const": "spdx:Core/RelationshipType/hasConcludedLicense" },
-                { "const": "spdx:Core/RelationshipType/hasDataFile" },
-                { "const": "spdx:Core/RelationshipType/hasDeclaredLicense" },
-                { "const": "spdx:Core/RelationshipType/hasDeletedFile" },
-                { "const": "spdx:Core/RelationshipType/hasDependencyManifest" },
-                { "const": "spdx:Core/RelationshipType/hasDistributionArtifact" },
-                { "const": "spdx:Core/RelationshipType/hasDocumentation" },
-                { "const": "spdx:Core/RelationshipType/hasDynamicLink" },
-                { "const": "spdx:Core/RelationshipType/hasEvidence" },
-                { "const": "spdx:Core/RelationshipType/hasExample" },
-                { "const": "spdx:Core/RelationshipType/hasHost" },
-                { "const": "spdx:Core/RelationshipType/hasInput" },
-                { "const": "spdx:Core/RelationshipType/hasMetadata" },
-                { "const": "spdx:Core/RelationshipType/hasOptionalComponent" },
-                { "const": "spdx:Core/RelationshipType/hasOptionalDependency" },
-                { "const": "spdx:Core/RelationshipType/hasOutput" },
-                { "const": "spdx:Core/RelationshipType/hasPrerequisite" },
-                { "const": "spdx:Core/RelationshipType/hasProvidedDependency" },
-                { "const": "spdx:Core/RelationshipType/hasRequirement" },
-                { "const": "spdx:Core/RelationshipType/hasSpecification" },
-                { "const": "spdx:Core/RelationshipType/hasStaticLink" },
-                { "const": "spdx:Core/RelationshipType/hasTest" },
-                { "const": "spdx:Core/RelationshipType/hasTestCase" },
-                { "const": "spdx:Core/RelationshipType/hasVariant" },
-                { "const": "spdx:Core/RelationshipType/invokedBy" },
-                { "const": "spdx:Core/RelationshipType/modifiedBy" },
-                { "const": "spdx:Core/RelationshipType/other" },
-                { "const": "spdx:Core/RelationshipType/packagedBy" },
-                { "const": "spdx:Core/RelationshipType/patchedBy" },
                 { "const": "spdx:Core/RelationshipType/publishedBy" },
-                { "const": "spdx:Core/RelationshipType/reportedBy" },
-                { "const": "spdx:Core/RelationshipType/republishedBy" },
-                { "const": "spdx:Core/RelationshipType/serializedInArtifact" },
-                { "const": "spdx:Core/RelationshipType/testedOn" },
+                { "const": "spdx:Core/RelationshipType/hasHost" },
                 { "const": "spdx:Core/RelationshipType/trainedOn" },
-                { "const": "spdx:Core/RelationshipType/underInvestigationFor" },
+                { "const": "spdx:Core/RelationshipType/hasOutput" },
+                { "const": "spdx:Core/RelationshipType/hasDynamicLink" },
+                { "const": "spdx:Core/RelationshipType/exploitCreatedBy" },
+                { "const": "spdx:Core/RelationshipType/hasDocumentation" },
+                { "const": "spdx:Core/RelationshipType/hasStaticLink" },
+                { "const": "spdx:Core/RelationshipType/hasAddedFile" },
+                { "const": "spdx:Core/RelationshipType/configures" },
+                { "const": "spdx:Core/RelationshipType/coordinatedBy" },
+                { "const": "spdx:Core/RelationshipType/hasConcludedLicense" },
+                { "const": "spdx:Core/RelationshipType/hasDependencyManifest" },
+                { "const": "spdx:Core/RelationshipType/serializedInArtifact" },
+                { "const": "spdx:Core/RelationshipType/hasTestCase" },
+                { "const": "spdx:Core/RelationshipType/hasDataFile" },
                 { "const": "spdx:Core/RelationshipType/usesTool" },
+                { "const": "spdx:Core/RelationshipType/dependsOn" },
+                { "const": "spdx:Core/RelationshipType/affects" },
+                { "const": "spdx:Core/RelationshipType/hasExample" },
+                { "const": "spdx:Core/RelationshipType/hasInput" },
+                { "const": "spdx:Core/RelationshipType/hasVariant" },
+                { "const": "spdx:Core/RelationshipType/contains" },
+                { "const": "spdx:Core/RelationshipType/hasRequirement" },
+                { "const": "spdx:Core/RelationshipType/other" },
+                { "const": "spdx:Core/RelationshipType/testedOn" },
+                { "const": "spdx:Core/RelationshipType/hasMetadata" },
+                { "const": "spdx:Core/RelationshipType/delegatedTo" },
+                { "const": "spdx:Core/RelationshipType/hasDistributionArtifact" },
+                { "const": "spdx:Core/RelationshipType/reportedBy" },
+                { "const": "spdx:Core/RelationshipType/hasOptionalComponent" },
+                { "const": "spdx:Core/RelationshipType/generates" },
+                { "const": "spdx:Core/RelationshipType/amendedBy" },
+                { "const": "spdx:Core/RelationshipType/patchedBy" },
+                { "const": "spdx:Core/RelationshipType/hasProvidedDependency" },
+                { "const": "spdx:Core/RelationshipType/describes" },
+                { "const": "spdx:Core/RelationshipType/ancestorOf" },
+                { "const": "spdx:Core/RelationshipType/copiedTo" },
+                { "const": "spdx:Core/RelationshipType/hasPrerequisite" },
+                { "const": "spdx:Core/RelationshipType/descendantOf" },
+                { "const": "spdx:Core/RelationshipType/packagedBy" },
+                { "const": "spdx:Core/RelationshipType/republishedBy" },
+                { "const": "spdx:Core/RelationshipType/hasSpecification" },
+                { "const": "spdx:Core/RelationshipType/hasAssociatedVulnerability" },
+                { "const": "spdx:Core/RelationshipType/availableFrom" },
+                { "const": "spdx:Core/RelationshipType/fixedIn" },
+                { "const": "spdx:Core/RelationshipType/hasTest" },
+                { "const": "spdx:Core/RelationshipType/modifiedBy" },
+                { "const": "spdx:Core/RelationshipType/hasOptionalDependency" },
+                { "const": "spdx:Core/RelationshipType/hasDeletedFile" },
+                { "const": "spdx:Core/RelationshipType/hasEvidence" },
+                { "const": "spdx:Core/RelationshipType/underInvestigationFor" },
+                { "const": "spdx:Core/RelationshipType/hasDeclaredLicense" },
+                { "const": "spdx:Core/RelationshipType/doesNotAffect" },
+                { "const": "spdx:Core/RelationshipType/foundBy" },
+                { "const": "spdx:Core/RelationshipType/invokedBy" },
+                { "const": "spdx:Core/RelationshipType/expandsTo" },
+                { "const": "spdx:Core/RelationshipType/fixedBy" },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
             ]
         },
@@ -1882,14 +1871,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "SpdxDocument" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/SpdxDocument_props" }
             ]
@@ -1953,7 +1942,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNodeOrIRI" },
+                        "spdxId": { "$ref": "#/$defs/BlankNodeOrIRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "SupportType" }
@@ -1973,13 +1962,13 @@
                         { "$ref": "#/$defs/SupportType" }
                     ]
                 },
-                { "const": "spdx:Core/SupportType/deployed" },
-                { "const": "spdx:Core/SupportType/development" },
-                { "const": "spdx:Core/SupportType/endOfSupport" },
-                { "const": "spdx:Core/SupportType/limitedSupport" },
                 { "const": "spdx:Core/SupportType/noAssertion" },
-                { "const": "spdx:Core/SupportType/noSupport" },
+                { "const": "spdx:Core/SupportType/limitedSupport" },
+                { "const": "spdx:Core/SupportType/deployed" },
                 { "const": "spdx:Core/SupportType/support" },
+                { "const": "spdx:Core/SupportType/development" },
+                { "const": "spdx:Core/SupportType/noSupport" },
+                { "const": "spdx:Core/SupportType/endOfSupport" },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
             ]
         },
@@ -1998,14 +1987,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "Tool" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/Tool_props" }
             ]
@@ -2037,7 +2026,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNodeOrIRI" },
+                        "spdxId": { "$ref": "#/$defs/BlankNodeOrIRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "dataset_ConfidentialityLevelType" }
@@ -2057,10 +2046,10 @@
                         { "$ref": "#/$defs/dataset_ConfidentialityLevelType" }
                     ]
                 },
-                { "const": "spdx:Dataset/ConfidentialityLevelType/amber" },
-                { "const": "spdx:Dataset/ConfidentialityLevelType/clear" },
                 { "const": "spdx:Dataset/ConfidentialityLevelType/green" },
                 { "const": "spdx:Dataset/ConfidentialityLevelType/red" },
+                { "const": "spdx:Dataset/ConfidentialityLevelType/amber" },
+                { "const": "spdx:Dataset/ConfidentialityLevelType/clear" },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
             ]
         },
@@ -2079,7 +2068,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNodeOrIRI" },
+                        "spdxId": { "$ref": "#/$defs/BlankNodeOrIRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "dataset_DatasetAvailabilityType" }
@@ -2100,10 +2089,10 @@
                     ]
                 },
                 { "const": "spdx:Dataset/DatasetAvailabilityType/clickthrough" },
-                { "const": "spdx:Dataset/DatasetAvailabilityType/directDownload" },
                 { "const": "spdx:Dataset/DatasetAvailabilityType/query" },
-                { "const": "spdx:Dataset/DatasetAvailabilityType/registration" },
                 { "const": "spdx:Dataset/DatasetAvailabilityType/scrapingScript" },
+                { "const": "spdx:Dataset/DatasetAvailabilityType/registration" },
+                { "const": "spdx:Dataset/DatasetAvailabilityType/directDownload" },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
             ]
         },
@@ -2122,7 +2111,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNodeOrIRI" },
+                        "spdxId": { "$ref": "#/$defs/BlankNodeOrIRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "dataset_DatasetType" }
@@ -2143,19 +2132,19 @@
                     ]
                 },
                 { "const": "spdx:Dataset/DatasetType/audio" },
-                { "const": "spdx:Dataset/DatasetType/categorical" },
                 { "const": "spdx:Dataset/DatasetType/graph" },
+                { "const": "spdx:Dataset/DatasetType/video" },
+                { "const": "spdx:Dataset/DatasetType/syntactic" },
+                { "const": "spdx:Dataset/DatasetType/categorical" },
+                { "const": "spdx:Dataset/DatasetType/timestamp" },
+                { "const": "spdx:Dataset/DatasetType/timeseries" },
                 { "const": "spdx:Dataset/DatasetType/image" },
+                { "const": "spdx:Dataset/DatasetType/structured" },
                 { "const": "spdx:Dataset/DatasetType/noAssertion" },
+                { "const": "spdx:Dataset/DatasetType/sensor" },
                 { "const": "spdx:Dataset/DatasetType/numeric" },
                 { "const": "spdx:Dataset/DatasetType/other" },
-                { "const": "spdx:Dataset/DatasetType/sensor" },
-                { "const": "spdx:Dataset/DatasetType/structured" },
-                { "const": "spdx:Dataset/DatasetType/syntactic" },
                 { "const": "spdx:Dataset/DatasetType/text" },
-                { "const": "spdx:Dataset/DatasetType/timeseries" },
-                { "const": "spdx:Dataset/DatasetType/timestamp" },
-                { "const": "spdx:Dataset/DatasetType/video" },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
             ]
         },
@@ -2176,8 +2165,7 @@
                     "unevaluatedProperties": false,
                     "anyOf": [
                         { "$ref": "#/$defs/expandedlicensing_CustomLicenseAddition" },
-                        { "$ref": "#/$defs/expandedlicensing_ListedLicenseException" },
-                        { "$ref": "#/$defs/expandedlicensing_LicenseAddition" }
+                        { "$ref": "#/$defs/expandedlicensing_ListedLicenseException" }
                     ]
                 },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
@@ -2244,14 +2232,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "expandedlicensing_ListedLicenseException" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/expandedlicensing_ListedLicenseException_props" }
             ]
@@ -2295,7 +2283,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNode" },
+                        "spdxId": { "$ref": "#/$defs/BlankNode" },
                         "type": {
                             "oneOf": [
                                 { "const": "extension_CdxPropertyEntry" }
@@ -2349,8 +2337,7 @@
                     "type": "object",
                     "unevaluatedProperties": false,
                     "anyOf": [
-                        { "$ref": "#/$defs/extension_CdxPropertiesExtension" },
-                        { "$ref": "#/$defs/extension_Extension" }
+                        { "$ref": "#/$defs/extension_CdxPropertiesExtension" }
                     ]
                 },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
@@ -2371,7 +2358,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNodeOrIRI" },
+                        "spdxId": { "$ref": "#/$defs/BlankNodeOrIRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "security_CvssSeverityType" }
@@ -2391,11 +2378,11 @@
                         { "$ref": "#/$defs/security_CvssSeverityType" }
                     ]
                 },
-                { "const": "spdx:Security/CvssSeverityType/critical" },
-                { "const": "spdx:Security/CvssSeverityType/high" },
                 { "const": "spdx:Security/CvssSeverityType/low" },
-                { "const": "spdx:Security/CvssSeverityType/medium" },
                 { "const": "spdx:Security/CvssSeverityType/none" },
+                { "const": "spdx:Security/CvssSeverityType/critical" },
+                { "const": "spdx:Security/CvssSeverityType/medium" },
+                { "const": "spdx:Security/CvssSeverityType/high" },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
             ]
         },
@@ -2414,7 +2401,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNodeOrIRI" },
+                        "spdxId": { "$ref": "#/$defs/BlankNodeOrIRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "security_ExploitCatalogType" }
@@ -2454,7 +2441,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNodeOrIRI" },
+                        "spdxId": { "$ref": "#/$defs/BlankNodeOrIRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "security_SsvcDecisionType" }
@@ -2474,8 +2461,8 @@
                         { "$ref": "#/$defs/security_SsvcDecisionType" }
                     ]
                 },
-                { "const": "spdx:Security/SsvcDecisionType/act" },
                 { "const": "spdx:Security/SsvcDecisionType/attend" },
+                { "const": "spdx:Security/SsvcDecisionType/act" },
                 { "const": "spdx:Security/SsvcDecisionType/track" },
                 { "const": "spdx:Security/SsvcDecisionType/trackStar" },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
@@ -2496,7 +2483,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNodeOrIRI" },
+                        "spdxId": { "$ref": "#/$defs/BlankNodeOrIRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "security_VexJustificationType" }
@@ -2516,11 +2503,11 @@
                         { "$ref": "#/$defs/security_VexJustificationType" }
                     ]
                 },
+                { "const": "spdx:Security/VexJustificationType/vulnerableCodeNotInExecutePath" },
                 { "const": "spdx:Security/VexJustificationType/componentNotPresent" },
+                { "const": "spdx:Security/VexJustificationType/vulnerableCodeNotPresent" },
                 { "const": "spdx:Security/VexJustificationType/inlineMitigationsAlreadyExist" },
                 { "const": "spdx:Security/VexJustificationType/vulnerableCodeCannotBeControlledByAdversary" },
-                { "const": "spdx:Security/VexJustificationType/vulnerableCodeNotInExecutePath" },
-                { "const": "spdx:Security/VexJustificationType/vulnerableCodeNotPresent" },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
             ]
         },
@@ -2630,14 +2617,11 @@
                         { "$ref": "#/$defs/expandedlicensing_ConjunctiveLicenseSet" },
                         { "$ref": "#/$defs/expandedlicensing_CustomLicense" },
                         { "$ref": "#/$defs/expandedlicensing_DisjunctiveLicenseSet" },
-                        { "$ref": "#/$defs/expandedlicensing_ExtendableLicense" },
                         { "$ref": "#/$defs/expandedlicensing_IndividualLicensingInfo" },
-                        { "$ref": "#/$defs/expandedlicensing_License" },
                         { "$ref": "#/$defs/expandedlicensing_ListedLicense" },
                         { "$ref": "#/$defs/expandedlicensing_OrLaterOperator" },
                         { "$ref": "#/$defs/expandedlicensing_WithAdditionOperator" },
-                        { "$ref": "#/$defs/simplelicensing_LicenseExpression" },
-                        { "$ref": "#/$defs/simplelicensing_AnyLicenseInfo" }
+                        { "$ref": "#/$defs/simplelicensing_LicenseExpression" }
                     ]
                 },
                 { "const": "spdx:ExpandedLicensing/NoAssertionLicense" },
@@ -2660,14 +2644,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "simplelicensing_LicenseExpression" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/simplelicensing_LicenseExpression_props" }
             ]
@@ -2728,14 +2712,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "simplelicensing_SimpleLicensingText" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/simplelicensing_SimpleLicensingText_props" }
             ]
@@ -2776,7 +2760,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNode" },
+                        "spdxId": { "$ref": "#/$defs/BlankNode" },
                         "type": {
                             "oneOf": [
                                 { "const": "software_ContentIdentifier" }
@@ -2833,7 +2817,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNodeOrIRI" },
+                        "spdxId": { "$ref": "#/$defs/BlankNodeOrIRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "software_ContentIdentifierType" }
@@ -2853,8 +2837,8 @@
                         { "$ref": "#/$defs/software_ContentIdentifierType" }
                     ]
                 },
-                { "const": "spdx:Software/ContentIdentifierType/gitoid" },
                 { "const": "spdx:Software/ContentIdentifierType/swhid" },
+                { "const": "spdx:Software/ContentIdentifierType/gitoid" },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
             ]
         },
@@ -2873,7 +2857,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNodeOrIRI" },
+                        "spdxId": { "$ref": "#/$defs/BlankNodeOrIRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "software_FileKindType" }
@@ -2893,8 +2877,8 @@
                         { "$ref": "#/$defs/software_FileKindType" }
                     ]
                 },
-                { "const": "spdx:Software/FileKindType/directory" },
                 { "const": "spdx:Software/FileKindType/file" },
+                { "const": "spdx:Software/FileKindType/directory" },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
             ]
         },
@@ -2913,7 +2897,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNodeOrIRI" },
+                        "spdxId": { "$ref": "#/$defs/BlankNodeOrIRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "software_SbomType" }
@@ -2933,12 +2917,12 @@
                         { "$ref": "#/$defs/software_SbomType" }
                     ]
                 },
-                { "const": "spdx:Software/SbomType/analyzed" },
-                { "const": "spdx:Software/SbomType/build" },
-                { "const": "spdx:Software/SbomType/deployed" },
                 { "const": "spdx:Software/SbomType/design" },
+                { "const": "spdx:Software/SbomType/deployed" },
+                { "const": "spdx:Software/SbomType/analyzed" },
                 { "const": "spdx:Software/SbomType/runtime" },
                 { "const": "spdx:Software/SbomType/source" },
+                { "const": "spdx:Software/SbomType/build" },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
             ]
         },
@@ -2957,7 +2941,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNodeOrIRI" },
+                        "spdxId": { "$ref": "#/$defs/BlankNodeOrIRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "software_SoftwarePurpose" }
@@ -2977,35 +2961,35 @@
                         { "$ref": "#/$defs/software_SoftwarePurpose" }
                     ]
                 },
-                { "const": "spdx:Software/SoftwarePurpose/application" },
-                { "const": "spdx:Software/SoftwarePurpose/archive" },
-                { "const": "spdx:Software/SoftwarePurpose/bom" },
-                { "const": "spdx:Software/SoftwarePurpose/configuration" },
-                { "const": "spdx:Software/SoftwarePurpose/container" },
-                { "const": "spdx:Software/SoftwarePurpose/data" },
-                { "const": "spdx:Software/SoftwarePurpose/device" },
-                { "const": "spdx:Software/SoftwarePurpose/deviceDriver" },
-                { "const": "spdx:Software/SoftwarePurpose/diskImage" },
-                { "const": "spdx:Software/SoftwarePurpose/documentation" },
-                { "const": "spdx:Software/SoftwarePurpose/evidence" },
-                { "const": "spdx:Software/SoftwarePurpose/executable" },
                 { "const": "spdx:Software/SoftwarePurpose/file" },
-                { "const": "spdx:Software/SoftwarePurpose/filesystemImage" },
+                { "const": "spdx:Software/SoftwarePurpose/other" },
+                { "const": "spdx:Software/SoftwarePurpose/specification" },
+                { "const": "spdx:Software/SoftwarePurpose/bom" },
+                { "const": "spdx:Software/SoftwarePurpose/container" },
+                { "const": "spdx:Software/SoftwarePurpose/platform" },
+                { "const": "spdx:Software/SoftwarePurpose/device" },
                 { "const": "spdx:Software/SoftwarePurpose/firmware" },
-                { "const": "spdx:Software/SoftwarePurpose/framework" },
                 { "const": "spdx:Software/SoftwarePurpose/install" },
+                { "const": "spdx:Software/SoftwarePurpose/source" },
+                { "const": "spdx:Software/SoftwarePurpose/diskImage" },
+                { "const": "spdx:Software/SoftwarePurpose/configuration" },
+                { "const": "spdx:Software/SoftwarePurpose/module" },
+                { "const": "spdx:Software/SoftwarePurpose/archive" },
+                { "const": "spdx:Software/SoftwarePurpose/application" },
+                { "const": "spdx:Software/SoftwarePurpose/operatingSystem" },
+                { "const": "spdx:Software/SoftwarePurpose/executable" },
                 { "const": "spdx:Software/SoftwarePurpose/library" },
+                { "const": "spdx:Software/SoftwarePurpose/evidence" },
                 { "const": "spdx:Software/SoftwarePurpose/manifest" },
                 { "const": "spdx:Software/SoftwarePurpose/model" },
-                { "const": "spdx:Software/SoftwarePurpose/module" },
-                { "const": "spdx:Software/SoftwarePurpose/operatingSystem" },
-                { "const": "spdx:Software/SoftwarePurpose/other" },
-                { "const": "spdx:Software/SoftwarePurpose/patch" },
-                { "const": "spdx:Software/SoftwarePurpose/platform" },
                 { "const": "spdx:Software/SoftwarePurpose/requirement" },
-                { "const": "spdx:Software/SoftwarePurpose/source" },
-                { "const": "spdx:Software/SoftwarePurpose/specification" },
+                { "const": "spdx:Software/SoftwarePurpose/filesystemImage" },
+                { "const": "spdx:Software/SoftwarePurpose/documentation" },
                 { "const": "spdx:Software/SoftwarePurpose/test" },
+                { "const": "spdx:Software/SoftwarePurpose/framework" },
+                { "const": "spdx:Software/SoftwarePurpose/data" },
+                { "const": "spdx:Software/SoftwarePurpose/deviceDriver" },
+                { "const": "spdx:Software/SoftwarePurpose/patch" },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
             ]
         },
@@ -3024,14 +3008,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "build_Build" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/build_Build_props" }
             ]
@@ -3171,14 +3155,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "Agent" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/Agent_props" }
             ]
@@ -3213,14 +3197,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "Annotation" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/Annotation_props" }
             ]
@@ -3290,9 +3274,7 @@
                         { "$ref": "#/$defs/security_Vulnerability" },
                         { "$ref": "#/$defs/software_File" },
                         { "$ref": "#/$defs/software_Package" },
-                        { "$ref": "#/$defs/software_Snippet" },
-                        { "$ref": "#/$defs/software_SoftwareArtifact" },
-                        { "$ref": "#/$defs/Artifact" }
+                        { "$ref": "#/$defs/software_Snippet" }
                     ]
                 },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
@@ -3408,14 +3390,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "Bundle" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/Bundle_props" }
             ]
@@ -3455,7 +3437,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNode" },
+                        "spdxId": { "$ref": "#/$defs/BlankNode" },
                         "type": {
                             "oneOf": [
                                 { "const": "Hash" }
@@ -3532,14 +3514,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "LifecycleScopedRelationship" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/LifecycleScopedRelationship_props" }
             ]
@@ -3584,14 +3566,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "Organization" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/Organization_props" }
             ]
@@ -3623,14 +3605,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "Person" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/Person_props" }
             ]
@@ -3662,14 +3644,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "SoftwareAgent" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/SoftwareAgent_props" }
             ]
@@ -3701,14 +3683,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "expandedlicensing_ConjunctiveLicenseSet" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/expandedlicensing_ConjunctiveLicenseSet_props" }
             ]
@@ -3757,14 +3739,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "expandedlicensing_CustomLicenseAddition" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/expandedlicensing_CustomLicenseAddition_props" }
             ]
@@ -3796,14 +3778,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "expandedlicensing_DisjunctiveLicenseSet" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/expandedlicensing_DisjunctiveLicenseSet_props" }
             ]
@@ -3854,10 +3836,8 @@
                     "unevaluatedProperties": false,
                     "anyOf": [
                         { "$ref": "#/$defs/expandedlicensing_CustomLicense" },
-                        { "$ref": "#/$defs/expandedlicensing_License" },
                         { "$ref": "#/$defs/expandedlicensing_ListedLicense" },
-                        { "$ref": "#/$defs/expandedlicensing_OrLaterOperator" },
-                        { "$ref": "#/$defs/expandedlicensing_ExtendableLicense" }
+                        { "$ref": "#/$defs/expandedlicensing_OrLaterOperator" }
                     ]
                 },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
@@ -3878,14 +3858,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "expandedlicensing_IndividualLicensingInfo" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/expandedlicensing_IndividualLicensingInfo_props" }
             ]
@@ -3921,8 +3901,7 @@
                     "unevaluatedProperties": false,
                     "anyOf": [
                         { "$ref": "#/$defs/expandedlicensing_CustomLicense" },
-                        { "$ref": "#/$defs/expandedlicensing_ListedLicense" },
-                        { "$ref": "#/$defs/expandedlicensing_License" }
+                        { "$ref": "#/$defs/expandedlicensing_ListedLicense" }
                     ]
                 },
                 { "$ref": "#/$defs/BlankNodeOrIRI" }
@@ -4007,14 +3986,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "expandedlicensing_ListedLicense" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/expandedlicensing_ListedLicense_props" }
             ]
@@ -4058,14 +4037,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "expandedlicensing_OrLaterOperator" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/expandedlicensing_OrLaterOperator_props" }
             ]
@@ -4106,14 +4085,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "expandedlicensing_WithAdditionOperator" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/expandedlicensing_WithAdditionOperator_props" }
             ]
@@ -4161,7 +4140,7 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/BlankNode" },
+                        "spdxId": { "$ref": "#/$defs/BlankNode" },
                         "type": {
                             "oneOf": [
                                 { "const": "extension_CdxPropertiesExtension" }
@@ -4216,14 +4195,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "security_CvssV2VulnAssessmentRelationship" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/security_CvssV2VulnAssessmentRelationship_props" }
             ]
@@ -4279,14 +4258,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "security_CvssV3VulnAssessmentRelationship" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/security_CvssV3VulnAssessmentRelationship_props" }
             ]
@@ -4355,14 +4334,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "security_CvssV4VulnAssessmentRelationship" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/security_CvssV4VulnAssessmentRelationship_props" }
             ]
@@ -4431,14 +4410,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "security_EpssVulnAssessmentRelationship" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/security_EpssVulnAssessmentRelationship_props" }
             ]
@@ -4502,14 +4481,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "security_ExploitCatalogVulnAssessmentRelationship" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/security_ExploitCatalogVulnAssessmentRelationship_props" }
             ]
@@ -4567,14 +4546,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "security_SsvcVulnAssessmentRelationship" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/security_SsvcVulnAssessmentRelationship_props" }
             ]
@@ -4658,14 +4637,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "security_Vulnerability" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/security_Vulnerability_props" }
             ]
@@ -4877,14 +4856,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "Bom" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/Bom_props" }
             ]
@@ -4917,14 +4896,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "expandedlicensing_CustomLicense" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/expandedlicensing_CustomLicense_props" }
             ]
@@ -4956,14 +4935,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "security_VexAffectedVulnAssessmentRelationship" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/security_VexAffectedVulnAssessmentRelationship_props" }
             ]
@@ -5022,14 +5001,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "security_VexFixedVulnAssessmentRelationship" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/security_VexFixedVulnAssessmentRelationship_props" }
             ]
@@ -5061,14 +5040,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "security_VexNotAffectedVulnAssessmentRelationship" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/security_VexNotAffectedVulnAssessmentRelationship_props" }
             ]
@@ -5132,14 +5111,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "security_VexUnderInvestigationVulnAssessmentRelationship" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/security_VexUnderInvestigationVulnAssessmentRelationship_props" }
             ]
@@ -5171,14 +5150,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "software_File" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/software_File_props" }
             ]
@@ -5226,14 +5205,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "software_Package" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/software_Package_props" }
             ]
@@ -5297,14 +5276,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "software_Sbom" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/software_Sbom_props" }
             ]
@@ -5356,14 +5335,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "software_Snippet" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/software_Snippet_props" }
             ]
@@ -5416,14 +5395,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "ai_AIPackage" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/ai_AIPackage_props" }
             ]
@@ -5614,14 +5593,14 @@
                 {
                     "type": "object",
                     "properties": {
-                        "@id": { "$ref": "#/$defs/IRI" },
+                        "spdxId": { "$ref": "#/$defs/IRI" },
                         "type": {
                             "oneOf": [
                                 { "const": "dataset_DatasetPackage" }
                             ]
                         }
                     },
-                    "required": ["@id"]
+                    "required": ["spdxId"]
                 },
                 { "$ref": "#/$defs/dataset_DatasetPackage_props" }
             ]
