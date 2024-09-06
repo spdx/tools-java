@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 
-import org.spdx.library.InvalidSPDXAnalysisException;
+import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.utility.compare.LicenseCompareHelper;
 import org.spdx.utility.compare.SpdxCompareException;
 
@@ -60,7 +60,8 @@ public class MatchingStandardLicenses {
 			usage();
 			System.exit(ERROR_STATUS);
 		}
-
+		
+		SpdxToolsHelper.initialize();
 		String licenseText = null;
 		try {
 			licenseText = readAll(textFile);

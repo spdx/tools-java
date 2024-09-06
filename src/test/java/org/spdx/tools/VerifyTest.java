@@ -3,6 +3,12 @@ package org.spdx.tools;
 import java.io.File;
 import java.util.List;
 
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.ModelRegistry;
+import org.spdx.library.ModelCopyManager;
+import org.spdx.library.model.v2.SpdxModelInfoV2_X;
+import org.spdx.library.model.v3_0_1.SpdxModelInfoV3_0;
+import org.spdx.storage.simple.InMemSpdxStore;
 import org.spdx.tools.SpdxToolsHelper.SerFileType;
 
 import junit.framework.TestCase;
@@ -10,6 +16,7 @@ import junit.framework.TestCase;
 public class VerifyTest extends TestCase {
 	
 	static final String TEST_DIR = "testResources";
+	static final String TEST_JSONLD_FILE_PATH = TEST_DIR + File.separator + "SPDXJsonLDExample-v3.0.1.json";
 	static final String TEST_JSON_FILE_PATH = TEST_DIR + File.separator + "SPDXJSONExample-v2.3.spdx.json";
 	static final String JSON_V2_3_FILE_PATH = TEST_DIR + File.separator + "SPDXJSONExample-v2.3.spdx.json";
 	static final String JSON_V2_2_FILE_PATH = TEST_DIR + File.separator + "SPDXJSONExample-v2.2.spdx.json";
@@ -26,6 +33,9 @@ public class VerifyTest extends TestCase {
 	
 	protected void setUp() throws Exception {
 		super.setUp();
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV3_0());
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV2_X());
+		DefaultModelStore.initialize(new InMemSpdxStore(), "http://default/namespace", new ModelCopyManager());
 	}
 
 	protected void tearDown() throws Exception {
@@ -69,6 +79,11 @@ public class VerifyTest extends TestCase {
 	public void testVerifyBadJSON() throws SpdxVerificationException {
 		List<String> result = Verify.verify(BAD_JSON_FILE_PATH, SerFileType.JSON);
 		assertTrue(result.size() == 4);
+	}
+	
+	public void testVerifyJsonLD() throws SpdxVerificationException {
+		List<String> result = Verify.verify(TEST_JSONLD_FILE_PATH, SerFileType.JSONLD);
+		assertTrue(result.isEmpty());
 	}
 	
 	// Test specific spec versions for the JSON format

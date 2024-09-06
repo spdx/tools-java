@@ -32,8 +32,14 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.model.SpdxDocument;
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.ModelRegistry;
+import org.spdx.library.ModelCopyManager;
+import org.spdx.library.model.v2.SpdxDocument;
+import org.spdx.library.model.v2.SpdxModelInfoV2_X;
+import org.spdx.library.model.v3_0_1.SpdxModelInfoV3_0;
+import org.spdx.storage.simple.InMemSpdxStore;
 import org.spdx.tools.SpdxToolsHelper.SerFileType;
 import org.spdx.utility.compare.SpdxCompareException;
 import org.spdx.utility.compare.SpdxComparer;
@@ -44,7 +50,7 @@ import junit.framework.TestCase;
  * @author gary
  *
  */
-public class SpdxConverterTest extends TestCase {
+public class SpdxConverterTestV2 extends TestCase {
 	
 	static final String TEST_DIR = "testResources";
 	static final String TEST_JSON_FILE_PATH = TEST_DIR + File.separator + "SPDXJSONExample-v2.3.spdx.json";
@@ -62,6 +68,9 @@ public class SpdxConverterTest extends TestCase {
 	 */
 	protected void setUp() throws Exception {
 		super.setUp();
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV3_0());
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV2_X());
+		DefaultModelStore.initialize(new InMemSpdxStore(), "http://default/namespace", new ModelCopyManager());
 		tempDirPath = Files.createTempDirectory("spdx-tools-test-");
 	}
 
@@ -105,8 +114,8 @@ public class SpdxConverterTest extends TestCase {
 		File result = new File(outFilePath.toString());
 		File source = new File(TEST_SPREADSHEET_XLSX_FILE_PATH);
 		assertTrue(result.exists());
-		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocument(source, SerFileType.XLSX);
-		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.RDFXML);
+		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocumentCompatV2(source, SerFileType.XLSX);
+		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.RDFXML);
 		SpdxComparer comparer = new SpdxComparer();
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());
@@ -116,7 +125,7 @@ public class SpdxConverterTest extends TestCase {
 		SpdxConverter.convert(TEST_SPREADSHEET_XLSX_FILE_PATH, outFilePath.toString());
 		result = new File(outFilePath.toString());
 		assertTrue(result.exists());
-		resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.RDFXML);
+		resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.RDFXML);
 		comparer = new SpdxComparer();
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());
@@ -129,8 +138,8 @@ public class SpdxConverterTest extends TestCase {
 		File result = new File(outFilePath.toString());
 		File source = new File(TEST_TAG_FILE_PATH);
 		assertTrue(result.exists());
-		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocument(source, SerFileType.TAG);
-		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.RDFXML);
+		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocumentCompatV2(source, SerFileType.TAG);
+		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.RDFXML);
 		SpdxComparer comparer = new SpdxComparer();
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());
@@ -140,7 +149,7 @@ public class SpdxConverterTest extends TestCase {
 		SpdxConverter.convert(TEST_TAG_FILE_PATH, outFilePath.toString());
 		result = new File(outFilePath.toString());
 		assertTrue(result.exists());
-		resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.RDFXML);
+		resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.RDFXML);
 		comparer = new SpdxComparer();
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());
@@ -153,8 +162,8 @@ public class SpdxConverterTest extends TestCase {
 		File result = new File(outFilePath.toString());
 		File source = new File(TEST_YAML_FILE_PATH);
 		assertTrue(result.exists());
-		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocument(source, SerFileType.YAML);
-		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.RDFXML);
+		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocumentCompatV2(source, SerFileType.YAML);
+		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.RDFXML);
 		SpdxComparer comparer = new SpdxComparer();
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());
@@ -164,7 +173,7 @@ public class SpdxConverterTest extends TestCase {
 		SpdxConverter.convert(TEST_YAML_FILE_PATH, outFilePath.toString());
 		result = new File(outFilePath.toString());
 		assertTrue(result.exists());
-		resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.RDFXML);
+		resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.RDFXML);
 		comparer = new SpdxComparer();
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());
@@ -177,8 +186,8 @@ public class SpdxConverterTest extends TestCase {
 		File result = new File(outFilePath.toString());
 		File source = new File(TEST_XML_FILE_PATH);
 		assertTrue(result.exists());
-		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocument(source, SerFileType.XML);
-		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.RDFXML);
+		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocumentCompatV2(source, SerFileType.XML);
+		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.RDFXML);
 		SpdxComparer comparer = new SpdxComparer();
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());
@@ -188,7 +197,7 @@ public class SpdxConverterTest extends TestCase {
 		SpdxConverter.convert(TEST_XML_FILE_PATH, outFilePath.toString());
 		result = new File(outFilePath.toString());
 		assertTrue(result.exists());
-		resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.RDFXML);
+		resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.RDFXML);
 		comparer = new SpdxComparer();
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());
@@ -201,8 +210,8 @@ public class SpdxConverterTest extends TestCase {
 		File result = new File(outFilePath.toString());
 		File source = new File(TEST_SPREADSHEET_XLS_FILE_PATH);
 		assertTrue(result.exists());
-		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocument(source, SerFileType.XLS);
-		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.RDFXML);
+		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocumentCompatV2(source, SerFileType.XLS);
+		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.RDFXML);
 		SpdxComparer comparer = new SpdxComparer();
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());
@@ -212,7 +221,7 @@ public class SpdxConverterTest extends TestCase {
 		SpdxConverter.convert(TEST_SPREADSHEET_XLS_FILE_PATH, outFilePath.toString());
 		result = new File(outFilePath.toString());
 		assertTrue(result.exists());
-		resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.RDFXML);
+		resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.RDFXML);
 		comparer = new SpdxComparer();
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());
@@ -225,8 +234,8 @@ public class SpdxConverterTest extends TestCase {
 		File result = new File(outFilePath.toString());
 		File source = new File(TEST_JSON_FILE_PATH);
 		assertTrue(result.exists());
-		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocument(source, SerFileType.JSON);
-		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.XLS);
+		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocumentCompatV2(source, SerFileType.JSON);
+		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.XLS);
 		SpdxComparer comparer = new SpdxComparer();
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());
@@ -236,7 +245,7 @@ public class SpdxConverterTest extends TestCase {
 		SpdxConverter.convert(TEST_JSON_FILE_PATH, outFilePath.toString());
 		result = new File(outFilePath.toString());
 		assertTrue(result.exists());
-		resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.XLS);
+		resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.XLS);
 		comparer = new SpdxComparer();
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());
@@ -249,8 +258,8 @@ public class SpdxConverterTest extends TestCase {
 		File result = new File(outFilePath.toString());
 		File source = new File(TEST_JSON_FILE_PATH);
 		assertTrue(result.exists());
-		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocument(source, SerFileType.JSON);
-		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.XLSX);
+		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocumentCompatV2(source, SerFileType.JSON);
+		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.XLSX);
 		SpdxComparer comparer = new SpdxComparer();
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());
@@ -260,7 +269,7 @@ public class SpdxConverterTest extends TestCase {
 		SpdxConverter.convert(TEST_JSON_FILE_PATH, outFilePath.toString());
 		result = new File(outFilePath.toString());
 		assertTrue(result.exists());
-		resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.XLSX);
+		resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.XLSX);
 		comparer = new SpdxComparer();
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());
@@ -273,8 +282,9 @@ public class SpdxConverterTest extends TestCase {
 		File result = new File(outFilePath.toString());
 		File source = new File(TEST_JSON_FILE_PATH);
 		assertTrue(result.exists());
-		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocument(source, SerFileType.JSON);
-		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.TAG);
+		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocumentCompatV2(source, SerFileType.JSON);
+		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.TAG);
+
 		SpdxComparer comparer = new SpdxComparer();
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());
@@ -284,7 +294,7 @@ public class SpdxConverterTest extends TestCase {
 		SpdxConverter.convert(TEST_JSON_FILE_PATH, outFilePath.toString());
 		result = new File(outFilePath.toString());
 		assertTrue(result.exists());
-		resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.TAG);
+		resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.TAG);
 		comparer = new SpdxComparer();
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());
@@ -297,8 +307,8 @@ public class SpdxConverterTest extends TestCase {
 		File result = new File(outFilePath.toString());
 		File source = new File(TEST_JSON_FILE_PATH);
 		assertTrue(result.exists());
-		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocument(source, SerFileType.JSON);
-		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.RDFXML);
+		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocumentCompatV2(source, SerFileType.JSON);
+		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.RDFXML);
 		SpdxComparer comparer = new SpdxComparer();
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());
@@ -308,7 +318,7 @@ public class SpdxConverterTest extends TestCase {
 		SpdxConverter.convert(TEST_JSON_FILE_PATH, outFilePath.toString());
 		result = new File(outFilePath.toString());
 		assertTrue(result.exists());
-		resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.RDFXML);
+		resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.RDFXML);
 		comparer = new SpdxComparer();
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());
@@ -321,8 +331,8 @@ public class SpdxConverterTest extends TestCase {
 		File result = new File(outFilePath.toString());
 		File source = new File(TEST_JSON_FILE_PATH);
 		assertTrue(result.exists());
-		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocument(source, SerFileType.JSON);
-		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.YAML);
+		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocumentCompatV2(source, SerFileType.JSON);
+		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.YAML);
 		SpdxComparer comparer = new SpdxComparer();
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());
@@ -332,7 +342,7 @@ public class SpdxConverterTest extends TestCase {
 		SpdxConverter.convert(TEST_JSON_FILE_PATH, outFilePath.toString());
 		result = new File(outFilePath.toString());
 		assertTrue(result.exists());
-		resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.YAML);
+		resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.YAML);
 		comparer = new SpdxComparer();
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());
@@ -345,8 +355,8 @@ public class SpdxConverterTest extends TestCase {
 		File result = new File(outFilePath.toString());
 		File source = new File(TEST_JSON_FILE_PATH);
 		assertTrue(result.exists());
-		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocument(source, SerFileType.JSON);
-		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.XML);
+		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocumentCompatV2(source, SerFileType.JSON);
+		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.XML);
 		SpdxComparer comparer = new SpdxComparer();
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());
@@ -356,7 +366,7 @@ public class SpdxConverterTest extends TestCase {
 		SpdxConverter.convert(TEST_JSON_FILE_PATH, outFilePath.toString());
 		result = new File(outFilePath.toString());
 		assertTrue(result.exists());
-		resultDoc = SpdxToolsHelper.deserializeDocument(result, SerFileType.XML);
+		resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.XML);
 		comparer = new SpdxComparer();
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());
@@ -372,9 +382,9 @@ public class SpdxConverterTest extends TestCase {
 		File detailsFile = new File(detailsRdfFilePath);
 		assertTrue(detailsFile.exists());
 		File source = new File(TEST_WITH_EXCEPTION_FILE_PATH);
-		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocument(source, SerFileType.JSON);
-		SpdxDocument detailsDoc = SpdxToolsHelper.deserializeDocument(detailsFile, SerFileType.RDFXML);
-		SpdxDocument noDetailsDoc = SpdxToolsHelper.deserializeDocument(noDetailsFile, SerFileType.RDFXML);
+		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocumentCompatV2(source, SerFileType.JSON);
+		SpdxDocument detailsDoc = SpdxToolsHelper.deserializeDocumentCompatV2(detailsFile, SerFileType.RDFXML);
+		SpdxDocument noDetailsDoc = SpdxToolsHelper.deserializeDocumentCompatV2(noDetailsFile, SerFileType.RDFXML);
 		
 		// Make sure they compare - the inclusion of the details should not impact of the 2 documents match
 		SpdxComparer comparer = new SpdxComparer();
@@ -404,5 +414,4 @@ public class SpdxConverterTest extends TestCase {
 		Resource noDetailException = noDetailModel.createResource(exceptionUri);
 		assertFalse(noDetailModel.contains(noDetailException, detailExceptionTextProperty));
 	}
-
 }

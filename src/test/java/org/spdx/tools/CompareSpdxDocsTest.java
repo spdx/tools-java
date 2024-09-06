@@ -27,8 +27,14 @@ import java.util.Objects;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.spdx.library.InvalidSPDXAnalysisException;
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.ModelRegistry;
+import org.spdx.library.ModelCopyManager;
+import org.spdx.library.model.v2.SpdxModelInfoV2_X;
+import org.spdx.library.model.v3_0_1.SpdxModelInfoV3_0;
 import org.spdx.spreadsheetstore.SpreadsheetException;
+import org.spdx.storage.simple.InMemSpdxStore;
 import org.spdx.tools.compare.DocumentSheet;
 import org.spdx.tools.compare.MultiDocumentSpreadsheet;
 
@@ -69,6 +75,9 @@ public class CompareSpdxDocsTest extends TestCase {
 	 */
 	protected void setUp() throws Exception {
 		super.setUp();
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV3_0());
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV2_X());
+		DefaultModelStore.initialize(new InMemSpdxStore(), "http://default/namespace", new ModelCopyManager());
 		tempDirPath = Files.createTempDirectory("spdx-tools-test-");
 	}
 
@@ -77,7 +86,7 @@ public class CompareSpdxDocsTest extends TestCase {
 	 */
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		SpdxConverterTest.deleteDirAndFiles(tempDirPath);
+		SpdxConverterTestV2.deleteDirAndFiles(tempDirPath);
 	}
 	
 	public void testCompareDocumentsv23() throws OnlineToolException, InvalidSPDXAnalysisException, IOException, InvalidFileNameException {

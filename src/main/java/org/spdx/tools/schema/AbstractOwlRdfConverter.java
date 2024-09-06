@@ -44,8 +44,8 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.iterator.ExtendedIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spdx.library.SpdxConstants;
-import org.spdx.library.model.enumerations.SpdxEnumFactory;
+import org.spdx.library.model.v2.SpdxConstantsCompatV2;
+import org.spdx.library.model.v2.enumerations.SpdxEnumFactoryCompatV2;
 
 /**
  * Abstract class for implementing classes which convert from RDF/XML OWL format to some other format
@@ -63,7 +63,7 @@ public class AbstractOwlRdfConverter {
 		skipped.add("http://www.w3.org/2002/07/owl#qualifiedCardinality");
 		skipped.add("http://www.w3.org/2002/07/owl#deprecatedProperty");
 		skipped.add("http://www.w3.org/2002/07/owl#deprecatedClass");
-		skipped.add(SpdxConstants.SPDX_NAMESPACE + "describesPackage");   // This is an old deprecated field from 1.0 which should be ignored - it was only used in RDF format
+		skipped.add(SpdxConstantsCompatV2.SPDX_NAMESPACE + "describesPackage");   // This is an old deprecated field from 1.0 which should be ignored - it was only used in RDF format
 		SKIPPED_PROPERTIES = Collections.unmodifiableSet(skipped);
 	}
 	
@@ -75,8 +75,8 @@ public class AbstractOwlRdfConverter {
 	static {
 		Map<String, String> renamedToOwl = new HashMap<>();
 		Map<String, String> owlToRenamed = new HashMap<>();
-		renamedToOwl.put(SpdxConstants.PROP_SPDX_SPEC_VERSION, SpdxConstants.PROP_SPDX_VERSION);
-		owlToRenamed.put(SpdxConstants.PROP_SPDX_VERSION, SpdxConstants.PROP_SPDX_SPEC_VERSION);
+		renamedToOwl.put(SpdxConstantsCompatV2.PROP_SPDX_SPEC_VERSION.getName(), SpdxConstantsCompatV2.PROP_SPDX_VERSION.getName());
+		owlToRenamed.put(SpdxConstantsCompatV2.PROP_SPDX_VERSION.getName(), SpdxConstantsCompatV2.PROP_SPDX_SPEC_VERSION.getName());
 		RENAMED_PROPERTY_TO_OWL_PROPERTY = Collections.unmodifiableMap(renamedToOwl);
 		OWL_PROPERTY_TO_RENAMED_PROPERTY = Collections.unmodifiableMap(owlToRenamed);
 	}
@@ -124,7 +124,7 @@ public class AbstractOwlRdfConverter {
 						while (individualIter.hasNext()) {
 							Individual individual = individualIter.next();
 							if (individual.isURIResource()) {
-								Enum<?> e = SpdxEnumFactory.uriToEnum.get(individual.getURI());
+								Enum<?> e = SpdxEnumFactoryCompatV2.uriToEnum.get(individual.getURI());
 								if (Objects.nonNull(e)) {
 									this.enumValues.add(e.toString());
 									this.enumProperty = true;
@@ -140,7 +140,7 @@ public class AbstractOwlRdfConverter {
 					while (hasValueIter.hasNext()) {
 						RDFNode hasValue = hasValueIter.next();
 						if (hasValue.isURIResource()) {
-							Enum<?> e = SpdxEnumFactory.uriToEnum.get(hasValue.asResource().getURI());
+							Enum<?> e = SpdxEnumFactoryCompatV2.uriToEnum.get(hasValue.asResource().getURI());
 							if (Objects.nonNull(e)) {
 								this.enumValues.add(e.toString());
 								this.enumProperty = true;
@@ -217,7 +217,7 @@ public class AbstractOwlRdfConverter {
 			}
 			if (Objects.isNull(typeUri) && ("comment".equals(property.getLocalName()) || "seeAlso".equals(property.getLocalName()))) {
 				// A bit of a hack, the schema file can not store the type of rdfs:comment, so we must override it to xsd:string
-				typeUri = SpdxConstants.XML_SCHEMA_NAMESPACE + "string";
+				typeUri = SpdxConstantsCompatV2.XML_SCHEMA_NAMESPACE + "string";
 			}
 		}
 

@@ -28,7 +28,7 @@ import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntProperty;
 import org.apache.jena.util.iterator.ExtendedIterator;
 import org.spdx.jacksonstore.MultiFormatStore;
-import org.spdx.library.SpdxConstants;
+import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -46,13 +46,13 @@ public class OwlToJsonContext extends AbstractOwlRdfConverter {
 	
 	static {
 		Map<String, String> namespaceMap = new HashMap<>();
-		namespaceMap.put(SpdxConstants.SPDX_NAMESPACE, "spdx");
-		namespaceMap.put(SpdxConstants.RDFS_NAMESPACE, "rdfs");
-		namespaceMap.put(SpdxConstants.RDF_NAMESPACE, "rdf");
-		namespaceMap.put(SpdxConstants.RDF_POINTER_NAMESPACE, "rdfpointer");
-		namespaceMap.put(SpdxConstants.OWL_NAMESPACE, "owl");
-		namespaceMap.put(SpdxConstants.DOAP_NAMESPACE, "doap");
-		namespaceMap.put(SpdxConstants.XML_SCHEMA_NAMESPACE, "xs");
+		namespaceMap.put(SpdxConstantsCompatV2.SPDX_NAMESPACE, "spdx");
+		namespaceMap.put(SpdxConstantsCompatV2.RDFS_NAMESPACE, "rdfs");
+		namespaceMap.put(SpdxConstantsCompatV2.RDF_NAMESPACE, "rdf");
+		namespaceMap.put(SpdxConstantsCompatV2.RDF_POINTER_NAMESPACE, "rdfpointer");
+		namespaceMap.put(SpdxConstantsCompatV2.OWL_NAMESPACE, "owl");
+		namespaceMap.put(SpdxConstantsCompatV2.DOAP_NAMESPACE, "doap");
+		namespaceMap.put(SpdxConstantsCompatV2.XML_SCHEMA_NAMESPACE, "xs");
 		NAMESPACES = Collections.unmodifiableMap(namespaceMap);
 	}
 	
@@ -76,8 +76,8 @@ public class OwlToJsonContext extends AbstractOwlRdfConverter {
 		documentContext.put("@type", "spdx:SpdxDocument");
 		documentContext.put("@id", "spdx:spdxDocument");
 		contexts.set("Document", documentContext);
-		contexts.put(SpdxConstants.SPDX_IDENTIFIER, "@id");
-		contexts.put(SpdxConstants.EXTERNAL_DOCUMENT_REF_IDENTIFIER, "@id");
+		contexts.put(SpdxConstantsCompatV2.SPDX_IDENTIFIER, "@id");
+		contexts.put(SpdxConstantsCompatV2.EXTERNAL_DOCUMENT_REF_IDENTIFIER, "@id");
 		TreeMap<String, OntProperty> sortedOntProperties = new TreeMap<>();
 		ExtendedIterator<OntProperty> iter = model.listAllOntProperties();
 		while (iter.hasNext()) {

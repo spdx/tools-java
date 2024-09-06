@@ -21,9 +21,9 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.apache.poi.ss.usermodel.Workbook;
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.model.SpdxFile;
-import org.spdx.library.model.license.AnyLicenseInfo;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.library.model.v2.SpdxFile;
+import org.spdx.library.model.v2.license.AnyLicenseInfo;
 import org.spdx.utility.compare.SpdxCompareException;
 import org.spdx.utility.compare.SpdxComparer;
 

@@ -10,23 +10,23 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.spdx.jacksonstore.MultiFormatStore;
 import org.spdx.jacksonstore.MultiFormatStore.Format;
-import org.spdx.library.InvalidSPDXAnalysisException;
+import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.library.ModelCopyManager;
-import org.spdx.library.SpdxConstants;
-import org.spdx.library.model.ModelObject;
-import org.spdx.library.model.SpdxDocument;
-import org.spdx.library.model.SpdxElement;
-import org.spdx.library.model.SpdxModelFactory;
+import org.spdx.library.SpdxModelFactory;
+import org.spdx.library.model.v2.SpdxConstantsCompatV2;
+import org.spdx.library.model.v2.SpdxDocument;
+import org.spdx.library.model.v2.SpdxElement;
 import org.spdx.storage.ISerializableModelStore;
 import org.spdx.storage.simple.InMemSpdxStore;
 
 /**
- * This example demonstrate opening an existing SPDX document and accessing it.  The format
- * for this example is assumed to be JSON (e.g. the output of the SimpleSpdxDocument example).
+ * This example demonstrate opening an existing SPDX spec version 2.X document and accessing it.  The format
+ * for this example is assumed to be JSON (e.g. the output of the SimpleSpdxDocumentV2Compat example).
  * Different format can be used by using the associated store rather than the spdx-jackson store
  * (e.g. spdx-spreadsheet-store, spdx-tagvalue-store, or the spdx-rdf-store).
  * 
@@ -35,7 +35,7 @@ import org.spdx.storage.simple.InMemSpdxStore;
  * @author Gary O'Neall
  *
  */
-public class ExistingSpdxDocument {
+public class ExistingSpdxDocumentV2Compat {
 
 	/**
 	 * @param args args[0] is the file path containing the SPDX document
@@ -74,10 +74,10 @@ public class ExistingSpdxDocument {
 		 * license information over to the document model store
 		 */
 		ModelCopyManager copyManager = new ModelCopyManager();
-		String documentUri = null;
 		// Let's deseralize the document
 		try (InputStream stream = new FileInputStream(inputFile)) {
-			documentUri = modelStore.deSerialize(stream, false);
+			modelStore.deSerialize(stream, false);
+			
 		} catch (FileNotFoundException e1) {
 			System.out.println("Input file does not exist: "+args[0]);
 			System.exit(1);
@@ -90,22 +90,20 @@ public class ExistingSpdxDocument {
 		}
 		// Now that the document is deserialized, we can access it using the SpdxModelFactory
 		try {
-			// To access the existing document, simply create the SPDX document passing in the 
-			// model store and document URI as parameters
-			SpdxDocument document = new SpdxDocument(modelStore, documentUri, copyManager, false);
+			// To find all the SPDX documents in the model store, use the getObjects method from the
+			// SpdxModelFactory passing in the SpdxDocument type
+			// When using the factory method, we have to type cast the result
+			@SuppressWarnings("unchecked")
+			List<SpdxDocument> allDocs = (List<SpdxDocument>) SpdxModelFactory.getSpdxObjects(modelStore, copyManager, 
+					SpdxConstantsCompatV2.CLASS_SPDX_DOCUMENT, null, null)
+					.collect(Collectors.toList());
+			SpdxDocument document = allDocs.get(0);
+			String documentUri = document.getDocumentUri();
+			// If you know the document URI, you can simply create an SPDX document using the followint constructor
+			SpdxDocument document2 = new SpdxDocument(modelStore, documentUri, copyManager, false);
 			// Note that all class objects in the Spdx Java Library follow the same pattern - 
 			// to access any existing object in the store, simply create the object passing in 
 			// the document URI, model store and the ID for the object
-			
-			// Another (more cumbersome) approach is to use the model factory
-			Optional<ModelObject> optionalDocument2 = SpdxModelFactory.getModelObject(modelStore, documentUri, SpdxConstants.SPDX_DOCUMENT_ID, copyManager);
-			if (!optionalDocument2.isPresent()) {
-				System.out.println("The SPDX document is not present in the model");
-				// Note - this should never happen
-				System.exit(1);
-			}
-			// When using the factory method, we have to type cast the result
-			SpdxDocument document2 = (SpdxDocument)optionalDocument2.get();
 			// Since the 2 documents are just references to the same object, they will always be equivalent
 			if (!document.equivalent(document2)) {
 				System.out.println("Oops - these 2 documents should be the same");

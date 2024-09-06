@@ -28,10 +28,10 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.model.license.AnyLicenseInfo;
-import org.spdx.library.model.license.ExtractedLicenseInfo;
-import org.spdx.utility.compare.LicenseCompareHelper;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.library.model.v2.license.AnyLicenseInfo;
+import org.spdx.library.model.v2.license.ExtractedLicenseInfo;
+import org.spdx.licenseTemplate.LicenseTextHelper;
 import org.spdx.utility.compare.SpdxCompareException;
 import org.spdx.utility.compare.SpdxComparer;
 
@@ -166,7 +166,7 @@ public class ExtractedLicenseSheet extends AbstractSheet {
 				if (extractedLicenses[i].length > licenseIndexes[i]) {
 					if  (extractedLicenses[i][licenseIndexes[i]] instanceof ExtractedLicenseInfo) {
 						String compareExtractedText = ((ExtractedLicenseInfo)extractedLicenses[i][licenseIndexes[i]]).getExtractedText();
-						if (LicenseCompareHelper.isLicenseTextEquivalent(extractedLicenseText,
+						if (LicenseTextHelper.isLicenseTextEquivalent(extractedLicenseText,
 								compareExtractedText)) {
 							Cell licenseIdCell = currentRow.createCell(FIRST_LIC_ID_COL+i);
 							licenseIdCell.setCellValue(formatLicenseInfo((ExtractedLicenseInfo)extractedLicenses[i][licenseIndexes[i]]));

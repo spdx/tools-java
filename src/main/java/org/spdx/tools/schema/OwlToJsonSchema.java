@@ -33,11 +33,11 @@ import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.util.iterator.ExtendedIterator;
 import org.spdx.jacksonstore.MultiFormatStore;
 import org.spdx.jacksonstore.SpdxJsonLDContext;
-import org.spdx.library.SpdxConstants;
-import org.spdx.library.model.ReferenceType;
-import org.spdx.library.model.SpdxElement;
-import org.spdx.library.model.SpdxModelFactory;
-import org.spdx.library.model.license.AnyLicenseInfo;
+import org.spdx.library.model.v2.ReferenceType;
+import org.spdx.library.model.v2.SpdxConstantsCompatV2;
+import org.spdx.library.model.v2.SpdxElement;
+import org.spdx.library.model.v2.SpdxModelFactoryCompatV2;
+import org.spdx.library.model.v2.license.AnyLicenseInfo;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -66,18 +66,18 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
     private static final String JSON_RESTRICTION_MAXITEMS = "maxItems";
     
     private static final String SCHEMA_VERSION_URI = "https://json-schema.org/draft/2019-09/schema#";
-	private static final String RELATIONSHIP_TYPE = SpdxConstants.SPDX_NAMESPACE + SpdxConstants.CLASS_RELATIONSHIP;
+	private static final String RELATIONSHIP_TYPE = SpdxConstantsCompatV2.SPDX_NAMESPACE + SpdxConstantsCompatV2.CLASS_RELATIONSHIP;
 	static ObjectMapper jsonMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 	private static final Set<String> USES_SPDXIDS;
     
 	static {
 	    Set<String> spdxids = new HashSet<>();
-	    spdxids.add(SpdxConstants.CLASS_SPDX_DOCUMENT);
-	    spdxids.add(SpdxConstants.CLASS_SPDX_ELEMENT);
-	    spdxids.add(SpdxConstants.CLASS_SPDX_FILE);
-	    spdxids.add(SpdxConstants.CLASS_SPDX_ITEM);
-	    spdxids.add(SpdxConstants.CLASS_SPDX_PACKAGE);
-	    spdxids.add(SpdxConstants.CLASS_SPDX_SNIPPET);
+	    spdxids.add(SpdxConstantsCompatV2.CLASS_SPDX_DOCUMENT);
+	    spdxids.add(SpdxConstantsCompatV2.CLASS_SPDX_ELEMENT);
+	    spdxids.add(SpdxConstantsCompatV2.CLASS_SPDX_FILE);
+	    spdxids.add(SpdxConstantsCompatV2.CLASS_SPDX_ITEM);
+	    spdxids.add(SpdxConstantsCompatV2.CLASS_SPDX_PACKAGE);
+	    spdxids.add(SpdxConstantsCompatV2.CLASS_SPDX_SNIPPET);
 	    USES_SPDXIDS = Collections.unmodifiableSet(spdxids);
 	}
 	
@@ -119,29 +119,29 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 		schemaProp.put("description", schemaRefDescription);
 		properties.set("$schema", schemaProp);
 		
-		OntClass docClass = model.getOntClass(SpdxConstants.SPDX_NAMESPACE + SpdxConstants.CLASS_SPDX_DOCUMENT);
+		OntClass docClass = model.getOntClass(SpdxConstantsCompatV2.SPDX_NAMESPACE + SpdxConstantsCompatV2.CLASS_SPDX_DOCUMENT);
 		Objects.requireNonNull(docClass, "Missing SpdxDocument class in OWL document");
 		addClassProperties(docClass, properties, required);
 		// Add in the extra properties
-		properties.set(SpdxConstants.PROP_DOCUMENT_NAMESPACE, createSimpleTypeSchema(JSON_TYPE_STRING, 
+		properties.set(SpdxConstantsCompatV2.PROP_DOCUMENT_NAMESPACE.getName(), createSimpleTypeSchema(JSON_TYPE_STRING, 
 		        "The URI provides an unambiguous mechanism for other SPDX documents to reference SPDX elements within this SPDX document."));
-		required.add(SpdxConstants.PROP_DOCUMENT_NAMESPACE);
+		required.add(SpdxConstantsCompatV2.PROP_DOCUMENT_NAMESPACE.getName());
 		ObjectNode describesProperty = toArraySchema(createSimpleTypeSchema(JSON_TYPE_STRING, "SPDX ID for each Package, File, or Snippet."), 
 		        "DEPRECATED: use relationships instead of this field. Packages, files and/or Snippets described by this SPDX document", 0);
 		describesProperty.put("deprecated", true);
 		describesProperty.put("$comment", "This field has been deprecated as it is a duplicate of using the SPDXRef-DOCUMENT DESCRIBES relationship");
-		properties.set(SpdxConstants.PROP_DOCUMENT_DESCRIBES, describesProperty);
+		properties.set(SpdxConstantsCompatV2.PROP_DOCUMENT_DESCRIBES.getName(), describesProperty);
         
-		OntClass packageClass = model.getOntClass(SpdxConstants.SPDX_NAMESPACE + SpdxConstants.CLASS_SPDX_PACKAGE);
+		OntClass packageClass = model.getOntClass(SpdxConstantsCompatV2.SPDX_NAMESPACE + SpdxConstantsCompatV2.CLASS_SPDX_PACKAGE);
 		Objects.requireNonNull(packageClass, "Missing SPDX Package class in OWL document");
 		properties.set("packages", toArrayPropertySchema(packageClass, 0));
-		OntClass fileClass = model.getOntClass(SpdxConstants.SPDX_NAMESPACE + SpdxConstants.CLASS_SPDX_FILE);
+		OntClass fileClass = model.getOntClass(SpdxConstantsCompatV2.SPDX_NAMESPACE + SpdxConstantsCompatV2.CLASS_SPDX_FILE);
 		Objects.requireNonNull(fileClass, "Missing SPDX File class in OWL document");
 		properties.set("files", toArrayPropertySchema(fileClass, 0));
-		OntClass snippetClass = model.getOntClass(SpdxConstants.SPDX_NAMESPACE + SpdxConstants.CLASS_SPDX_SNIPPET);
+		OntClass snippetClass = model.getOntClass(SpdxConstantsCompatV2.SPDX_NAMESPACE + SpdxConstantsCompatV2.CLASS_SPDX_SNIPPET);
 		Objects.requireNonNull(snippetClass, "Missing SPDX Snippet class in OWL document");
 		properties.set("snippets", toArrayPropertySchema(snippetClass, 0));
-		OntClass relationshipClass = model.getOntClass(SpdxConstants.SPDX_NAMESPACE + SpdxConstants.CLASS_RELATIONSHIP);
+		OntClass relationshipClass = model.getOntClass(SpdxConstantsCompatV2.SPDX_NAMESPACE + SpdxConstantsCompatV2.CLASS_RELATIONSHIP);
 		Objects.requireNonNull(relationshipClass, "Missing SPDX Relationship class in OWL document");
 		properties.set("relationships", toArrayPropertySchema(relationshipClass, 0));
 		root.set("properties", properties);
@@ -187,11 +187,11 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
         retval.put(JSON_RESTRICTION_TYPE, JSON_TYPE_OBJECT);
         ObjectNode properties = jsonMapper.createObjectNode();
         ArrayNode required = jsonMapper.createArrayNode();
-        if (ontClass.getLocalName().equals(SpdxConstants.CLASS_RELATIONSHIP)) {
+        if (ontClass.getLocalName().equals(SpdxConstantsCompatV2.CLASS_RELATIONSHIP)) {
             // Need to add the spdxElementId
-            properties.set(SpdxConstants.PROP_SPDX_ELEMENTID, createSimpleTypeSchema(JSON_TYPE_STRING, 
+            properties.set(SpdxConstantsCompatV2.PROP_SPDX_ELEMENTID.getName(), createSimpleTypeSchema(JSON_TYPE_STRING, 
                     "Id to which the SPDX element is related"));
-            required.add(SpdxConstants.PROP_SPDX_ELEMENTID);
+            required.add(SpdxConstantsCompatV2.PROP_SPDX_ELEMENTID.getName());
         }
         addClassProperties(ontClass, properties, required);
         if (properties.size() > 0) {
@@ -230,8 +230,8 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 	private void addClassProperties(OntClass spdxClass, ObjectNode jsonSchemaProperties,
 	        ArrayNode required) {
         if (USES_SPDXIDS.contains(spdxClass.getLocalName())) {
-            required.add(SpdxConstants.SPDX_IDENTIFIER);
-            jsonSchemaProperties.set(SpdxConstants.SPDX_IDENTIFIER, 
+            required.add(SpdxConstantsCompatV2.SPDX_IDENTIFIER);
+            jsonSchemaProperties.set(SpdxConstantsCompatV2.SPDX_IDENTIFIER, 
                     createSimpleTypeSchema(JSON_TYPE_STRING, 
                             "Uniquely identify any element in an SPDX document which may be referenced by other elements."));
         }
@@ -342,9 +342,9 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 			propertySchema.set("enum", enums);
 		} else if (restrictions.getTypeUri().equals("http://www.w3.org/2000/01/rdf-schema#Literal")) {
 			propertySchema.put(JSON_RESTRICTION_TYPE, JSON_TYPE_STRING);
-		} else if (restrictions.getTypeUri().startsWith(SpdxConstants.XML_SCHEMA_NAMESPACE)) {
+		} else if (restrictions.getTypeUri().startsWith(SpdxConstantsCompatV2.XML_SCHEMA_NAMESPACE)) {
 				// Primitive type
-			String primitiveType = restrictions.getTypeUri().substring(SpdxConstants.XML_SCHEMA_NAMESPACE.length());
+			String primitiveType = restrictions.getTypeUri().substring(SpdxConstantsCompatV2.XML_SCHEMA_NAMESPACE.length());
 			Class<? extends Object> primitiveClass = SpdxJsonLDContext.XMLSCHEMA_TYPE_TO_JAVA_CLASS.get(primitiveType);
 			Objects.requireNonNull(primitiveClass, "No primitive class found for type "+restrictions.getTypeUri());
 			if (Boolean.class.equals(primitiveClass)) {
@@ -356,11 +356,11 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 			} else {
 				throw new RuntimeException("Unknown primitive class "+primitiveType);
 			}
-		} else if (restrictions.getTypeUri().startsWith(SpdxConstants.SPDX_NAMESPACE)) {
-			String spdxType = restrictions.getTypeUri().substring(SpdxConstants.SPDX_NAMESPACE.length());
-			Class<? extends Object> clazz = SpdxModelFactory.SPDX_TYPE_TO_CLASS.get(spdxType);
+		} else if (restrictions.getTypeUri().startsWith(SpdxConstantsCompatV2.SPDX_NAMESPACE)) {
+			String spdxType = restrictions.getTypeUri().substring(SpdxConstantsCompatV2.SPDX_NAMESPACE.length());
+			Class<? extends Object> clazz = SpdxModelFactoryCompatV2.SPDX_TYPE_TO_CLASS_V2.get(spdxType);
 			if (Objects.nonNull(clazz) && (AnyLicenseInfo.class.isAssignableFrom(clazz))
-					&& !SpdxConstants.PROP_SPDX_EXTRACTED_LICENSES.equals(checkConvertRenamedPropertyName(property.getLocalName()))) {
+					&& !SpdxConstantsCompatV2.PROP_SPDX_EXTRACTED_LICENSES.getName().equals(checkConvertRenamedPropertyName(property.getLocalName()))) {
 				// check for AnyLicenseInfo - these are strings with the exception of the extractedLicensingInfos which are the actual license description
 				JsonNode description = propertySchema.get("description");
 				if (Objects.isNull(description)) {

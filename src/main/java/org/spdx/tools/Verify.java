@@ -17,26 +17,31 @@
 package org.spdx.tools;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import com.fasterxml.jackson.core.JsonParseException;
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.Version;
-import org.spdx.library.model.SpdxDocument;
+
+import org.spdx.core.CoreModelObject;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.library.model.v2.Version;
 import org.spdx.storage.ISerializableModelStore;
 import org.spdx.tagvaluestore.TagValueStore;
 import org.spdx.tools.SpdxToolsHelper.SerFileType;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.fge.jackson.JsonLoader;
-import com.github.fge.jsonschema.core.exceptions.ProcessingException;
-import com.github.fge.jsonschema.core.report.ProcessingReport;
-import com.github.fge.jsonschema.main.JsonSchema;
-import com.github.fge.jsonschema.main.JsonSchemaFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.networknt.schema.JsonSchema;
+import com.networknt.schema.JsonSchemaFactory;
+import com.networknt.schema.SpecVersion.VersionFlag;
+import com.networknt.schema.ValidationMessage;
 
 /**
  * Verifies an SPDX document and lists any verification errors
@@ -48,8 +53,11 @@ public class Verify {
 	static final int MIN_ARGS = 1;
 	static final int MAX_ARGS = 2;
 	static final int ERROR_STATUS = 1;
-	private static final String JSON_SCHEMA_RESOURCE_V2_3 = "/resources/spdx-schema-v2.3.json";
-	private static final String JSON_SCHEMA_RESOURCE_V2_2 = "/resources/spdx-schema-v2.2.json";
+	private static final String JSON_SCHEMA_RESOURCE_V2_3 = "resources/spdx-schema-v2.3.json";
+	private static final String JSON_SCHEMA_RESOURCE_V2_2 = "resources/spdx-schema-v2.2.json";
+	private static final String JSON_SCHEMA_RESOURCE_V3 = "resources/spdx-schema-v3.0.1.json";
+	
+	static final ObjectMapper JSON_MAPPER = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 	
 	/**
 	 * @param args args[0] SPDX file path; args[1] [RDFXML|JSON|XLS|XLSX|YAML|TAG] an optional file type - if not present, file type of the to file will be used
@@ -63,6 +71,7 @@ public class Verify {
 		if (args.length > MAX_ARGS) {
 			System.out.printf("Warning: Extra arguments will be ignored");
 		}
+		SpdxToolsHelper.initialize();
 		List<String> verify = null;
 		try {
 			SerFileType fileType = null;
@@ -141,7 +150,7 @@ public class Verify {
 		} catch (InvalidSPDXAnalysisException e) {
 			throw new SpdxVerificationException("Error converting fileType to store",e);
 		}
-		SpdxDocument doc = null;
+		CoreModelObject doc = null;
 		try {
 			doc = SpdxToolsHelper.readDocumentFromFile(store, file);
 		} catch (FileNotFoundException e) {
@@ -158,33 +167,36 @@ public class Verify {
 			// add in any parser warnings
 			retval.addAll(((TagValueStore)store).getWarnings());
 		}
-		if (SerFileType.JSON.equals(fileType)) {
+		if (SerFileType.JSON.equals(fileType) || SerFileType.JSONLD.equals(fileType)) {
 			try {
-				String jsonSchemaResource = Version.versionLessThan(Version.TWO_POINT_THREE_VERSION, doc.getSpecVersion()) ? 
+				String jsonSchemaResource;
+				if (SerFileType.JSON.equals(fileType)) {
+					jsonSchemaResource = Version.versionLessThan(Version.TWO_POINT_THREE_VERSION, doc.getSpecVersion()) ? 
 						JSON_SCHEMA_RESOURCE_V2_2 : JSON_SCHEMA_RESOURCE_V2_3;
-				JsonNode spdxJsonSchema = JsonLoader.fromResource(jsonSchemaResource);
-				final JsonSchema schema = JsonSchemaFactory.byDefault().getJsonSchema(spdxJsonSchema);
-				JsonNode spdxDocJson = JsonLoader.fromFile(file);
-				ProcessingReport report = schema.validateUnchecked(spdxDocJson, true);
-				report.spliterator().forEachRemaining(msg -> {
-					JsonNode msgJson = msg.asJson();
-					if (!msg.getMessage().contains("$id") &&  // Known warning - this is in the draft 7 spec - perhaps a bug in the validator?
-							!msg.getMessage().contains("deprecated]")) { // We ignore deprecated warnings since the schema version is not supported 
-						JsonNode instance = msgJson.findValue("instance");
-						String warningStr = msg.getMessage();
-						if (Objects.nonNull(instance)) {
-							warningStr = warningStr + " for " + instance.toString();
-						}
-						retval.add(warningStr);
-					}
-				});
+				} else {
+					jsonSchemaResource = JSON_SCHEMA_RESOURCE_V3;
+				}
+				JsonSchemaFactory jsonSchemaFactory = JsonSchemaFactory.getInstance(VersionFlag.V202012);
+				JsonSchema schema;
+				try (InputStream is = Verify.class.getResourceAsStream("/" + jsonSchemaResource)) {
+					schema = jsonSchemaFactory.getSchema(is);
+				}
+				JsonNode root;
+				try (InputStream is = new FileInputStream(file)) {
+					root = JSON_MAPPER.readTree(is);
+				}
+				Set<ValidationMessage> messages = schema.validate(root);
+				for (ValidationMessage msg:messages) {
+					retval.add(msg.toString());
+				}
 			} catch (IOException e) {
 				retval.add("Unable to validate JSON file against schema due to I/O Error");
 			} catch (InvalidSPDXAnalysisException e) {
 				retval.add("Unable to validate JSON file against schema due to error in SPDX file");
-			} catch (ProcessingException e) {
-				retval.add("Unable to validate JSON file against schema due to processing exception");
 			}
+		}
+		if (SerFileType.JSONLD.equals(fileType)) {
+			//TODO: Implement verification against the OWL schema
 		}
 		List<String> verify;
 		try {

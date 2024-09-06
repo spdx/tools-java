@@ -25,12 +25,17 @@ import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spdx.library.InvalidSPDXAnalysisException;
+import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.library.ModelCopyManager;
-import org.spdx.library.SpdxConstants;
+import org.spdx.library.SpdxModelFactory;
+import org.spdx.library.conversion.Spdx2to3Converter;
+import org.spdx.library.model.v2.SpdxConstantsCompatV2;
+import org.spdx.library.model.v3_0_1.SpdxConstantsV3.SpdxMajorVersion;
+import org.spdx.library.model.v3_0_1.core.CreationInfo;
 import org.spdx.spdxRdfStore.RdfStore;
 import org.spdx.storage.ISerializableModelStore;
 import org.spdx.tools.SpdxToolsHelper.SerFileType;
+import org.spdx.v3jsonldstore.JsonLDStore;
 
 /**
  * Converts between various SPDX file types
@@ -56,6 +61,8 @@ public class SpdxConverter {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		
+		SpdxToolsHelper.initialize();
 		if (args.length < MIN_ARGS) {
 			
 			System.err
@@ -171,6 +178,13 @@ public class SpdxConverter {
 		try {
 			ISerializableModelStore fromStore = SpdxToolsHelper.fileTypeToStore(fromFileType);
 			ISerializableModelStore toStore = SpdxToolsHelper.fileTypeToStore(toFileType);
+			SpdxMajorVersion fromVersion = fromStore instanceof JsonLDStore ? SpdxMajorVersion.VERSION_3 :
+					SpdxMajorVersion.VERSION_2;
+			SpdxMajorVersion toVersion = toStore instanceof JsonLDStore ? SpdxMajorVersion.VERSION_3 :
+				SpdxMajorVersion.VERSION_2;
+			if (fromVersion == SpdxMajorVersion.VERSION_3 && toVersion != SpdxMajorVersion.VERSION_3) {
+				throw new SpdxConverterException("Can not convert from SPDX spec version 3 to previous versions");
+			}
 			if (fromStore instanceof RdfStore || toStore instanceof RdfStore) {
 				// Setting the property value will avoid the error message
 				// See issue #90 for more information
@@ -182,31 +196,20 @@ public class SpdxConverter {
 					propertySet = false; // we'll just deal with the extra error message
 				}
 			}
+			if (toStore instanceof JsonLDStore) {
+				((JsonLDStore)toStore).setUseExternalListedElements(true);
+			}
 			input = new FileInputStream(fromFile);
 			output = new FileOutputStream(toFile);
-			String documentUri = fromStore.deSerialize(input, false);
-			ModelCopyManager copyManager = new ModelCopyManager();
-			// Need to copy the external document refs first so that they line up with the references
-			fromStore.getAllItems(documentUri, SpdxConstants.CLASS_EXTERNAL_DOC_REF).forEach(tv -> {
-				try {
-					copyManager.copy(toStore, documentUri, fromStore, documentUri, 
-							tv.getId(), tv.getType());
-				} catch (InvalidSPDXAnalysisException e) {
-					throw new RuntimeException(e);
-				}
-			});
-			fromStore.getAllItems(documentUri, null).forEach(tv -> {
-				try {
-					if (!SpdxConstants.CLASS_EXTERNAL_DOC_REF.equals(tv.getType()) &&
-							!(excludeLicenseDetails && SpdxConstants.CLASS_CROSS_REF.equals(tv.getType()))) {
-						copyManager.copy(toStore, documentUri, fromStore, documentUri, 
-								tv.getId(), tv.getType(), excludeLicenseDetails);
-					}
-				} catch (InvalidSPDXAnalysisException e) {
-					throw new RuntimeException(e);
-				}
-			});
-			toStore.serialize(documentUri, output);
+			fromStore.deSerialize(input, false);
+			if (fromVersion == SpdxMajorVersion.VERSION_3) {
+				copyV3ToV3(fromStore, toStore, excludeLicenseDetails);
+			} else if (toVersion  == SpdxMajorVersion.VERSION_3) {
+				copyV2ToV3(fromStore, toStore, excludeLicenseDetails);
+			} else {
+				copyV2ToV2(fromStore, toStore, excludeLicenseDetails);
+			}
+			toStore.serialize(output);
 		} catch (Exception ex) {
 			String msg = "Error converting SPDX file: "+ex.getClass().toString();
 			if (Objects.nonNull(ex.getMessage())) {
@@ -238,6 +241,112 @@ public class SpdxConverter {
 		}
 	}
 
+
+	/**
+	 * Copies all data from the SPDX spec version 2 fromStore to an SPDX spec version 2 store
+	 * @param fromStore store to copy from
+	 * @param toStore store to copy to
+	 * @param excludeLicenseDetails If true, don't copy over properties of the listed licenses
+	 * @throws InvalidSPDXAnalysisException on copy errors
+	 */
+	private static void copyV2ToV2(ISerializableModelStore fromStore,
+			ISerializableModelStore toStore, boolean excludeLicenseDetails) throws InvalidSPDXAnalysisException {
+		String documentUri = SpdxToolsHelper.getDocFromStoreCompatV2(fromStore).getDocumentUri();
+		if (toStore instanceof RdfStore) {
+			((RdfStore) toStore).setDocumentUri(documentUri, false);
+			((RdfStore) toStore).setDontStoreLicenseDetails(excludeLicenseDetails);
+		}
+		ModelCopyManager copyManager = new ModelCopyManager();
+		// Need to copy the external document refs first so that they line up with the references
+		fromStore.getAllItems(documentUri, SpdxConstantsCompatV2.CLASS_EXTERNAL_DOC_REF).forEach(tv -> {
+			try {
+				copyManager.copy(toStore, fromStore, tv.getObjectUri(), tv.getSpecVersion(),
+						documentUri + "#");
+			} catch (InvalidSPDXAnalysisException e) {
+				throw new RuntimeException(e);
+			}
+		});
+		fromStore.getAllItems(documentUri, null).forEach(tv -> {
+			try {
+				if (!SpdxConstantsCompatV2.CLASS_EXTERNAL_DOC_REF.equals(tv.getType()) &&
+						!(excludeLicenseDetails && SpdxConstantsCompatV2.CLASS_CROSS_REF.equals(tv.getType()))) {
+					copyManager.copy(toStore, fromStore, tv.getObjectUri(), tv.getSpecVersion(), documentUri);
+				}
+			} catch (InvalidSPDXAnalysisException e) {
+				throw new RuntimeException(e);
+			}
+		});
+	}
+
+	/**
+	 * Copies all data from the SPDX spec version 2 fromStore to an SPDX spec version 3 store
+	 * @param fromStore store to copy from
+	 * @param toStore store to copy to
+	 * @param excludeLicenseDetails If true, don't copy over properties of the listed licenses
+	 * @throws InvalidSPDXAnalysisException on copy errors
+	 */
+	private static void copyV2ToV3(ISerializableModelStore fromStore,
+			ISerializableModelStore toStore, boolean excludeLicenseDetails) throws InvalidSPDXAnalysisException {
+		ModelCopyManager copyManager = new ModelCopyManager();
+		org.spdx.library.model.v2.SpdxDocument fromDoc = SpdxToolsHelper.getDocFromStoreCompatV2(fromStore);
+		String toUriPrefix = fromDoc.getDocumentUri() + "-specv3/";
+		CreationInfo defaultCreationInfo = Spdx2to3Converter.convertCreationInfo(fromDoc.getCreationInfo(),
+				toStore, toUriPrefix);
+		Spdx2to3Converter converter = new Spdx2to3Converter(toStore, copyManager, defaultCreationInfo, 
+				SpdxModelFactory.getLatestSpecVersion(), toUriPrefix);
+		converter.convertAndStore(fromDoc);
+		// Make sure we get all files, packages and snippets - any relationships and annotations will be copied
+		// as properties.  Note that the conversion of the document should already have been copied.
+		SpdxModelFactory.getSpdxObjects(fromStore, copyManager, SpdxConstantsCompatV2.CLASS_SPDX_FILE, 
+				fromDoc.getDocumentUri(), fromDoc.getDocumentUri()).forEach(f -> {
+					if (!converter.alreadyCopied((((org.spdx.library.model.v2.SpdxFile)f).getObjectUri()))) {
+						try {
+							converter.convertAndStore((org.spdx.library.model.v2.SpdxFile)f);
+						} catch (InvalidSPDXAnalysisException e) {
+							throw new RuntimeException("Error upgrading file "+f+" from spec version 2 to spec version 3",e);
+						}
+					}
+				});
+		SpdxModelFactory.getSpdxObjects(fromStore, copyManager, SpdxConstantsCompatV2.CLASS_SPDX_PACKAGE, 
+				fromDoc.getDocumentUri(), fromDoc.getDocumentUri()).forEach(p -> {
+					if (!converter.alreadyCopied((((org.spdx.library.model.v2.SpdxPackage)p).getObjectUri()))) {
+						try {
+							converter.convertAndStore((org.spdx.library.model.v2.SpdxPackage)p);
+						} catch (InvalidSPDXAnalysisException e) {
+							throw new RuntimeException("Error upgrading package "+p+" from spec version 2 to spec version 3",e);
+						}
+					}
+				});
+		SpdxModelFactory.getSpdxObjects(fromStore, copyManager, SpdxConstantsCompatV2.CLASS_SPDX_SNIPPET, 
+				fromDoc.getDocumentUri(), fromDoc.getDocumentUri()).forEach(s -> {
+					if (!converter.alreadyCopied((((org.spdx.library.model.v2.SpdxSnippet)s).getObjectUri()))) {
+						try {
+							converter.convertAndStore((org.spdx.library.model.v2.SpdxSnippet)s);
+						} catch (InvalidSPDXAnalysisException e) {
+							throw new RuntimeException("Error upgrading snippet "+s+" from spec version 2 to spec version 3",e);
+						}
+					}
+				});
+	}
+
+	/**
+	 * Copies all data from the SPDX spec version 3 fromStore to an SPDX spec version 3 store
+	 * @param fromStore store to copy from
+	 * @param toStore store to copy to
+	 * @param excludeLicenseDetails If true, don't copy over properties of the listed licenses
+	 * @throws InvalidSPDXAnalysisException on copy errors
+	 */
+	private static void copyV3ToV3(ISerializableModelStore fromStore,
+			ISerializableModelStore toStore, boolean excludeLicenseDetails) throws InvalidSPDXAnalysisException {
+		ModelCopyManager copyManager = new ModelCopyManager();
+		fromStore.getAllItems(null, null).forEach(tv -> {
+			try {
+				copyManager.copy(toStore, fromStore, tv.getObjectUri(), tv.getSpecVersion(), null);
+			} catch (InvalidSPDXAnalysisException e) {
+				throw new RuntimeException(e);
+			}
+		});
+	}
 
 	private static void usage() {
 		System.out.println("Usage:");

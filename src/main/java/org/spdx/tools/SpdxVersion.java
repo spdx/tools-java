@@ -19,11 +19,12 @@
  */
 package org.spdx.tools;
 
-import org.spdx.library.Version;
-import org.spdx.library.model.license.ListedLicenses;
-
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.Properties;
+
+import org.spdx.library.ListedLicenses;
+import org.spdx.library.SpdxModelFactory;
 
 /**
  * Static helper methods for tools and library version information
@@ -31,6 +32,28 @@ import java.util.Properties;
  * @author Hirumal Priyashan
  */
 public class SpdxVersion {
+	
+	static class SpdxVersionComparer implements Comparator<String> {
+		
+		/**
+		 * @param version version to normalize - may be an SPDX 2.X style or a 3.X SemVer style
+		 * @return version normalized to SemVer
+		 */
+		private String normalizeVersion(String version) {
+			if (version.startsWith("SPDX-")) {
+				return version.substring("SPDX-".length());
+			} else {
+				return version;
+			}
+		}
+
+		@Override
+		public int compare(String versionA, String versionB) {
+			return normalizeVersion(versionA).compareTo(normalizeVersion(versionB));
+		}
+
+		
+	}
 
     /**
      * Getter for the current tool Version
@@ -53,7 +76,14 @@ public class SpdxVersion {
      * @return The library specification version
      */
     public static String getLibraryVersion() {
-        return Version.CURRENT_SPDX_VERSION;
+    	return SpdxModelFactory.IMPLEMENTATION_VERSION;
+    }
+    
+    /**
+     * @return the latest spec version supported
+     */
+    public static String getLatestSpecVersion() {
+    	return SpdxModelFactory.getLatestSpecVersion();
     }
 
     /**
