@@ -8,7 +8,7 @@ These tools are published by the SPDX Workgroup
 see [http://spdx.org/](http://spdx.org/)
 
 ## Versions Supported
-This utility supports versions 2.0, 2.1, 2.2 and 2.3 of the SPDX specification.
+This utility supports versions 2.0, 2.1, 2.2, 2.3 and 3.0.1 of the SPDX specification.
 
 # Code quality badges
 
@@ -33,7 +33,7 @@ Non-security related issues should be added to the [SPDX tools issues list](http
 ## Syntax
 The command line interface of the spdx tools can be used like this:
 
-    java -jar tools-java-1.1.8-jar-with-dependencies.jar <function> <parameters>
+    java -jar tools-java-2.0.0-Alpha-jar-with-dependencies.jar <function> <parameters>
 
 ## SPDX format converters
 The following converter tools support spdx format:
@@ -45,14 +45,15 @@ The following converter tools support spdx format:
   * JSON
   * XML
   * YAML
+  * JSON-LD (SPDX spec version 3.0)
 
 Example to convert a SPDX file from tag to rdf format:
 
-    java -jar tools-java-1.1.8-jar-with-dependencies.jar Convert ../testResources/SPDXTagExample-v2.2.spdx TagToRDF.rdf
+    java -jar tools-java-2.0.0-Alpha-jar-with-dependencies.jar Convert ../testResources/SPDXTagExample-v2.2.spdx TagToRDF.rdf
 
 The file formats can optionally be provided as the 3rd and 4th parameter for the input and output formats respectively.  An optional 5th option `excludeLicenseDetails` will not copy the listed license properties to the output file.  The following example will copy a JSON format to an RDF Turtle format without including the listed license properties:
 
-    java -jar tools-java-1.1.8-jar-with-dependencies.jar Convert ../testResources/SPDXTagExample-v2.2.spdx TagToRDF.ttl TAG RDFTTL excludeLicenseDetails
+    java -jar tools-java-2.0.0-Alpha-jar-with-dependencies.jar Convert ../testResources/SPDXTagExample-v2.2.spdx TagToRDF.ttl TAG RDFTTL excludeLicenseDetails
 
 ## Compare utilities
 The following  tools can be used to compare one or more SPDX documents:
@@ -61,13 +62,13 @@ The following  tools can be used to compare one or more SPDX documents:
 
     Example to compare multiple SPDX files provided in rdf format and provide a spreadsheet with the results:
 
-        java -jar tools-java-1.1.8-jar-with-dependencies.jar CompareDocs output.xlsx doc1 doc2 ... docN
+        java -jar tools-java-2.0.0-Alpha-jar-with-dependencies.jar CompareDocs output.xlsx doc1 doc2 ... docN
 
   * CompareMultipleSpdxDocs with directory
 
     Example to compare all SPDX documents in a directory "/home/me/spdxdocs" and provide a spreadsheet with the results:
 
-        java -jar tools-java-1.1.8-jar-with-dependencies.jar CompareDocs output.xlsx /home/me/spdxdocs
+        java -jar tools-java-2.0.0-Alpha-jar-with-dependencies.jar CompareDocs output.xlsx /home/me/spdxdocs
 
 ## SPDX Viewer
 The following tool can be used to "Pretty Print" an SPDX document.
@@ -76,7 +77,7 @@ The following tool can be used to "Pretty Print" an SPDX document.
 
 Sample usage:
 
-    java -jar tools-java-1.1.8-jar-with-dependencies.jar SPDXViewer ../testResources/SPDXRdfExample-v2.2.spdx.rdf
+    java -jar tools-java-2.0.0-Alpha-jar-with-dependencies.jar SPDXViewer ../testResources/SPDXRdfExample-v2.2.spdx.rdf
 
 ## Verifier
 The following tool can be used to verify an SPDX document:
@@ -85,7 +86,7 @@ The following tool can be used to verify an SPDX document:
 
 Sample usage:
 
-    java -jar tools-java-1.1.8-jar-with-dependencies.jar Verify ../testResources/SPDXRdfExample-v2.2.spdx.rdf
+    java -jar tools-java-2.0.0-Alpha-jar-with-dependencies.jar Verify ../testResources/SPDXRdfExample-v2.2.spdx.rdf
 
 ## Generators
 The following tool can be used to generate an SPDX verification code from a directory of source files:
@@ -94,7 +95,7 @@ The following tool can be used to generate an SPDX verification code from a dire
 
   Sample usage:
 
-        java -jar tools-java-1.1.8-jar-with-dependencies.jar GenerateVerificationCode sourceDirectory [ignoredFilesRegex]
+        java -jar tools-java-2.0.0-Alpha-jar-with-dependencies.jar GenerateVerificationCode sourceDirectory [ignoredFilesRegex]
 
 ## SPDX Validation Tool
 The SPDX Workgroup provides an online interface to validate, compare, and convert SPDX documents in addition to the command line options above. The [SPDX Validation Tool](https://tools.spdx.org/app/validate/) is an all-in-one portal to upload and parse SPDX documents for validation, comparison and conversion and search the SPDX license list.
@@ -112,13 +113,3 @@ You need [Apache Maven](http://maven.apache.org/) to build the project:
 
     mvn clean install
 
-
-## Update for new properties or classes
-To update Spdx-Tools-Library, the following is a very brief checklist:
-
-  1. Update the properties files in the org.spdx.tag package for any new tag values
-  2. Update the org.spdx.tag.CommonCode.java for any new or changed tag values.  This will implement both the rdfToTag and the SPDXViewer applications.
-  3. Update the org.spdx.tag.BuildDocument to implement changes for the TagToRdf application
-  4. Update the HTML template (resources/htmlTemplate/SpdxHTMLTemplate.html) and contexts in org.spdx.html to implement changes for the SpdxToHtml application
-  5. Update the related sheets and RdfToSpreadsheet.java file in the package org.spdx.spreadsheet
-  6. Update the sheets for SPDX compare utility
