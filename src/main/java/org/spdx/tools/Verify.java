@@ -241,7 +241,7 @@ public class Verify {
 	}
 	
 	public void usage() {
-		System.out.println("Verify filepath [RDFXML|JSON|XLS|XLSX|YAML|TAG]");
+		System.out.println("Verify filepath [RDFXML|JSON|XLS|XLSX|YAML|TAG|JSONLD]");
 		System.out.println("    where filepath is a path to the SPDX file and [RDFXML|JSON|XLS|XLSX|YAML|TAG] is an optional file type - if not present, file type of the to file will be used");
 	}
 }
