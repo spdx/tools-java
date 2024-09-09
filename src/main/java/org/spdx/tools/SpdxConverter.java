@@ -353,8 +353,8 @@ public class SpdxConverter {
 		System.out.println("SpdxConverter fromFilePath toFilePath [fromFileType] [toFileType]");
 		System.out.println("\tfromFilePath - File path of the file to convert from");
 		System.out.println("\ttoFilePath - output file");
-		System.out.println("\t[fromFileType] - optional file type of the input file.  One of JSON, XLS, XLSX, TAG, RDFXML, RDFTTL, YAML or XML.  If not provided the file type will be determined by the file extension");
-		System.out.println("\t[toFileType] - optional file type of the output file.  One of JSON, XLS, XLSX, TAG, RDFXML, RDFTTL, YAML or XML.  If not provided the file type will be determined by the file extension");
+		System.out.println("\t[fromFileType] - optional file type of the input file.  One of JSON, XLS, XLSX, TAG, RDFXML, RDFTTL, YAML, XML or JSONLD.  If not provided the file type will be determined by the file extension");
+		System.out.println("\t[toFileType] - optional file type of the output file.  One of JSON, XLS, XLSX, TAG, RDFXML, RDFTTL, YAML, XML or JSONLD.  If not provided the file type will be determined by the file extension");
 		System.out.println("\t[excludeLicenseDetails] - If present, listed license and listed exception properties will not be included in the output file");
 	}
 

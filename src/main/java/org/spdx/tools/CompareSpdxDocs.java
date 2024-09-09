@@ -225,7 +225,7 @@ public class CompareSpdxDocs {
 		System.out.println("Usage: CompareMultipleSpdxDoc output.xls doc1 doc2 ... docN");
 		System.out.println("where output.xls is a file name for the output spreadsheet file");
 		System.out.println("and doc1 through docN are file names of valid SPDX documents ");
-		System.out.println("in either tag/value or RDF/XML format");
+		System.out.println("in any of the supported formats format");
 	}
 
 }

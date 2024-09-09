@@ -56,7 +56,7 @@ public class SpdxViewer {
 			System.err
 					.println("Usage:\n SPDXViewer file [RDFXML|JSON|XLS|XLSX|YAML|TAG] \n"
 							+ "where file is the file path to a valid SPDX file\n"
-							+ "and [RDFXML|JSON|XLS|XLSX|YAML|TAG] is an optional file type\n"
+							+ "and [RDFXML|JSON|XLS|XLSX|YAML|TAG|JSONLD] is an optional file type\n"
 							+ "if not present, file type of the to file will be used");
 			return;
 		}
