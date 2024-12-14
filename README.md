@@ -45,7 +45,7 @@ The following converter tools support spdx format:
   * JSON
   * XML
   * YAML
-  * JSON-LD (SPDX spec version 3.0)
+  * JSON-LD (SPDX spec version 3.0.1)
 
 Example to convert a SPDX file from tag to rdf format:
 
@@ -54,6 +54,13 @@ Example to convert a SPDX file from tag to rdf format:
 The file formats can optionally be provided as the 3rd and 4th parameter for the input and output formats respectively.  An optional 5th option `excludeLicenseDetails` will not copy the listed license properties to the output file.  The following example will copy a JSON format to an RDF Turtle format without including the listed license properties:
 
     java -jar tools-java-2.0.0-Alpha-jar-with-dependencies.jar Convert ../testResources/SPDXTagExample-v2.2.spdx TagToRDF.ttl TAG RDFTTL excludeLicenseDetails
+
+To convert from SPDX 2 to SPDX 3.0.1:
+* use the file extension `.jsonld.json` or `.jsonld`;
+* or add the options for the from and to file types:
+```
+java -jar tools-java-2.0.0-Alpha-jar-with-dependencies.jar Convert hello.spdx hello.spdx.json TAG JSONLD
+```
 
 ## Compare utilities
 The following  tools can be used to compare one or more SPDX documents:
