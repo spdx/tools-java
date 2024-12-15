@@ -127,7 +127,8 @@ public class CompareSpdxDocsTest extends TestCase {
 		Cell cell = resultRow.getCell(1);
 		int nextCol = 2;
 		while (Objects.nonNull(cell) && !cell.getStringCellValue().isEmpty()) {
-			assertTrue("Equals".equals(cell.getStringCellValue()) || "N/A".equals(cell.getStringCellValue()));
+			String cellResult = cell.getStringCellValue();
+			assertTrue("Equals".equals(cell.getStringCellValue()) || "N/A".equals(cellResult));
 			cell = resultRow.getCell(nextCol++);
 		}
 	}

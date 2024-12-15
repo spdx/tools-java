@@ -120,17 +120,17 @@
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>java-spdx-library</artifactId>
-	  	<version>2.0.0-Alpha</version>
+	  	<version>2.0.0-RC1</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>spdx-rdf-store</artifactId>
-	  	<version>2.0.0-Alpha</version>
+	  	<version>2.0.0-RC1</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>spdx-jackson-store</artifactId>
-	  	<version>2.0.0-Alpha</version>
+	  	<version>2.0.0-RC1</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>org.apache.ws.xmlschema</groupId>
@@ -140,12 +140,12 @@
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>spdx-spreadsheet-store</artifactId>
-	  	<version>2.0.0-Alpha</version>
+	  	<version>2.0.0-RC1</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>spdx-tagvalue-store</artifactId>
-	  	<version>2.0.0-Alpha</version>
+	  	<version>2.0.0-RC1</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>com.networknt</groupId>
@@ -161,8 +161,26 @@
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>spdx-v3jsonld-store</artifactId>
-	  	<version>0.1.0-Alpha</version>
+	  	<version>1.0.0-RC1</version>
 	  </dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>5.3.0</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jena</groupId>
+			<artifactId>jena-core</artifactId>
+			<version>5.2.0</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.spdx</groupId>
+			<artifactId>spdx-rdf-store</artifactId>
+			<version>2.0.0-RC1</version>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
     <build>
   		<resources>
