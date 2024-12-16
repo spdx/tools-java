@@ -35,6 +35,7 @@ import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.library.model.v2.SpdxDocument;
 import org.spdx.library.model.v2.SpdxPackage;
 import org.spdx.library.model.v2.SpdxPackageVerificationCode;
+import org.spdx.library.model.v2.license.AnyLicenseInfo;
 import org.spdx.utility.compare.SpdxCompareException;
 import org.spdx.utility.compare.SpdxComparer;
 import org.spdx.utility.compare.SpdxPackageComparer;
@@ -404,7 +405,10 @@ public class PackageSheet extends AbstractSheet {
 				}
 				concludedLicenseRow.createCell(FIRST_DOC_COL+i).setCellValue(pkg.getLicenseConcluded().toString());
 				licenseInfosFromFilesRow.createCell(FIRST_DOC_COL+i).setCellValue(CompareHelper.licenseInfosToString(pkg.getLicenseInfoFromFiles()));
-				declaredLicenseRow.createCell(FIRST_DOC_COL+i).setCellValue(pkg.getLicenseDeclared().toString());
+				AnyLicenseInfo licenseDeclared = pkg.getLicenseDeclared();
+				if (licenseDeclared != null) {
+					declaredLicenseRow.createCell(FIRST_DOC_COL+i).setCellValue(licenseDeclared.toString());
+				}
 				Optional<String> licenseComments = pkg.getLicenseComments();
 				if (licenseComments.isPresent()) {
 					licenseCommentRow.createCell(FIRST_DOC_COL+i).setCellValue(licenseComments.get());

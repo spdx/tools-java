@@ -26,11 +26,12 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.library.model.v2.SpdxCreatorInformation;
 import org.spdx.utility.compare.SpdxCompareException;
 import org.spdx.utility.compare.SpdxComparer;
 
 /**
- * Sheet to hold compare information at the docment level:
+ * Sheet to hold compare information at the document level:
  * 		Created, Data License, Document Comment
  * The first row summarizes which fields are different, the subsequent rows are the
  * specific date from each result
@@ -254,9 +255,12 @@ public class DocumentSheet extends AbstractSheet {
 		// data rows
 		for (int i = 0; i < comparer.getNumSpdxDocs(); i++) {
 			cell = sheet.getRow(getFirstDataRow()+i+1).createCell(LICENSE_LIST_VERSION_COL);
-			Optional<String> licenseListVersion = comparer.getSpdxDoc(i).getCreationInfo().getLicenseListVersion();
-			if (licenseListVersion.isPresent()) {
-				cell.setCellValue(licenseListVersion.get());
+			SpdxCreatorInformation creationInfo = comparer.getSpdxDoc(i).getCreationInfo();
+			if (creationInfo != null) {
+				Optional<String> licenseListVersion = creationInfo.getLicenseListVersion();
+				if (licenseListVersion.isPresent()) {
+					cell.setCellValue(licenseListVersion.get());
+				}
 			}
 		}
 	}
@@ -340,11 +344,13 @@ public class DocumentSheet extends AbstractSheet {
 		// data rows
 		for (int i = 0; i < comparer.getNumSpdxDocs(); i++) {
 			cell = sheet.getRow(getFirstDataRow()+i+1).createCell(CREATOR_COMMENT_COL);
-			Optional<String> creatorComment = comparer.getSpdxDoc(i).getCreationInfo().getComment();
-			if (creatorComment.isPresent()) {
-				cell.setCellValue(creatorComment.get());
+			SpdxCreatorInformation creationInfo = comparer.getSpdxDoc(i).getCreationInfo();
+			if (creationInfo != null) {
+				Optional<String> creatorComment = creationInfo.getComment();
+				if (creatorComment.isPresent()) {
+					cell.setCellValue(creatorComment.get());
+				}
 			}
-			
 		}
 	}
 
@@ -364,7 +370,10 @@ public class DocumentSheet extends AbstractSheet {
 		// data rows
 		for (int i = 0; i < comparer.getNumSpdxDocs(); i++) {
 			cell = sheet.getRow(getFirstDataRow()+i+1).createCell(CREATION_DATE_COL);
-			cell.setCellValue(comparer.getSpdxDoc(i).getCreationInfo().getCreated());
+			SpdxCreatorInformation creationInfo = comparer.getSpdxDoc(i).getCreationInfo();
+			if (creationInfo != null) {
+				cell.setCellValue(creationInfo.getCreated());
+			}
 		}
 	}
 
