@@ -153,8 +153,8 @@ public class PackageSheet extends AbstractSheet {
 			headerCell.setCellValue(docNames.get(i));
 		}
 
-		SpdxPackageComparer[] packagComparers = comparer.getPackageComparers();
-		Arrays.sort(packagComparers, new Comparator<SpdxPackageComparer>() {
+		SpdxPackageComparer[] packageComparers = comparer.getPackageComparers();
+		Arrays.sort(packageComparers, new Comparator<SpdxPackageComparer>() {
 
 			@Override
 			public int compare(SpdxPackageComparer o1, SpdxPackageComparer o2) {
@@ -167,8 +167,8 @@ public class PackageSheet extends AbstractSheet {
 			}
 
 		});
-		for (int i = 0; i < packagComparers.length; i++) {
-			addPackageToSheet(packagComparers[i], comparer.getSpdxDocuments());
+		for (int i = 0; i < packageComparers.length; i++) {
+			addPackageToSheet(packageComparers[i], comparer.getSpdxDocuments());
 		}
 	}
 
@@ -378,7 +378,7 @@ public class PackageSheet extends AbstractSheet {
 				Optional<SpdxPackageVerificationCode> verificationCode = pkg.getPackageVerificationCode();
 				if (verificationCode.isPresent()) {
 					verificationRow.createCell(FIRST_DOC_COL+i).setCellValue(pkg.getPackageVerificationCode().get().getValue());
-					verificationExcludedRow.createCell(FIRST_DOC_COL+i).setCellValue(exludeFilesToString(pkg.getPackageVerificationCode().get().getExcludedFileNames()));
+					verificationExcludedRow.createCell(FIRST_DOC_COL+i).setCellValue(excludeFilesToString(pkg.getPackageVerificationCode().get().getExcludedFileNames()));
 				} else {
 					verificationRow.createCell(FIRST_DOC_COL+i).setCellValue(NO_VALUE);
 					verificationExcludedRow.createCell(FIRST_DOC_COL+i).setCellValue(NO_VALUE);
@@ -448,7 +448,7 @@ public class PackageSheet extends AbstractSheet {
 	 * @param excludedFiles
 	 * @return
 	 */
-	protected String exludeFilesToString(Collection<String> excludedFiles) {
+	protected String excludeFilesToString(Collection<String> excludedFiles) {
 		if (excludedFiles == null || excludedFiles.size() == 0) {
 			return "";
 		}
