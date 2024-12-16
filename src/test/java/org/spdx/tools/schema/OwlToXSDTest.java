@@ -2,7 +2,6 @@ package org.spdx.tools.schema;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -38,8 +37,6 @@ public class OwlToXSDTest extends TestCase {
 		
 		try (StringWriter sw = new StringWriter()) {
 			result.write(sw);
-			String str = sw.toString();
-			int i = 0;
 		}
 	}
 
