@@ -67,7 +67,7 @@ public class PackageSheet extends AbstractSheet {
 	protected static final String CHECKSUM_FIELD_TEXT = "Checksum";
 	protected static final String VERIFICATION_EXCLUDED_FIELD_TEXT = "Verification Excluded";
 	protected static final String VERIFICATION_FIELD_TEXT = "Verification Value";
-	protected static final String DOWNLOAD_FIELD_TEXT = "Dowload Location";
+	protected static final String DOWNLOAD_FIELD_TEXT = "Download Location";
 	protected static final String ORIGINATOR_FIELD_TEXT = "Originator";
 	protected static final String SUPPLIER_FIELD_TEXT = "Supplier";
 	protected static final String FILE_NAME_FIELD_TEXT = "File Name";
