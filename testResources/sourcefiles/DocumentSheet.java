@@ -29,7 +29,7 @@ import org.spdx.utility.compare.SpdxCompareException;
 import org.spdx.utility.compare.SpdxComparer;
 
 /**
- * Sheet to hold compare information at the docment level:
+ * Sheet to hold compare information at the document level:
  * 		Created, Data License, Document Comment
  * The first row summarizes which fields are different, the subsequent rows are the
  * specific date from each result
