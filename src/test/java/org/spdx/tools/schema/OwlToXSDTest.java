@@ -33,7 +33,11 @@ public class OwlToXSDTest extends TestCase {
 			otx = new OwlToXsd(model);
 		}
 		XmlSchema result = otx.convertToXsd();
+
 		assertNotNull(result);
+		assertNotNull(result.getElementByName("Document"));
+		String expectedIRI = "http://spdx.org/rdf/terms";
+		assertEquals(expectedIRI, result.getTargetNamespace());
 	}
 
 }
