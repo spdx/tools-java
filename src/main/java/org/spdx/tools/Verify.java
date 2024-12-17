@@ -94,7 +94,7 @@ public class Verify {
 			System.exit(ERROR_STATUS);
 		}
 		// separate out the warning from errors
-		List<String> warnings = new ArrayList<String>();
+		List<String> warnings = new ArrayList<>();
 		List<String> errors = new ArrayList<String>();
 		for (String verifyMsg : verify) {
 			if (verifyMsg.contains(" is deprecated.")) {
