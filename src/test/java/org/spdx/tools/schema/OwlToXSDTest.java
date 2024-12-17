@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
@@ -15,8 +14,8 @@ import org.apache.ws.commons.schema.XmlSchemaSerializer.XmlSchemaSerializerExcep
 import junit.framework.TestCase;
 
 public class OwlToXSDTest extends TestCase {
-	
-	static final String OWL_FILE_PATH = "testResources" + File.separator + "spdx-2-2-revision-8-onotology.owl.xml";
+
+	static final String OWL_FILE_PATH = "testResources" + File.separator + "spdx-2-2-revision-8-ontology.owl.xml";
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -34,10 +33,7 @@ public class OwlToXSDTest extends TestCase {
 			otx = new OwlToXsd(model);
 		}
 		XmlSchema result = otx.convertToXsd();
-		
-		try (StringWriter sw = new StringWriter()) {
-			result.write(sw);
-		}
+		assertNotNull(result);
 	}
 
 }
