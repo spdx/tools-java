@@ -26,6 +26,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.library.model.v2.SpdxCreatorInformation;
 import org.spdx.utility.compare.SpdxCompareException;
 import org.spdx.utility.compare.SpdxComparer;
 
@@ -90,15 +91,18 @@ public class CreatorSheet extends AbstractSheet {
 		for (int i = 0; i < comparer.getNumSpdxDocs(); i++) {
 			Cell headerCell = header.getCell(i);
 			headerCell.setCellValue(docNames.get(i));
-			String[] creators = comparer.getSpdxDoc(i).getCreationInfo().getCreators().toArray(new String[comparer.getSpdxDoc(i).getCreationInfo().getCreators().size()]);
-			Arrays.sort(creators);
-			for (int j = 0; j < creators.length; j++) {
-				Cell creatorCell = null;
-				while (j+1 > this.getNumDataRows()) {
-					this.addRow();
+			SpdxCreatorInformation creationInfo = comparer.getSpdxDoc(i).getCreationInfo();
+			if (creationInfo != null) {
+				String[] creators = creationInfo.getCreators().toArray(new String[creationInfo.getCreators().size()]);
+				Arrays.sort(creators);
+				for (int j = 0; j < creators.length; j++) {
+					Cell creatorCell = null;
+					while (j+1 > this.getNumDataRows()) {
+						this.addRow();
+					}
+					creatorCell = sheet.getRow(j+1).createCell(i);
+					creatorCell.setCellValue(creators[j]);
 				}
-				creatorCell = sheet.getRow(j+1).createCell(i);
-				creatorCell.setCellValue(creators[j]);
 			}
 		}
 	}

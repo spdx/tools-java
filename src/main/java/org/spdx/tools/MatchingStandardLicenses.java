@@ -53,6 +53,7 @@ public class MatchingStandardLicenses {
 			usage();
 			System.exit(ERROR_STATUS);
 		}
+		@SuppressWarnings("null")
 		File textFile = new File(args[0]);
 
 		if (!textFile.exists()) {

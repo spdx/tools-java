@@ -86,7 +86,6 @@ public class Verify {
 				fileType = SpdxToolsHelper.fileToFileType(new File(args[0]));
 			}
 			verify = verify(args[0], fileType);
-			
 		} catch (SpdxVerificationException e) {
 			System.out.println(e.getMessage());
 			System.exit(ERROR_STATUS);
@@ -97,7 +96,7 @@ public class Verify {
 		// separate out the warning from errors
 		List<String> warnings = new ArrayList<>();
 		List<String> errors = new ArrayList<>();
-		for (String verifyMsg:verify) {
+		for (String verifyMsg : verify) {
 			if (verifyMsg.contains(" is deprecated.")) {
 				warnings.add(verifyMsg);
 			} else {
