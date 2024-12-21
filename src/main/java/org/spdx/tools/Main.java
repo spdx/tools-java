@@ -20,6 +20,7 @@
 package org.spdx.tools;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.spdx.library.SpdxModelFactory;
 
 /**
  * Dispatch individual tools
@@ -37,7 +38,7 @@ public class Main {
 			usage();
 			return;
 		}
-
+		SpdxModelFactory.init();
 		String spdxTool = args[0];
 		args = ArrayUtils.removeElement(args, args[0]);
 		if ("Convert".equals(spdxTool)) {
