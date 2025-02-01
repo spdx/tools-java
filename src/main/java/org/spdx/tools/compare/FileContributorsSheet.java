@@ -16,7 +16,6 @@ import org.spdx.utility.compare.SpdxComparer;
 /**
  * Sheet with results for file AttributionText comparison results
  * @author Gary O'Neall
- *
  */
 public class FileContributorsSheet extends AbstractFileCompareSheet {
 

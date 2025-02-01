@@ -14,7 +14,6 @@ import java.util.Optional;
  *  - File separator character is "/"
  *  - Must begin with "./"
  * @author Gary O'Neall
- *
  */
 public class NormalizedFileNameComparator implements Comparator<Optional<String>>, Serializable {
 
@@ -25,6 +24,7 @@ public class NormalizedFileNameComparator implements Comparator<Optional<String>
 	static final char DOS_SEPARATOR = '\\';
 	static final char UNIX_SEPARATOR = '/';
 	static final String RELATIVE_DIR = "./";
+
 	/* (non-Javadoc)
 	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 	 */

@@ -48,7 +48,6 @@ import org.spdx.utility.compare.SpdxComparer;
  *   - verification: List of any verification errors
  *
  * @author Gary O'Neall
- *
  */
 public class MultiDocumentSpreadsheet {
 

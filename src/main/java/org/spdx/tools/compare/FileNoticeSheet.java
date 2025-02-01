@@ -16,7 +16,6 @@ import org.spdx.utility.compare.SpdxComparer;
 /**
  * Sheet for file notice comparison results
  * @author Gary O'Neall
- *
  */
 public class FileNoticeSheet extends AbstractFileCompareSheet {
 

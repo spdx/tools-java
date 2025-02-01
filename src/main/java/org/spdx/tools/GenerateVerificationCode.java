@@ -25,7 +25,6 @@ import org.spdx.utility.verificationcode.VerificationCodeGenerator;
 /**
  * Generates a verification code for a specific directory
  * @author Gary O'Neall
- *
  */
 public class GenerateVerificationCode {
 

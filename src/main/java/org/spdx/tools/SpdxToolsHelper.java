@@ -55,7 +55,6 @@ import org.spdx.v3jsonldstore.JsonLDStore;
  * Static helper methods for the various tools
  *
  * @author Gary O'Neall
- *
  */
 public class SpdxToolsHelper {
 

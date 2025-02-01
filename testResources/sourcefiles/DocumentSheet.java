@@ -23,7 +23,6 @@ import org.spdx.utility.compare.SpdxComparer;
  * The first row summarizes which fields are different, the subsequent rows are the
  * specific date from each result
  * @author Gary O'Neall
- *
  */
 public class DocumentSheet extends AbstractSheet {
 

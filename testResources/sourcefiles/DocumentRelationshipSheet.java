@@ -23,7 +23,6 @@ import org.spdx.utility.compare.SpdxComparer;
 /**
  * Sheet for document level relationships
  * @author Gary O'Neall
- *
  */
 public class DocumentRelationshipSheet extends AbstractSheet {
 

@@ -26,7 +26,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  * Convert OWL RDF schema to a JSON Context file
  * 
  * @author Gary O'Neall
- *
  */
 public class OwlToJsonContext extends AbstractOwlRdfConverter {
 

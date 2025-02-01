@@ -12,6 +12,5 @@
  * - RDF/OWL in RDF/XML format
  * - JSON Schema Draft 7
  * - JSON LD (Linked Data)
- *
  */
 package org.spdx.tools.schema;

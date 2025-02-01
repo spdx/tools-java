@@ -14,8 +14,8 @@ import org.spdx.utility.compare.SpdxComparer;
 
 
 /**
+ * Sheet with results for file concluded license comparison results
  * @author Source Auditor
- *
  */
 public class FileConcludedSheet extends AbstractFileCompareSheet {
 

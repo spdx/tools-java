@@ -29,7 +29,6 @@ import org.spdx.library.referencetype.ListedReferenceTypes;
 /**
  * Helper class for comparisons
  * @author Gary O'Neall
- *
  */
 public class CompareHelper {
 

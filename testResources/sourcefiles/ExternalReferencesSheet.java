@@ -24,7 +24,6 @@ import org.spdx.utility.compare.SpdxComparer;
 /**
  * Sheet that compares the external document references
  * @author Gary O'Neall
- *
  */
 public class ExternalReferencesSheet extends AbstractSheet {
 

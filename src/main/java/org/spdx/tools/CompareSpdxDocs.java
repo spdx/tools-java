@@ -33,7 +33,6 @@ import org.spdx.utility.compare.SpdxComparer;
  * Document files can be either in RDF/XML  or tag/value format
  *
  * @author Gary O'Neall
- *
  */
 public class CompareSpdxDocs {
 	static final int MIN_ARGS = 2;

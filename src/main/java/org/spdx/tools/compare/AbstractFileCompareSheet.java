@@ -24,7 +24,6 @@ import org.spdx.utility.compare.SpdxComparer;
  * The first column is the file path, second column indicates if all documents are equal,
  * columns 3 through N are for the values of the individual documents
  * @author Gary O'Neall
- *
  */
 public abstract class AbstractFileCompareSheet extends AbstractSheet {
 

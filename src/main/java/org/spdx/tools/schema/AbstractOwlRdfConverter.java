@@ -39,7 +39,6 @@ import org.spdx.library.model.v2.enumerations.SpdxEnumFactoryCompatV2;
  * Abstract class for implementing classes which convert from RDF/XML OWL format to some other format
  * 
  * @author Gary O'Neall
- *
  */
 public class AbstractOwlRdfConverter {
 	
