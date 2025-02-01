@@ -394,7 +394,6 @@ public class DocumentSheet extends AbstractSheet {
 	}
 
 	/**
-	 * @param docNames
 	 * @throws SpdxCompareException
 	 * @throws InvalidSPDXAnalysisException 
 	 */
