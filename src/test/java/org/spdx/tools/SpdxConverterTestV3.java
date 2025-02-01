@@ -1,6 +1,7 @@
 /**
+ * SPDX-FileCopyrightText: Copyright (c) 2024 Source Auditor Inc.
+ * SPDX-FileType: SOURCE
  * SPDX-License-Identifier: Apache-2.0
- * Copyright (c) 2024 Source Auditor Inc.
  */
 package org.spdx.tools;
 
@@ -30,8 +31,9 @@ import org.spdx.utility.compare.SpdxCompareException;
 import junit.framework.TestCase;
 
 /**
- * @author gary
+ * Test SPDX converter v3
  *
+ * @author Gary O'Neall
  */
 public class SpdxConverterTestV3 extends TestCase {
 	
