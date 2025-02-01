@@ -143,7 +143,6 @@ public class SpdxConverter {
 	 * @param toFilePath Path of output file for the conversion
 	 * @param fromFileType Serialization type of the file to convert from
 	 * @param toFileType Serialization type of the file to convert to
-	 * @param excludeLicenseDetails If true, don't copy over properties of the listed licenses
 	 * @throws SpdxConverterException 
 	 */
 	public static void convert(String fromFilePath, String toFilePath, SerFileType fromFileType, 
@@ -293,7 +292,7 @@ public class SpdxConverter {
 		CreationInfo defaultCreationInfo = Spdx2to3Converter.convertCreationInfo(fromDoc.getCreationInfo(),
 				toStore, toUriPrefix);
 		Spdx2to3Converter converter = new Spdx2to3Converter(toStore, copyManager, defaultCreationInfo, 
-				SpdxModelFactory.getLatestSpecVersion(), toUriPrefix);
+				SpdxModelFactory.getLatestSpecVersion(), toUriPrefix, !excludeLicenseDetails);
 		converter.convertAndStore(fromDoc);
 		// Make sure we get all files, packages and snippets - any relationships and annotations will be copied
 		// as properties.  Note that the conversion of the document should already have been copied.

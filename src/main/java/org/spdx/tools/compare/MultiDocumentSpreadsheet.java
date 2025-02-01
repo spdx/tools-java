@@ -427,7 +427,7 @@ public class MultiDocumentSpreadsheet {
 	}
 	
 	/**
-	 * @throws AnalyzeException
+	 * @throws SpreadsheetException
 	 *
 	 */
 	public void close() throws SpreadsheetException {
