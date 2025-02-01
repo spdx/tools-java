@@ -14,7 +14,6 @@ import org.spdx.utility.compare.SpdxComparer;
 /**
  * Sheet comparing file copyrights
  * @author Gary O'Neall
- *
  */
 public class FileCopyrightSheet extends AbstractFileCompareSheet {
 

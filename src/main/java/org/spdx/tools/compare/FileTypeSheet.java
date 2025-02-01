@@ -18,7 +18,6 @@ import org.spdx.utility.compare.SpdxComparer;
 /**
  * Sheet containing File Type
  * @author Gary O'Neall
- *
  */
 public class FileTypeSheet extends AbstractFileCompareSheet {
 

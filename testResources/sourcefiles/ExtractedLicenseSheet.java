@@ -29,7 +29,6 @@ import org.spdx.utility.compare.SpdxComparer;
  * Column 1 contains the extracted text
  * Columns 2 through N contains the license information in the format licenseId [licenseName] {licenceUrls} (licenseComment)
  * @author Gary O'Neall
- *
  */
 public class ExtractedLicenseSheet extends AbstractSheet {
 

@@ -23,7 +23,6 @@ import org.spdx.utility.compare.SpdxComparer;
 /**
  * Sheet for document level annotations
  * @author Gary O'Neall
- *
  */
 public class DocumentAnnotationSheet extends AbstractSheet {
 

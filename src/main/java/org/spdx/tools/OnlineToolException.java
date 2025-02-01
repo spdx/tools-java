@@ -9,24 +9,22 @@ package org.spdx.tools;
  * Default Exception thrown to the Online Tool
  *
  * @author Rohit Lodha
- *
  */
-
 public class OnlineToolException extends Exception {
 
 	/**
-	 * 
+	 * Serial version UID
 	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 *
+	 * Default constructor for OnlineToolException.
 	 */
 	public OnlineToolException() {
 	}
 
 	/**
-	 *
+	 * Constructs an OnlineToolException with the specified message.
 	 * @param arg0
 	 */
 	public OnlineToolException(String arg0) {
@@ -34,7 +32,7 @@ public class OnlineToolException extends Exception {
 	}
 
 	/**
-	 *
+	 * Constructs an OnlineToolException with the specified throwable.
 	 * @param arg0
 	 */
 	public OnlineToolException(Throwable arg0) {
@@ -42,7 +40,7 @@ public class OnlineToolException extends Exception {
 	}
 
 	/**
-	 *
+	 * Constructs an OnlineToolException with the specified message and throwable.
 	 * @param arg0
 	 * @param arg1
 	 */
@@ -51,7 +49,7 @@ public class OnlineToolException extends Exception {
 	}
 
 	/**
-	 *
+	 * Constructs an OnlineToolException with the specified message, throwable, and booleans.
 	 * @param arg0
 	 * @param arg1
 	 * @param arg2

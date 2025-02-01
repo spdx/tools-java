@@ -48,7 +48,6 @@ import org.w3c.dom.Text;
  * 
  * 
  * @author Gary O'Neall
- *
  */
 public class OwlToXsd extends AbstractOwlRdfConverter {
 	

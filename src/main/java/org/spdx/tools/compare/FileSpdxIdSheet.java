@@ -11,6 +11,7 @@ import org.spdx.utility.compare.SpdxCompareException;
 import org.spdx.utility.compare.SpdxComparer;
 
 /**
+ * Sheet comparing file SPDX IDs
  * @author Gary O'Neall
  */
 public class FileSpdxIdSheet extends AbstractFileCompareSheet {

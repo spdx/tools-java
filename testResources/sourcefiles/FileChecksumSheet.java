@@ -17,7 +17,6 @@ import org.spdx.utility.compare.SpdxComparer;
 /**
  * Sheet of comparison results for file checksums
  * @author Gary O'Neall
- *
  */
 public class FileChecksumSheet extends AbstractFileCompareSheet {
 

@@ -14,7 +14,6 @@ import org.spdx.utility.compare.SpdxComparer;
 /**
  * Sheet comparing file annotations
  * @author Gary O'Neall
- *
  */
 public class FileAnnotationSheet extends AbstractFileCompareSheet {
 

@@ -34,7 +34,6 @@ import org.spdx.storage.simple.InMemSpdxStore;
  * This example depends on the Spdx-Java-Library and the spdx-java-jackson store libraries
  * 
  * @author Gary O'Neall
- *
  */
 public class ExistingSpdxDocumentV2Compat {
 
@@ -53,7 +52,7 @@ public class ExistingSpdxDocumentV2Compat {
 		}
 		
 		/*
-		 * First thing we need is a store deseralize the SPDX document into.
+		 * First thing we need is a store deserialize the SPDX document into.
 		 * We'll chose the MultiFormatStore since it supports serializing to JSON files
 		 * It takes an underlying model store as the first parameter - the inMemSpdxStore is a simple
 		 * built in store included in the Spdx-Java-Library.  The second parameter is the format
@@ -75,7 +74,7 @@ public class ExistingSpdxDocumentV2Compat {
 		 * license information over to the document model store
 		 */
 		ModelCopyManager copyManager = new ModelCopyManager();
-		// Let's deseralize the document
+		// Let's deserialize the document
 		try (InputStream stream = new FileInputStream(inputFile)) {
 			modelStore.deSerialize(stream, false);
 			

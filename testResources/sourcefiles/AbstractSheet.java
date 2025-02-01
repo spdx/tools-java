@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Abstract class representing a workbook sheet used in storing structured data
  * @author Gary O'Neall
- *
  */
 public abstract class AbstractSheet {
 	

@@ -36,7 +36,6 @@ import org.spdx.storage.simple.InMemSpdxStore;
  * This example depends on the Spdx-Java-Library and the spdx-java-jackson store libraries
  * 
  * @author Gary O'Neall
- *
  */
 public class SimpleSpdxDocumentV2Compat {
 

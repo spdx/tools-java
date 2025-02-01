@@ -14,7 +14,6 @@ import org.spdx.utility.compare.SpdxComparer;
 /**
  * Sheet comparing file relationships
  * @author Gary O'Neall
- *
  */
 public class FileRelationshipSheet extends AbstractFileCompareSheet {
 

@@ -19,7 +19,6 @@ import org.spdx.utility.compare.SpdxComparer;
 /**
  * Sheet of the comparison results for the file seen licenses
  * @author Gary O'Neall
- *
  */
 public class FileLicenseInfoSheet extends AbstractFileCompareSheet {
 

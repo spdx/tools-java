@@ -14,9 +14,8 @@ import org.spdx.utility.compare.SpdxCompareException;
 import org.spdx.utility.compare.SpdxComparer;
 
 /**
- * Sheet continaing results for file comment comparison
+ * Sheet containing results for file comment comparison
  * @author Gary O'Neall
- *
  */
 public class FileCommentSheet extends AbstractFileCompareSheet {
 

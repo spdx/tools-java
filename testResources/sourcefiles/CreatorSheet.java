@@ -23,7 +23,6 @@ import org.spdx.utility.compare.SpdxComparer;
  * Column 1 describes if the creator is the same or different
  * Columns 2 through N are for creators in each of the documents
  * @author Gary O'Neall
- *
  */
 public class CreatorSheet extends AbstractSheet {
 	private static final int COL_WIDTH = 50;
