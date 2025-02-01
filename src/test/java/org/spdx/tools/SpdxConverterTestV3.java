@@ -13,6 +13,7 @@ import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.junit.After;
 import org.junit.Before;
@@ -21,6 +22,7 @@ import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.library.ModelCopyManager;
 import org.spdx.library.SpdxModelFactory;
 import org.spdx.library.model.v3_0_1.core.Element;
+import org.spdx.library.model.v3_0_1.core.NamespaceMap;
 import org.spdx.library.model.v3_0_1.core.SpdxDocument;
 import org.spdx.library.model.v3_0_1.software.SpdxFile;
 import org.spdx.library.model.v3_0_1.software.SpdxPackage;
@@ -108,6 +110,12 @@ public class SpdxConverterTestV3 extends TestCase {
 		
 		assertEquals(sourcePackage.getName().get(), resultPackage.getName().get());
 		assertEquals(sourceFile.getName().get(), resultFile.getName().get());
+
+		assertEquals(1, resultDoc.getNamespaceMaps().size());
+		Optional<NamespaceMap> map = resultDoc.getNamespaceMaps().stream().findFirst();
+		assertTrue(map.isPresent());
+		assertEquals("http://spdx.org/spdxdocs/spdx-tools-v1.2-3F2504E0-4F89-41D3-9A0C-0305E82C3301#", map.get().getNamespace());
+		assertEquals("DocumentRef-spdx-tool-1.2", map.get().getPrefix());
 		// TODO: create a more extensive set of checks
 	}
 

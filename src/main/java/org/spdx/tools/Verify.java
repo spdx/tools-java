@@ -116,10 +116,9 @@ public class Verify {
 	 * @param filePath File path to the SPDX file to be verified
 	 * @param fileType 
 	 * @return A list of verification errors - if empty, the SPDX file is valid
-	 * @throws InvalidFileNameException 
-	 * @throws IOException 
-	 * @throws SpdxVerificationException 
-	 * @throws Errors where the SPDX file can not be parsed or the filename is invalid
+	 * @throws InvalidFileNameException on invalid file name or file not found
+	 * @throws IOException on IO error
+	 * @throws SpdxVerificationException where the SPDX file can not be parsed or the filename is invalid
 	 */
 	public static List<String> verify(String filePath, SerFileType fileType) throws SpdxVerificationException {
 		Objects.requireNonNull(filePath);

@@ -1,0 +1,122 @@
+{
+  "@context": "https://spdx.org/rdf/3.0.1/spdx-context.jsonld",
+  "@graph": [
+    {
+      "type": "Organization",
+      "spdxId": "SPDXRef-MyOrganization:-73f9a129-5eea-4de8-b38b-96832cc72d57",
+      "name": "MyOrganization",
+      "creationInfo": "_:creationinfo"
+    },
+    {
+      "type": "CreationInfo",
+      "@id": "_:creationinfo",
+      "specVersion": "3.0.1",
+      "createdBy": [
+        "SPDXRef-MyOrganization:-73f9a129-5eea-4de8-b38b-96832cc72d57"
+      ],
+      "created": "2025-01-07T07:01:21Z"
+    },
+    {
+      "type": "SpdxDocument",
+      "spdxId": "SPDXRef-Document:-8b2134c3-1472-48c3-bbd9-53cdef129f09",
+      "creationInfo": "_:creationinfo",
+      "dataLicense": "SPDXRef-License:-DataLicenseCC1.0",
+      "profileConformance": [
+        "core",
+        "software",
+        "security",
+        "simpleLicensing"
+      ],
+      "rootElement": [
+        "BOM:ROOT"
+      ]
+    },
+	{
+      "type": "simplelicensing_LicenseExpression",
+      "spdxId": "SPDXRef-License:-DataLicenseCC1.0",
+      "name": "Data License CC 1.0",
+      "description": "Refer to this element if another element's data license is CC 1.0",
+      "creationInfo": "_:creationinfo",
+      "simplelicensing_licenseExpression": "CC-BY-1.0"
+    },
+    {
+      "type": "simplelicensing_LicenseExpression",
+      "spdxId": "SPDXRef-License:-NoAssertion",
+      "name": "NoAssertion",
+      "description": "Refer to this element if another element's license can't be asserted.",
+      "creationInfo": "_:creationinfo",
+      "simplelicensing_licenseExpression": "NOASSERTION"
+    },
+	{
+	  "type": "software_Package",
+      "spdxId": "SPDX-ID:-73fde02b-0fda-50b2-ad2e-a219f85c7ce4",
+      "creationInfo": "_:creationinfo",
+      "name": "An example software",
+      "originatedBy": [
+        "Organization: An example organization"
+      ],
+      "software_copyrightText": "NOASSERTION",
+      "software_primaryPurpose": "application",
+      "description": "This is an example software"
+	},
+	{
+      "type": "security_Vulnerability",
+      "spdxId": "SPDXRef-Vulnerability:-CVE-2016-4285",
+      "name": "CVE-2016-4285",
+      "creationInfo": "_:creationinfo",
+      "externalIdentifier": [
+        {
+          "type": "ExternalIdentifier",
+          "externalIdentifierType": "cve",
+          "identifier": "CVE-2016-4285",
+          "identifierLocator": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2016-4285"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "security_CvssV3VulnAssessmentRelationship",
+      "spdxId": "SPDXRef-CVSSAssessment:-CVE-2016-4285",
+      "creationInfo": "_:creationinfo",
+      "relationshipType": "hasAssessmentFor",
+      "security_score": "8.8",
+      "security_severity": "high",
+      "security_vectorString": "CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+      "from": "SPDXRef-Vulnerability:-CVE-2016-4285",
+      "to": [
+        "SPDX-ID:-73fde02b-0fda-50b2-ad2e-a219f85c7ce4"
+      ]
+    },
+    {
+      "type": "security_VexAffectedVulnAssessmentRelationship",
+      "spdxId": "SPDXRef-VexAffectedRelationship:-CVE-2016-4285",
+      "creationInfo": "_:creationinfo",
+      "relationshipType": "affects",
+      "security_actionStatement": "no_assertion",
+      "from": "SPDXRef-Vulnerability:-CVE-2016-4285",
+      "to": [
+        "SPDX-ID:-73fde02b-0fda-50b2-ad2e-a219f85c7ce4"
+      ]
+    },
+	{
+      "type": "software_Sbom",
+      "spdxId": "BOM:ROOT",
+      "creationInfo": "_:creationinfo",
+      "software_sbomType": [
+        "analyzed"
+      ],
+      "rootElement": [
+        "SPDX-ID:-73fde02b-0fda-50b2-ad2e-a219f85c7ce4"
+      ],
+      "element": [
+        "SPDXRef-License:-DataLicenseCC1.0",
+        "SPDXRef-License:-NoAssertion",
+		"SPDX-ID:-73fde02b-0fda-50b2-ad2e-a219f85c7ce4",
+		"SPDXRef-Vulnerability:-CVE-2016-4285",
+		"SPDXRef-CVSSAssessment:-CVE-2016-4285",
+		"SPDXRef-VexAffectedRelationship:-CVE-2016-4285"
+      ]
+    }
+  ]
+}

@@ -35,6 +35,7 @@ public class VerifyTest extends TestCase {
 	static final String TEST_YAML_FILE_PATH = TEST_DIR + File.separator + "SPDXYAMLExample-2.3.spdx.yaml";
 	static final String TEST_WARNING_FILE_PATH = TEST_DIR + File.separator + "SPDXTagExample-v2.2-warning.spdx";
     static final String BAD_JSON_FILE_PATH = TEST_DIR + File.separator + "BadJSON.spdx.json";
+	static final String DOUBLE_JSON_LD_FILE_PATH = TEST_DIR + File.separator + "double.jsonld";
 	
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -49,7 +50,7 @@ public class VerifyTest extends TestCase {
 
 	public void testUpsupportedVersionFields() throws SpdxVerificationException {
 		List<String> result = Verify.verify(TEST_V23_FIELDS_IN_V22_FILE, SerFileType.JSON);
-		assertTrue(result.size() > 0);
+        assertFalse(result.isEmpty());
 	}
 	
 	public void testVerifyTagFile() throws SpdxVerificationException {
@@ -77,13 +78,13 @@ public class VerifyTest extends TestCase {
 	
 	public void testVerifyWarning() throws SpdxVerificationException {
 		List<String> result = Verify.verify(TEST_WARNING_FILE_PATH, SerFileType.TAG);
-		assertTrue(result.size() > 0);
+        assertFalse(result.isEmpty());
 		assertTrue(result.get(0).contains("deprecated"));
 	}
 	
 	public void testVerifyBadJSON() throws SpdxVerificationException {
 		List<String> result = Verify.verify(BAD_JSON_FILE_PATH, SerFileType.JSON);
-		assertTrue(result.size() == 4);
+        assertEquals(4, result.size());
 	}
 	
 	public void testVerifyJsonLD() throws SpdxVerificationException {
@@ -94,10 +95,15 @@ public class VerifyTest extends TestCase {
 	// Test specific spec versions for the JSON format
 	public void testVerifyJSONVersion() throws SpdxVerificationException {
 		List<String> result = Verify.verify(JSON_V2_2_FILE_PATH, SerFileType.JSON);
-		assertTrue(result.size() == 0);
+        assertEquals(0, result.size());
 		result = Verify.verify(JSON_V2_3_FILE_PATH, SerFileType.JSON);
-		assertTrue(result.size() == 0);
+        assertEquals(0, result.size());
 		result = Verify.verify(JSON_BAD_VERSION_FILE_PATH, SerFileType.JSON); // a 2.3 version syntax with a 2.2 specversion
-		assertTrue(result.size() > 0);
+        assertFalse(result.isEmpty());
+	}
+
+	public void testVerifyDouble() throws SpdxVerificationException {
+		List<String> result = Verify.verify(DOUBLE_JSON_LD_FILE_PATH, SerFileType.JSONLD);
+        assertEquals(0, result.size());
 	}
 }
