@@ -8,3 +8,4 @@
 - [ ] Release artifacts to Maven Central
 - [ ] Create a Git release including release notes
 - [ ] Zip up the files from the Maven archive and add them to the release
+- [ ] Update README to refer to the new release in the Syntax section
