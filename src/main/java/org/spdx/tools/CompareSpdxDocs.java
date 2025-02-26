@@ -78,6 +78,7 @@ public class CompareSpdxDocs {
 	}
 
 	/**
+	 * Invoke SPDX document processing functions from the online tool
 	 *
 	 * @param args args[0] is the output Excel file name, all other args are SPDX document file names
 	 * @throws OnlineToolException Exception caught by JPype and displayed to the user
