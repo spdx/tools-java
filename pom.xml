@@ -7,6 +7,7 @@
 	<packaging>jar</packaging>
 	
 	<name>tools-java</name>
+	<description>SPDX Command Line Tools using the Spdx-Java-Library</description>
 	<url>https://spdx.dev/</url>
 	<licenses>
 		<license>
@@ -38,7 +39,6 @@
 		<system>Github</system>
 		<url>https://github.com/spdx/tools-java/issues</url>
 	</issueManagement>
-	<description>SPDX Command Line Tools using the Spdx-Java-Library</description>
 	<ciManagement>
 		<system>Github Actions</system>
 		<url>https://github.com/spdx/tools-java/actions</url>
@@ -50,6 +50,15 @@
         <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
       </repository>
 	</distributionManagement>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>net.jimblackler.jsonschemafriend</groupId>
+				<artifactId>core</artifactId>
+				<version>0.12.3</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
     <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	  <sonar.host.url>https://sonarcloud.io</sonar.host.url>
