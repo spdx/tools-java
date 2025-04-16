@@ -12,20 +12,17 @@ import org.apache.commons.io.IOUtils;
 
 import junit.framework.TestCase;
 
-public class SchemaVersionTest extends TestCase {
+public class LatestSchemaVersionTest extends TestCase {
 
     private String VERSION_REGEX = "spdx-schema-v(\\d+\\.\\d+(\\.\\d+)?)\\.json";
 
     public void testLatestSpdxSchemaVersionIsUpToDate() throws IOException {
         // Step 1: Find the latest JSON schema file in the resources directory
         Path resourcesDir = Paths.get("resources");
-
-
         Optional<Path> latestSchemaFile = Files.list(resourcesDir)
                 .filter(path -> path.getFileName().toString().matches(VERSION_REGEX))
                 .max(Comparator.comparing(path -> parseVersion(path.getFileName().toString()),
                         versionComparator));
-
         assertTrue("No SPDX schema file found in resources directory.",
                 latestSchemaFile.isPresent());
 

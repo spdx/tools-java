@@ -100,13 +100,13 @@
             ]
         },
         "prop_ai_EnergyConsumption_ai_finetuningEnergyConsumption": {
-            "$ref": "#/$defs/ai_EnergyConsumptionDescription_derived"
+                "$ref": "#/$defs/ai_EnergyConsumptionDescription_derived"
         },
         "prop_ai_EnergyConsumption_ai_inferenceEnergyConsumption": {
-            "$ref": "#/$defs/ai_EnergyConsumptionDescription_derived"
+                "$ref": "#/$defs/ai_EnergyConsumptionDescription_derived"
         },
         "prop_ai_EnergyConsumption_ai_trainingEnergyConsumption": {
-            "$ref": "#/$defs/ai_EnergyConsumptionDescription_derived"
+                "$ref": "#/$defs/ai_EnergyConsumptionDescription_derived"
         },
         "ai_EnergyConsumptionDescription": {
             "allOf": [
@@ -157,22 +157,22 @@
             ]
         },
         "prop_ai_EnergyConsumptionDescription_ai_energyQuantity": {
-            "oneOf": [
-                {
-                    "type": "number"
-                },
-                {
-                    "type": "string",
-                    "pattern": "^-?[0-9]+(\\.[0-9]*)?$"
-                }
-            ]
+                    "oneOf": [
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "string",
+                            "pattern": "^-?[0-9]+(\\.[0-9]*)?$"
+                        }
+                    ]
         },
         "prop_ai_EnergyConsumptionDescription_ai_energyUnit": {
-            "enum": [
-                "kilowattHour",
-                "megajoule",
-                "other"
-            ]
+                "enum": [
+                    "kilowattHour",
+                    "megajoule",
+                    "other"
+                ]
         },
         "ai_EnergyUnitType": {
             "allOf": [
@@ -371,28 +371,28 @@
             ]
         },
         "prop_CreationInfo_comment": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_CreationInfo_created": {
-            "type": "string",
-            "allOf": [
-                {
-                    "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
-                },
-                {
-                    "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
-                }
-            ]
+                    "type": "string",
+                    "allOf": [
+                        {
+                            "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
+                        },
+                        {
+                            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
+                        }
+                    ]
         },
         "prop_CreationInfo_createdBy": {
-            "$ref": "#/$defs/Agent_derived"
+                "$ref": "#/$defs/Agent_derived"
         },
         "prop_CreationInfo_createdUsing": {
-            "$ref": "#/$defs/Tool_derived"
+                "$ref": "#/$defs/Tool_derived"
         },
         "prop_CreationInfo_specVersion": {
-            "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
-            "type": "string"
+                    "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+                    "type": "string"
         },
         "DictionaryEntry": {
             "allOf": [
@@ -442,10 +442,10 @@
             ]
         },
         "prop_DictionaryEntry_key": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_DictionaryEntry_value": {
-            "type": "string"
+                    "type": "string"
         },
         "Element_derived": {
             "anyOf": [
@@ -573,31 +573,31 @@
             ]
         },
         "prop_Element_comment": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_Element_creationInfo": {
-            "$ref": "#/$defs/CreationInfo_derived"
+                "$ref": "#/$defs/CreationInfo_derived"
         },
         "prop_Element_description": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_Element_extension": {
-            "$ref": "#/$defs/extension_Extension_derived"
+                "$ref": "#/$defs/extension_Extension_derived"
         },
         "prop_Element_externalIdentifier": {
-            "$ref": "#/$defs/ExternalIdentifier_derived"
+                "$ref": "#/$defs/ExternalIdentifier_derived"
         },
         "prop_Element_externalRef": {
-            "$ref": "#/$defs/ExternalRef_derived"
+                "$ref": "#/$defs/ExternalRef_derived"
         },
         "prop_Element_name": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_Element_summary": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_Element_verifiedUsing": {
-            "$ref": "#/$defs/IntegrityMethod_derived"
+                "$ref": "#/$defs/IntegrityMethod_derived"
         },
         "ElementCollection_derived": {
             "anyOf": [
@@ -655,24 +655,24 @@
             ]
         },
         "prop_ElementCollection_element": {
-            "$ref": "#/$defs/Element_derived"
+                "$ref": "#/$defs/Element_derived"
         },
         "prop_ElementCollection_profileConformance": {
-            "enum": [
-                "ai",
-                "build",
-                "core",
-                "dataset",
-                "expandedLicensing",
-                "extension",
-                "lite",
-                "security",
-                "simpleLicensing",
-                "software"
-            ]
+                "enum": [
+                    "ai",
+                    "build",
+                    "core",
+                    "dataset",
+                    "expandedLicensing",
+                    "extension",
+                    "lite",
+                    "security",
+                    "simpleLicensing",
+                    "software"
+                ]
         },
         "prop_ElementCollection_rootElement": {
-            "$ref": "#/$defs/Element_derived"
+                "$ref": "#/$defs/Element_derived"
         },
         "ExternalIdentifier": {
             "allOf": [
@@ -739,31 +739,31 @@
             ]
         },
         "prop_ExternalIdentifier_comment": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_ExternalIdentifier_externalIdentifierType": {
-            "enum": [
-                "cpe22",
-                "cpe23",
-                "cve",
-                "email",
-                "gitoid",
-                "other",
-                "packageUrl",
-                "securityOther",
-                "swhid",
-                "swid",
-                "urlScheme"
-            ]
+                "enum": [
+                    "cpe22",
+                    "cpe23",
+                    "cve",
+                    "email",
+                    "gitoid",
+                    "other",
+                    "packageUrl",
+                    "securityOther",
+                    "swhid",
+                    "swid",
+                    "urlScheme"
+                ]
         },
         "prop_ExternalIdentifier_identifier": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_ExternalIdentifier_identifierLocator": {
-            "$ref": "#/$defs/anyURI"
+                    "$ref": "#/$defs/anyURI"
         },
         "prop_ExternalIdentifier_issuingAuthority": {
-            "type": "string"
+                    "type": "string"
         },
         "ExternalIdentifierType": {
             "allOf": [
@@ -875,16 +875,16 @@
             ]
         },
         "prop_ExternalMap_definingArtifact": {
-            "$ref": "#/$defs/Artifact_derived"
+                "$ref": "#/$defs/Artifact_derived"
         },
         "prop_ExternalMap_externalSpdxId": {
-            "$ref": "#/$defs/anyURI"
+                    "$ref": "#/$defs/anyURI"
         },
         "prop_ExternalMap_locationHint": {
-            "$ref": "#/$defs/anyURI"
+                    "$ref": "#/$defs/anyURI"
         },
         "prop_ExternalMap_verifiedUsing": {
-            "$ref": "#/$defs/IntegrityMethod_derived"
+                "$ref": "#/$defs/IntegrityMethod_derived"
         },
         "ExternalRef": {
             "allOf": [
@@ -944,64 +944,64 @@
             ]
         },
         "prop_ExternalRef_comment": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_ExternalRef_contentType": {
-            "pattern": "^[^\\/]+\\/[^\\/]+$",
-            "type": "string"
+                    "pattern": "^[^\\/]+\\/[^\\/]+$",
+                    "type": "string"
         },
         "prop_ExternalRef_externalRefType": {
-            "enum": [
-                "altDownloadLocation",
-                "altWebPage",
-                "binaryArtifact",
-                "bower",
-                "buildMeta",
-                "buildSystem",
-                "certificationReport",
-                "chat",
-                "componentAnalysisReport",
-                "cwe",
-                "documentation",
-                "dynamicAnalysisReport",
-                "eolNotice",
-                "exportControlAssessment",
-                "funding",
-                "issueTracker",
-                "license",
-                "mailingList",
-                "mavenCentral",
-                "metrics",
-                "npm",
-                "nuget",
-                "other",
-                "privacyAssessment",
-                "productMetadata",
-                "purchaseOrder",
-                "qualityAssessmentReport",
-                "releaseHistory",
-                "releaseNotes",
-                "riskAssessment",
-                "runtimeAnalysisReport",
-                "secureSoftwareAttestation",
-                "securityAdversaryModel",
-                "securityAdvisory",
-                "securityFix",
-                "securityOther",
-                "securityPenTestReport",
-                "securityPolicy",
-                "securityThreatModel",
-                "socialMedia",
-                "sourceArtifact",
-                "staticAnalysisReport",
-                "support",
-                "vcs",
-                "vulnerabilityDisclosureReport",
-                "vulnerabilityExploitabilityAssessment"
-            ]
+                "enum": [
+                    "altDownloadLocation",
+                    "altWebPage",
+                    "binaryArtifact",
+                    "bower",
+                    "buildMeta",
+                    "buildSystem",
+                    "certificationReport",
+                    "chat",
+                    "componentAnalysisReport",
+                    "cwe",
+                    "documentation",
+                    "dynamicAnalysisReport",
+                    "eolNotice",
+                    "exportControlAssessment",
+                    "funding",
+                    "issueTracker",
+                    "license",
+                    "mailingList",
+                    "mavenCentral",
+                    "metrics",
+                    "npm",
+                    "nuget",
+                    "other",
+                    "privacyAssessment",
+                    "productMetadata",
+                    "purchaseOrder",
+                    "qualityAssessmentReport",
+                    "releaseHistory",
+                    "releaseNotes",
+                    "riskAssessment",
+                    "runtimeAnalysisReport",
+                    "secureSoftwareAttestation",
+                    "securityAdversaryModel",
+                    "securityAdvisory",
+                    "securityFix",
+                    "securityOther",
+                    "securityPenTestReport",
+                    "securityPolicy",
+                    "securityThreatModel",
+                    "socialMedia",
+                    "sourceArtifact",
+                    "staticAnalysisReport",
+                    "support",
+                    "vcs",
+                    "vulnerabilityDisclosureReport",
+                    "vulnerabilityExploitabilityAssessment"
+                ]
         },
         "prop_ExternalRef_locator": {
-            "type": "string"
+                    "type": "string"
         },
         "ExternalRefType": {
             "allOf": [
@@ -1216,7 +1216,7 @@
             ]
         },
         "prop_IntegrityMethod_comment": {
-            "type": "string"
+                    "type": "string"
         },
         "LifecycleScopeType": {
             "allOf": [
@@ -1311,10 +1311,10 @@
             ]
         },
         "prop_NamespaceMap_namespace": {
-            "$ref": "#/$defs/anyURI"
+                    "$ref": "#/$defs/anyURI"
         },
         "prop_NamespaceMap_prefix": {
-            "type": "string"
+                    "type": "string"
         },
         "PackageVerificationCode": {
             "allOf": [
@@ -1375,36 +1375,36 @@
             ]
         },
         "prop_PackageVerificationCode_algorithm": {
-            "enum": [
-                "adler32",
-                "blake2b256",
-                "blake2b384",
-                "blake2b512",
-                "blake3",
-                "crystalsDilithium",
-                "crystalsKyber",
-                "falcon",
-                "md2",
-                "md4",
-                "md5",
-                "md6",
-                "other",
-                "sha1",
-                "sha224",
-                "sha256",
-                "sha384",
-                "sha3_224",
-                "sha3_256",
-                "sha3_384",
-                "sha3_512",
-                "sha512"
-            ]
+                "enum": [
+                    "adler32",
+                    "blake2b256",
+                    "blake2b384",
+                    "blake2b512",
+                    "blake3",
+                    "crystalsDilithium",
+                    "crystalsKyber",
+                    "falcon",
+                    "md2",
+                    "md4",
+                    "md5",
+                    "md6",
+                    "other",
+                    "sha1",
+                    "sha224",
+                    "sha256",
+                    "sha384",
+                    "sha3_224",
+                    "sha3_256",
+                    "sha3_384",
+                    "sha3_512",
+                    "sha512"
+                ]
         },
         "prop_PackageVerificationCode_hashValue": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_PackageVerificationCode_packageVerificationCodeExcludedFile": {
-            "type": "string"
+                    "type": "string"
         },
         "PositiveIntegerRange": {
             "allOf": [
@@ -1455,12 +1455,12 @@
             ]
         },
         "prop_PositiveIntegerRange_beginIntegerRange": {
-            "type": "integer",
-            "minimum": 1
+                    "type": "integer",
+                    "minimum": 1
         },
         "prop_PositiveIntegerRange_endIntegerRange": {
-            "type": "integer",
-            "minimum": 1
+                    "type": "integer",
+                    "minimum": 1
         },
         "PresenceType": {
             "allOf": [
@@ -1633,102 +1633,102 @@
             ]
         },
         "prop_Relationship_completeness": {
-            "enum": [
-                "complete",
-                "incomplete",
-                "noAssertion"
-            ]
+                "enum": [
+                    "complete",
+                    "incomplete",
+                    "noAssertion"
+                ]
         },
         "prop_Relationship_endTime": {
-            "type": "string",
-            "allOf": [
-                {
-                    "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
-                },
-                {
-                    "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
-                }
-            ]
+                    "type": "string",
+                    "allOf": [
+                        {
+                            "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
+                        },
+                        {
+                            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
+                        }
+                    ]
         },
         "prop_Relationship_from_": {
-            "$ref": "#/$defs/Element_derived"
+                "$ref": "#/$defs/Element_derived"
         },
         "prop_Relationship_relationshipType": {
-            "enum": [
-                "affects",
-                "amendedBy",
-                "ancestorOf",
-                "availableFrom",
-                "configures",
-                "contains",
-                "coordinatedBy",
-                "copiedTo",
-                "delegatedTo",
-                "dependsOn",
-                "descendantOf",
-                "describes",
-                "doesNotAffect",
-                "expandsTo",
-                "exploitCreatedBy",
-                "fixedBy",
-                "fixedIn",
-                "foundBy",
-                "generates",
-                "hasAddedFile",
-                "hasAssessmentFor",
-                "hasAssociatedVulnerability",
-                "hasConcludedLicense",
-                "hasDataFile",
-                "hasDeclaredLicense",
-                "hasDeletedFile",
-                "hasDependencyManifest",
-                "hasDistributionArtifact",
-                "hasDocumentation",
-                "hasDynamicLink",
-                "hasEvidence",
-                "hasExample",
-                "hasHost",
-                "hasInput",
-                "hasMetadata",
-                "hasOptionalComponent",
-                "hasOptionalDependency",
-                "hasOutput",
-                "hasPrerequisite",
-                "hasProvidedDependency",
-                "hasRequirement",
-                "hasSpecification",
-                "hasStaticLink",
-                "hasTest",
-                "hasTestCase",
-                "hasVariant",
-                "invokedBy",
-                "modifiedBy",
-                "other",
-                "packagedBy",
-                "patchedBy",
-                "publishedBy",
-                "reportedBy",
-                "republishedBy",
-                "serializedInArtifact",
-                "testedOn",
-                "trainedOn",
-                "underInvestigationFor",
-                "usesTool"
-            ]
+                "enum": [
+                    "affects",
+                    "amendedBy",
+                    "ancestorOf",
+                    "availableFrom",
+                    "configures",
+                    "contains",
+                    "coordinatedBy",
+                    "copiedTo",
+                    "delegatedTo",
+                    "dependsOn",
+                    "descendantOf",
+                    "describes",
+                    "doesNotAffect",
+                    "expandsTo",
+                    "exploitCreatedBy",
+                    "fixedBy",
+                    "fixedIn",
+                    "foundBy",
+                    "generates",
+                    "hasAddedFile",
+                    "hasAssessmentFor",
+                    "hasAssociatedVulnerability",
+                    "hasConcludedLicense",
+                    "hasDataFile",
+                    "hasDeclaredLicense",
+                    "hasDeletedFile",
+                    "hasDependencyManifest",
+                    "hasDistributionArtifact",
+                    "hasDocumentation",
+                    "hasDynamicLink",
+                    "hasEvidence",
+                    "hasExample",
+                    "hasHost",
+                    "hasInput",
+                    "hasMetadata",
+                    "hasOptionalComponent",
+                    "hasOptionalDependency",
+                    "hasOutput",
+                    "hasPrerequisite",
+                    "hasProvidedDependency",
+                    "hasRequirement",
+                    "hasSpecification",
+                    "hasStaticLink",
+                    "hasTest",
+                    "hasTestCase",
+                    "hasVariant",
+                    "invokedBy",
+                    "modifiedBy",
+                    "other",
+                    "packagedBy",
+                    "patchedBy",
+                    "publishedBy",
+                    "reportedBy",
+                    "republishedBy",
+                    "serializedInArtifact",
+                    "testedOn",
+                    "trainedOn",
+                    "underInvestigationFor",
+                    "usesTool"
+                ]
         },
         "prop_Relationship_startTime": {
-            "type": "string",
-            "allOf": [
-                {
-                    "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
-                },
-                {
-                    "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
-                }
-            ]
+                    "type": "string",
+                    "allOf": [
+                        {
+                            "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
+                        },
+                        {
+                            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
+                        }
+                    ]
         },
         "prop_Relationship_to": {
-            "$ref": "#/$defs/Element_derived"
+                "$ref": "#/$defs/Element_derived"
         },
         "RelationshipCompleteness": {
             "allOf": [
@@ -1931,13 +1931,13 @@
             ]
         },
         "prop_SpdxDocument_dataLicense": {
-            "$ref": "#/$defs/simplelicensing_AnyLicenseInfo_derived"
+                "$ref": "#/$defs/simplelicensing_AnyLicenseInfo_derived"
         },
         "prop_SpdxDocument_import_": {
-            "$ref": "#/$defs/ExternalMap_derived"
+                "$ref": "#/$defs/ExternalMap_derived"
         },
         "prop_SpdxDocument_namespaceMap": {
-            "$ref": "#/$defs/NamespaceMap_derived"
+                "$ref": "#/$defs/NamespaceMap_derived"
         },
         "SupportType": {
             "allOf": [
@@ -2212,22 +2212,22 @@
             ]
         },
         "prop_expandedlicensing_LicenseAddition_expandedlicensing_additionText": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_expandedlicensing_LicenseAddition_expandedlicensing_isDeprecatedAdditionId": {
-            "type": "boolean"
+                    "type": "boolean"
         },
         "prop_expandedlicensing_LicenseAddition_expandedlicensing_licenseXml": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_expandedlicensing_LicenseAddition_expandedlicensing_obsoletedBy": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_expandedlicensing_LicenseAddition_expandedlicensing_seeAlso": {
-            "$ref": "#/$defs/anyURI"
+                    "$ref": "#/$defs/anyURI"
         },
         "prop_expandedlicensing_LicenseAddition_expandedlicensing_standardAdditionTemplate": {
-            "type": "string"
+                    "type": "string"
         },
         "expandedlicensing_ListedLicenseException": {
             "allOf": [
@@ -2275,10 +2275,10 @@
             ]
         },
         "prop_expandedlicensing_ListedLicenseException_expandedlicensing_deprecatedVersion": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_expandedlicensing_ListedLicenseException_expandedlicensing_listVersionAdded": {
-            "type": "string"
+                    "type": "string"
         },
         "extension_CdxPropertyEntry": {
             "allOf": [
@@ -2328,10 +2328,10 @@
             ]
         },
         "prop_extension_CdxPropertyEntry_extension_cdxPropName": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_extension_CdxPropertyEntry_extension_cdxPropValue": {
-            "type": "string"
+                    "type": "string"
         },
         "extension_Extension": {
             "allOf": [
@@ -2588,43 +2588,43 @@
             ]
         },
         "prop_security_VulnAssessmentRelationship_suppliedBy": {
-            "$ref": "#/$defs/Agent_derived"
+                "$ref": "#/$defs/Agent_derived"
         },
         "prop_security_VulnAssessmentRelationship_security_assessedElement": {
-            "$ref": "#/$defs/software_SoftwareArtifact_derived"
+                "$ref": "#/$defs/software_SoftwareArtifact_derived"
         },
         "prop_security_VulnAssessmentRelationship_security_modifiedTime": {
-            "type": "string",
-            "allOf": [
-                {
-                    "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
-                },
-                {
-                    "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
-                }
-            ]
+                    "type": "string",
+                    "allOf": [
+                        {
+                            "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
+                        },
+                        {
+                            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
+                        }
+                    ]
         },
         "prop_security_VulnAssessmentRelationship_security_publishedTime": {
-            "type": "string",
-            "allOf": [
-                {
-                    "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
-                },
-                {
-                    "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
-                }
-            ]
+                    "type": "string",
+                    "allOf": [
+                        {
+                            "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
+                        },
+                        {
+                            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
+                        }
+                    ]
         },
         "prop_security_VulnAssessmentRelationship_security_withdrawnTime": {
-            "type": "string",
-            "allOf": [
-                {
-                    "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
-                },
-                {
-                    "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
-                }
-            ]
+                    "type": "string",
+                    "allOf": [
+                        {
+                            "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
+                        },
+                        {
+                            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
+                        }
+                    ]
         },
         "simplelicensing_AnyLicenseInfo_derived": {
             "anyOf": [
@@ -2716,14 +2716,14 @@
             ]
         },
         "prop_simplelicensing_LicenseExpression_simplelicensing_customIdToUri": {
-            "$ref": "#/$defs/DictionaryEntry_derived"
+                "$ref": "#/$defs/DictionaryEntry_derived"
         },
         "prop_simplelicensing_LicenseExpression_simplelicensing_licenseExpression": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_simplelicensing_LicenseExpression_simplelicensing_licenseListVersion": {
-            "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
-            "type": "string"
+                    "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+                    "type": "string"
         },
         "simplelicensing_SimpleLicensingText": {
             "allOf": [
@@ -2771,7 +2771,7 @@
             ]
         },
         "prop_simplelicensing_SimpleLicensingText_simplelicensing_licenseText": {
-            "type": "string"
+                    "type": "string"
         },
         "software_ContentIdentifier": {
             "allOf": [
@@ -2822,13 +2822,13 @@
             ]
         },
         "prop_software_ContentIdentifier_software_contentIdentifierType": {
-            "enum": [
-                "gitoid",
-                "swhid"
-            ]
+                "enum": [
+                    "gitoid",
+                    "swhid"
+                ]
         },
         "prop_software_ContentIdentifier_software_contentIdentifierValue": {
-            "$ref": "#/$defs/anyURI"
+                    "$ref": "#/$defs/anyURI"
         },
         "software_ContentIdentifierType": {
             "allOf": [
@@ -3126,47 +3126,47 @@
             ]
         },
         "prop_build_Build_build_buildEndTime": {
-            "type": "string",
-            "allOf": [
-                {
-                    "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
-                },
-                {
-                    "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
-                }
-            ]
+                    "type": "string",
+                    "allOf": [
+                        {
+                            "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
+                        },
+                        {
+                            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
+                        }
+                    ]
         },
         "prop_build_Build_build_buildId": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_build_Build_build_buildStartTime": {
-            "type": "string",
-            "allOf": [
-                {
-                    "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
-                },
-                {
-                    "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
-                }
-            ]
+                    "type": "string",
+                    "allOf": [
+                        {
+                            "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
+                        },
+                        {
+                            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
+                        }
+                    ]
         },
         "prop_build_Build_build_buildType": {
-            "$ref": "#/$defs/anyURI"
+                    "$ref": "#/$defs/anyURI"
         },
         "prop_build_Build_build_configSourceDigest": {
-            "$ref": "#/$defs/Hash_derived"
+                "$ref": "#/$defs/Hash_derived"
         },
         "prop_build_Build_build_configSourceEntrypoint": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_build_Build_build_configSourceUri": {
-            "$ref": "#/$defs/anyURI"
+                    "$ref": "#/$defs/anyURI"
         },
         "prop_build_Build_build_environment": {
-            "$ref": "#/$defs/DictionaryEntry_derived"
+                "$ref": "#/$defs/DictionaryEntry_derived"
         },
         "prop_build_Build_build_parameter": {
-            "$ref": "#/$defs/DictionaryEntry_derived"
+                "$ref": "#/$defs/DictionaryEntry_derived"
         },
         "Agent": {
             "allOf": [
@@ -3267,20 +3267,20 @@
             ]
         },
         "prop_Annotation_annotationType": {
-            "enum": [
-                "other",
-                "review"
-            ]
+                "enum": [
+                    "other",
+                    "review"
+                ]
         },
         "prop_Annotation_contentType": {
-            "pattern": "^[^\\/]+\\/[^\\/]+$",
-            "type": "string"
+                    "pattern": "^[^\\/]+\\/[^\\/]+$",
+                    "type": "string"
         },
         "prop_Annotation_statement": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_Annotation_subject": {
-            "$ref": "#/$defs/Element_derived"
+                "$ref": "#/$defs/Element_derived"
         },
         "Artifact_derived": {
             "anyOf": [
@@ -3352,57 +3352,57 @@
             ]
         },
         "prop_Artifact_builtTime": {
-            "type": "string",
-            "allOf": [
-                {
-                    "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
-                },
-                {
-                    "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
-                }
-            ]
+                    "type": "string",
+                    "allOf": [
+                        {
+                            "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
+                        },
+                        {
+                            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
+                        }
+                    ]
         },
         "prop_Artifact_originatedBy": {
-            "$ref": "#/$defs/Agent_derived"
+                "$ref": "#/$defs/Agent_derived"
         },
         "prop_Artifact_releaseTime": {
-            "type": "string",
-            "allOf": [
-                {
-                    "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
-                },
-                {
-                    "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
-                }
-            ]
+                    "type": "string",
+                    "allOf": [
+                        {
+                            "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
+                        },
+                        {
+                            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
+                        }
+                    ]
         },
         "prop_Artifact_standardName": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_Artifact_suppliedBy": {
-            "$ref": "#/$defs/Agent_derived"
+                "$ref": "#/$defs/Agent_derived"
         },
         "prop_Artifact_supportLevel": {
-            "enum": [
-                "deployed",
-                "development",
-                "endOfSupport",
-                "limitedSupport",
-                "noAssertion",
-                "noSupport",
-                "support"
-            ]
+                "enum": [
+                    "deployed",
+                    "development",
+                    "endOfSupport",
+                    "limitedSupport",
+                    "noAssertion",
+                    "noSupport",
+                    "support"
+                ]
         },
         "prop_Artifact_validUntilTime": {
-            "type": "string",
-            "allOf": [
-                {
-                    "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
-                },
-                {
-                    "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
-                }
-            ]
+                    "type": "string",
+                    "allOf": [
+                        {
+                            "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
+                        },
+                        {
+                            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
+                        }
+                    ]
         },
         "Bundle": {
             "allOf": [
@@ -3449,7 +3449,7 @@
             ]
         },
         "prop_Bundle_context": {
-            "type": "string"
+                    "type": "string"
         },
         "Hash": {
             "allOf": [
@@ -3500,33 +3500,33 @@
             ]
         },
         "prop_Hash_algorithm": {
-            "enum": [
-                "adler32",
-                "blake2b256",
-                "blake2b384",
-                "blake2b512",
-                "blake3",
-                "crystalsDilithium",
-                "crystalsKyber",
-                "falcon",
-                "md2",
-                "md4",
-                "md5",
-                "md6",
-                "other",
-                "sha1",
-                "sha224",
-                "sha256",
-                "sha384",
-                "sha3_224",
-                "sha3_256",
-                "sha3_384",
-                "sha3_512",
-                "sha512"
-            ]
+                "enum": [
+                    "adler32",
+                    "blake2b256",
+                    "blake2b384",
+                    "blake2b512",
+                    "blake3",
+                    "crystalsDilithium",
+                    "crystalsKyber",
+                    "falcon",
+                    "md2",
+                    "md4",
+                    "md5",
+                    "md6",
+                    "other",
+                    "sha1",
+                    "sha224",
+                    "sha256",
+                    "sha384",
+                    "sha3_224",
+                    "sha3_256",
+                    "sha3_384",
+                    "sha3_512",
+                    "sha512"
+                ]
         },
         "prop_Hash_hashValue": {
-            "type": "string"
+                    "type": "string"
         },
         "LifecycleScopedRelationship": {
             "allOf": [
@@ -3571,14 +3571,14 @@
             ]
         },
         "prop_LifecycleScopedRelationship_scope": {
-            "enum": [
-                "build",
-                "design",
-                "development",
-                "other",
-                "runtime",
-                "test"
-            ]
+                "enum": [
+                    "build",
+                    "design",
+                    "development",
+                    "other",
+                    "runtime",
+                    "test"
+                ]
         },
         "Organization": {
             "allOf": [
@@ -3752,7 +3752,7 @@
             ]
         },
         "prop_expandedlicensing_ConjunctiveLicenseSet_expandedlicensing_member": {
-            "$ref": "#/$defs/simplelicensing_AnyLicenseInfo_derived"
+                "$ref": "#/$defs/simplelicensing_AnyLicenseInfo_derived"
         },
         "expandedlicensing_CustomLicenseAddition": {
             "allOf": [
@@ -3847,7 +3847,7 @@
             ]
         },
         "prop_expandedlicensing_DisjunctiveLicenseSet_expandedlicensing_member": {
-            "$ref": "#/$defs/simplelicensing_AnyLicenseInfo_derived"
+                "$ref": "#/$defs/simplelicensing_AnyLicenseInfo_derived"
         },
         "expandedlicensing_ExtendableLicense_derived": {
             "anyOf": [
@@ -3975,31 +3975,31 @@
             ]
         },
         "prop_expandedlicensing_License_expandedlicensing_isDeprecatedLicenseId": {
-            "type": "boolean"
+                    "type": "boolean"
         },
         "prop_expandedlicensing_License_expandedlicensing_isFsfLibre": {
-            "type": "boolean"
+                    "type": "boolean"
         },
         "prop_expandedlicensing_License_expandedlicensing_isOsiApproved": {
-            "type": "boolean"
+                    "type": "boolean"
         },
         "prop_expandedlicensing_License_expandedlicensing_licenseXml": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_expandedlicensing_License_expandedlicensing_obsoletedBy": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_expandedlicensing_License_expandedlicensing_seeAlso": {
-            "$ref": "#/$defs/anyURI"
+                    "$ref": "#/$defs/anyURI"
         },
         "prop_expandedlicensing_License_expandedlicensing_standardLicenseHeader": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_expandedlicensing_License_expandedlicensing_standardLicenseTemplate": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_expandedlicensing_License_simplelicensing_licenseText": {
-            "type": "string"
+                    "type": "string"
         },
         "expandedlicensing_ListedLicense": {
             "allOf": [
@@ -4047,10 +4047,10 @@
             ]
         },
         "prop_expandedlicensing_ListedLicense_expandedlicensing_deprecatedVersion": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_expandedlicensing_ListedLicense_expandedlicensing_listVersionAdded": {
-            "type": "string"
+                    "type": "string"
         },
         "expandedlicensing_OrLaterOperator": {
             "allOf": [
@@ -4098,7 +4098,7 @@
             ]
         },
         "prop_expandedlicensing_OrLaterOperator_expandedlicensing_subjectLicense": {
-            "$ref": "#/$defs/expandedlicensing_License_derived"
+                "$ref": "#/$defs/expandedlicensing_License_derived"
         },
         "expandedlicensing_WithAdditionOperator": {
             "allOf": [
@@ -4150,10 +4150,10 @@
             ]
         },
         "prop_expandedlicensing_WithAdditionOperator_expandedlicensing_subjectAddition": {
-            "$ref": "#/$defs/expandedlicensing_LicenseAddition_derived"
+                "$ref": "#/$defs/expandedlicensing_LicenseAddition_derived"
         },
         "prop_expandedlicensing_WithAdditionOperator_expandedlicensing_subjectExtendableLicense": {
-            "$ref": "#/$defs/expandedlicensing_ExtendableLicense_derived"
+                "$ref": "#/$defs/expandedlicensing_ExtendableLicense_derived"
         },
         "extension_CdxPropertiesExtension": {
             "allOf": [
@@ -4208,7 +4208,7 @@
             ]
         },
         "prop_extension_CdxPropertiesExtension_extension_cdxProperty": {
-            "$ref": "#/$defs/extension_CdxPropertyEntry_derived"
+                "$ref": "#/$defs/extension_CdxPropertyEntry_derived"
         },
         "security_CvssV2VulnAssessmentRelationship": {
             "allOf": [
@@ -4260,18 +4260,18 @@
             ]
         },
         "prop_security_CvssV2VulnAssessmentRelationship_security_score": {
-            "oneOf": [
-                {
-                    "type": "number"
-                },
-                {
-                    "type": "string",
-                    "pattern": "^-?[0-9]+(\\.[0-9]*)?$"
-                }
-            ]
+                    "oneOf": [
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "string",
+                            "pattern": "^-?[0-9]+(\\.[0-9]*)?$"
+                        }
+                    ]
         },
         "prop_security_CvssV2VulnAssessmentRelationship_security_vectorString": {
-            "type": "string"
+                    "type": "string"
         },
         "security_CvssV3VulnAssessmentRelationship": {
             "allOf": [
@@ -4327,27 +4327,27 @@
             ]
         },
         "prop_security_CvssV3VulnAssessmentRelationship_security_score": {
-            "oneOf": [
-                {
-                    "type": "number"
-                },
-                {
-                    "type": "string",
-                    "pattern": "^-?[0-9]+(\\.[0-9]*)?$"
-                }
-            ]
+                    "oneOf": [
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "string",
+                            "pattern": "^-?[0-9]+(\\.[0-9]*)?$"
+                        }
+                    ]
         },
         "prop_security_CvssV3VulnAssessmentRelationship_security_severity": {
-            "enum": [
-                "critical",
-                "high",
-                "low",
-                "medium",
-                "none"
-            ]
+                "enum": [
+                    "critical",
+                    "high",
+                    "low",
+                    "medium",
+                    "none"
+                ]
         },
         "prop_security_CvssV3VulnAssessmentRelationship_security_vectorString": {
-            "type": "string"
+                    "type": "string"
         },
         "security_CvssV4VulnAssessmentRelationship": {
             "allOf": [
@@ -4403,27 +4403,27 @@
             ]
         },
         "prop_security_CvssV4VulnAssessmentRelationship_security_score": {
-            "oneOf": [
-                {
-                    "type": "number"
-                },
-                {
-                    "type": "string",
-                    "pattern": "^-?[0-9]+(\\.[0-9]*)?$"
-                }
-            ]
+                    "oneOf": [
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "string",
+                            "pattern": "^-?[0-9]+(\\.[0-9]*)?$"
+                        }
+                    ]
         },
         "prop_security_CvssV4VulnAssessmentRelationship_security_severity": {
-            "enum": [
-                "critical",
-                "high",
-                "low",
-                "medium",
-                "none"
-            ]
+                "enum": [
+                    "critical",
+                    "high",
+                    "low",
+                    "medium",
+                    "none"
+                ]
         },
         "prop_security_CvssV4VulnAssessmentRelationship_security_vectorString": {
-            "type": "string"
+                    "type": "string"
         },
         "security_EpssVulnAssessmentRelationship": {
             "allOf": [
@@ -4475,26 +4475,26 @@
             ]
         },
         "prop_security_EpssVulnAssessmentRelationship_security_percentile": {
-            "oneOf": [
-                {
-                    "type": "number"
-                },
-                {
-                    "type": "string",
-                    "pattern": "^-?[0-9]+(\\.[0-9]*)?$"
-                }
-            ]
+                    "oneOf": [
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "string",
+                            "pattern": "^-?[0-9]+(\\.[0-9]*)?$"
+                        }
+                    ]
         },
         "prop_security_EpssVulnAssessmentRelationship_security_probability": {
-            "oneOf": [
-                {
-                    "type": "number"
-                },
-                {
-                    "type": "string",
-                    "pattern": "^-?[0-9]+(\\.[0-9]*)?$"
-                }
-            ]
+                    "oneOf": [
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "string",
+                            "pattern": "^-?[0-9]+(\\.[0-9]*)?$"
+                        }
+                    ]
         },
         "security_ExploitCatalogVulnAssessmentRelationship": {
             "allOf": [
@@ -4550,16 +4550,16 @@
             ]
         },
         "prop_security_ExploitCatalogVulnAssessmentRelationship_security_catalogType": {
-            "enum": [
-                "kev",
-                "other"
-            ]
+                "enum": [
+                    "kev",
+                    "other"
+                ]
         },
         "prop_security_ExploitCatalogVulnAssessmentRelationship_security_exploited": {
-            "type": "boolean"
+                    "type": "boolean"
         },
         "prop_security_ExploitCatalogVulnAssessmentRelationship_security_locator": {
-            "$ref": "#/$defs/anyURI"
+                    "$ref": "#/$defs/anyURI"
         },
         "security_SsvcVulnAssessmentRelationship": {
             "allOf": [
@@ -4607,12 +4607,12 @@
             ]
         },
         "prop_security_SsvcVulnAssessmentRelationship_security_decisionType": {
-            "enum": [
-                "act",
-                "attend",
-                "track",
-                "trackStar"
-            ]
+                "enum": [
+                    "act",
+                    "attend",
+                    "track",
+                    "trackStar"
+                ]
         },
         "security_VexVulnAssessmentRelationship_derived": {
             "anyOf": [
@@ -4646,10 +4646,10 @@
             ]
         },
         "prop_security_VexVulnAssessmentRelationship_security_statusNotes": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_security_VexVulnAssessmentRelationship_security_vexVersion": {
-            "type": "string"
+                    "type": "string"
         },
         "security_Vulnerability": {
             "allOf": [
@@ -4700,37 +4700,37 @@
             ]
         },
         "prop_security_Vulnerability_security_modifiedTime": {
-            "type": "string",
-            "allOf": [
-                {
-                    "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
-                },
-                {
-                    "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
-                }
-            ]
+                    "type": "string",
+                    "allOf": [
+                        {
+                            "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
+                        },
+                        {
+                            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
+                        }
+                    ]
         },
         "prop_security_Vulnerability_security_publishedTime": {
-            "type": "string",
-            "allOf": [
-                {
-                    "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
-                },
-                {
-                    "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
-                }
-            ]
+                    "type": "string",
+                    "allOf": [
+                        {
+                            "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
+                        },
+                        {
+                            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
+                        }
+                    ]
         },
         "prop_security_Vulnerability_security_withdrawnTime": {
-            "type": "string",
-            "allOf": [
-                {
-                    "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
-                },
-                {
-                    "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
-                }
-            ]
+                    "type": "string",
+                    "allOf": [
+                        {
+                            "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
+                        },
+                        {
+                            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
+                        }
+                    ]
         },
         "software_SoftwareArtifact_derived": {
             "anyOf": [
@@ -4795,79 +4795,79 @@
             ]
         },
         "prop_software_SoftwareArtifact_software_additionalPurpose": {
-            "enum": [
-                "application",
-                "archive",
-                "bom",
-                "configuration",
-                "container",
-                "data",
-                "device",
-                "deviceDriver",
-                "diskImage",
-                "documentation",
-                "evidence",
-                "executable",
-                "file",
-                "filesystemImage",
-                "firmware",
-                "framework",
-                "install",
-                "library",
-                "manifest",
-                "model",
-                "module",
-                "operatingSystem",
-                "other",
-                "patch",
-                "platform",
-                "requirement",
-                "source",
-                "specification",
-                "test"
-            ]
+                "enum": [
+                    "application",
+                    "archive",
+                    "bom",
+                    "configuration",
+                    "container",
+                    "data",
+                    "device",
+                    "deviceDriver",
+                    "diskImage",
+                    "documentation",
+                    "evidence",
+                    "executable",
+                    "file",
+                    "filesystemImage",
+                    "firmware",
+                    "framework",
+                    "install",
+                    "library",
+                    "manifest",
+                    "model",
+                    "module",
+                    "operatingSystem",
+                    "other",
+                    "patch",
+                    "platform",
+                    "requirement",
+                    "source",
+                    "specification",
+                    "test"
+                ]
         },
         "prop_software_SoftwareArtifact_software_attributionText": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_software_SoftwareArtifact_software_contentIdentifier": {
-            "$ref": "#/$defs/software_ContentIdentifier_derived"
+                "$ref": "#/$defs/software_ContentIdentifier_derived"
         },
         "prop_software_SoftwareArtifact_software_copyrightText": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_software_SoftwareArtifact_software_primaryPurpose": {
-            "enum": [
-                "application",
-                "archive",
-                "bom",
-                "configuration",
-                "container",
-                "data",
-                "device",
-                "deviceDriver",
-                "diskImage",
-                "documentation",
-                "evidence",
-                "executable",
-                "file",
-                "filesystemImage",
-                "firmware",
-                "framework",
-                "install",
-                "library",
-                "manifest",
-                "model",
-                "module",
-                "operatingSystem",
-                "other",
-                "patch",
-                "platform",
-                "requirement",
-                "source",
-                "specification",
-                "test"
-            ]
+                "enum": [
+                    "application",
+                    "archive",
+                    "bom",
+                    "configuration",
+                    "container",
+                    "data",
+                    "device",
+                    "deviceDriver",
+                    "diskImage",
+                    "documentation",
+                    "evidence",
+                    "executable",
+                    "file",
+                    "filesystemImage",
+                    "firmware",
+                    "framework",
+                    "install",
+                    "library",
+                    "manifest",
+                    "model",
+                    "module",
+                    "operatingSystem",
+                    "other",
+                    "patch",
+                    "platform",
+                    "requirement",
+                    "source",
+                    "specification",
+                    "test"
+                ]
         },
         "Bom": {
             "allOf": [
@@ -4997,18 +4997,18 @@
             ]
         },
         "prop_security_VexAffectedVulnAssessmentRelationship_security_actionStatement": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_security_VexAffectedVulnAssessmentRelationship_security_actionStatementTime": {
-            "type": "string",
-            "allOf": [
-                {
-                    "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
-                },
-                {
-                    "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
-                }
-            ]
+                    "type": "string",
+                    "allOf": [
+                        {
+                            "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
+                        },
+                        {
+                            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
+                        }
+                    ]
         },
         "security_VexFixedVulnAssessmentRelationship": {
             "allOf": [
@@ -5098,27 +5098,27 @@
             ]
         },
         "prop_security_VexNotAffectedVulnAssessmentRelationship_security_impactStatement": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_security_VexNotAffectedVulnAssessmentRelationship_security_impactStatementTime": {
-            "type": "string",
-            "allOf": [
-                {
-                    "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
-                },
-                {
-                    "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
-                }
-            ]
+                    "type": "string",
+                    "allOf": [
+                        {
+                            "pattern": "^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9](Z|[+-][0-9]{2}:[0-9]{2})$"
+                        },
+                        {
+                            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
+                        }
+                    ]
         },
         "prop_security_VexNotAffectedVulnAssessmentRelationship_security_justificationType": {
-            "enum": [
-                "componentNotPresent",
-                "inlineMitigationsAlreadyExist",
-                "vulnerableCodeCannotBeControlledByAdversary",
-                "vulnerableCodeNotInExecutePath",
-                "vulnerableCodeNotPresent"
-            ]
+                "enum": [
+                    "componentNotPresent",
+                    "inlineMitigationsAlreadyExist",
+                    "vulnerableCodeCannotBeControlledByAdversary",
+                    "vulnerableCodeNotInExecutePath",
+                    "vulnerableCodeNotPresent"
+                ]
         },
         "security_VexUnderInvestigationVulnAssessmentRelationship": {
             "allOf": [
@@ -5205,14 +5205,14 @@
             ]
         },
         "prop_software_File_contentType": {
-            "pattern": "^[^\\/]+\\/[^\\/]+$",
-            "type": "string"
+                    "pattern": "^[^\\/]+\\/[^\\/]+$",
+                    "type": "string"
         },
         "prop_software_File_software_fileKind": {
-            "enum": [
-                "directory",
-                "file"
-            ]
+                "enum": [
+                    "directory",
+                    "file"
+                ]
         },
         "software_Package": {
             "allOf": [
@@ -5271,19 +5271,19 @@
             ]
         },
         "prop_software_Package_software_downloadLocation": {
-            "$ref": "#/$defs/anyURI"
+                    "$ref": "#/$defs/anyURI"
         },
         "prop_software_Package_software_homePage": {
-            "$ref": "#/$defs/anyURI"
+                    "$ref": "#/$defs/anyURI"
         },
         "prop_software_Package_software_packageUrl": {
-            "$ref": "#/$defs/anyURI"
+                    "$ref": "#/$defs/anyURI"
         },
         "prop_software_Package_software_packageVersion": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_software_Package_software_sourceInfo": {
-            "type": "string"
+                    "type": "string"
         },
         "software_Sbom": {
             "allOf": [
@@ -5335,14 +5335,14 @@
             ]
         },
         "prop_software_Sbom_software_sbomType": {
-            "enum": [
-                "analyzed",
-                "build",
-                "deployed",
-                "design",
-                "runtime",
-                "source"
-            ]
+                "enum": [
+                    "analyzed",
+                    "build",
+                    "deployed",
+                    "design",
+                    "runtime",
+                    "source"
+                ]
         },
         "software_Snippet": {
             "allOf": [
@@ -5396,13 +5396,13 @@
             ]
         },
         "prop_software_Snippet_software_byteRange": {
-            "$ref": "#/$defs/PositiveIntegerRange_derived"
+                "$ref": "#/$defs/PositiveIntegerRange_derived"
         },
         "prop_software_Snippet_software_lineRange": {
-            "$ref": "#/$defs/PositiveIntegerRange_derived"
+                "$ref": "#/$defs/PositiveIntegerRange_derived"
         },
         "prop_software_Snippet_software_snippetFromFile": {
-            "$ref": "#/$defs/software_File_derived"
+                "$ref": "#/$defs/software_File_derived"
         },
         "ai_AIPackage": {
             "allOf": [
@@ -5545,62 +5545,62 @@
             ]
         },
         "prop_ai_AIPackage_ai_autonomyType": {
-            "enum": [
-                "no",
-                "noAssertion",
-                "yes"
-            ]
+                "enum": [
+                    "no",
+                    "noAssertion",
+                    "yes"
+                ]
         },
         "prop_ai_AIPackage_ai_domain": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_ai_AIPackage_ai_energyConsumption": {
-            "$ref": "#/$defs/ai_EnergyConsumption_derived"
+                "$ref": "#/$defs/ai_EnergyConsumption_derived"
         },
         "prop_ai_AIPackage_ai_hyperparameter": {
-            "$ref": "#/$defs/DictionaryEntry_derived"
+                "$ref": "#/$defs/DictionaryEntry_derived"
         },
         "prop_ai_AIPackage_ai_informationAboutApplication": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_ai_AIPackage_ai_informationAboutTraining": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_ai_AIPackage_ai_limitation": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_ai_AIPackage_ai_metric": {
-            "$ref": "#/$defs/DictionaryEntry_derived"
+                "$ref": "#/$defs/DictionaryEntry_derived"
         },
         "prop_ai_AIPackage_ai_metricDecisionThreshold": {
-            "$ref": "#/$defs/DictionaryEntry_derived"
+                "$ref": "#/$defs/DictionaryEntry_derived"
         },
         "prop_ai_AIPackage_ai_modelDataPreprocessing": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_ai_AIPackage_ai_modelExplainability": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_ai_AIPackage_ai_safetyRiskAssessment": {
-            "enum": [
-                "high",
-                "low",
-                "medium",
-                "serious"
-            ]
+                "enum": [
+                    "high",
+                    "low",
+                    "medium",
+                    "serious"
+                ]
         },
         "prop_ai_AIPackage_ai_standardCompliance": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_ai_AIPackage_ai_typeOfModel": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_ai_AIPackage_ai_useSensitivePersonalInformation": {
-            "enum": [
-                "no",
-                "noAssertion",
-                "yes"
-            ]
+                "enum": [
+                    "no",
+                    "noAssertion",
+                    "yes"
+                ]
         },
         "dataset_DatasetPackage": {
             "allOf": [
@@ -5720,74 +5720,74 @@
             ]
         },
         "prop_dataset_DatasetPackage_dataset_anonymizationMethodUsed": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_dataset_DatasetPackage_dataset_confidentialityLevel": {
-            "enum": [
-                "amber",
-                "clear",
-                "green",
-                "red"
-            ]
+                "enum": [
+                    "amber",
+                    "clear",
+                    "green",
+                    "red"
+                ]
         },
         "prop_dataset_DatasetPackage_dataset_dataCollectionProcess": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_dataset_DatasetPackage_dataset_dataPreprocessing": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_dataset_DatasetPackage_dataset_datasetAvailability": {
-            "enum": [
-                "clickthrough",
-                "directDownload",
-                "query",
-                "registration",
-                "scrapingScript"
-            ]
+                "enum": [
+                    "clickthrough",
+                    "directDownload",
+                    "query",
+                    "registration",
+                    "scrapingScript"
+                ]
         },
         "prop_dataset_DatasetPackage_dataset_datasetNoise": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_dataset_DatasetPackage_dataset_datasetSize": {
-            "type": "integer",
-            "minimum": 0
+                    "type": "integer",
+                    "minimum": 0
         },
         "prop_dataset_DatasetPackage_dataset_datasetType": {
-            "enum": [
-                "audio",
-                "categorical",
-                "graph",
-                "image",
-                "noAssertion",
-                "numeric",
-                "other",
-                "sensor",
-                "structured",
-                "syntactic",
-                "text",
-                "timeseries",
-                "timestamp",
-                "video"
-            ]
+                "enum": [
+                    "audio",
+                    "categorical",
+                    "graph",
+                    "image",
+                    "noAssertion",
+                    "numeric",
+                    "other",
+                    "sensor",
+                    "structured",
+                    "syntactic",
+                    "text",
+                    "timeseries",
+                    "timestamp",
+                    "video"
+                ]
         },
         "prop_dataset_DatasetPackage_dataset_datasetUpdateMechanism": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_dataset_DatasetPackage_dataset_hasSensitivePersonalInformation": {
-            "enum": [
-                "no",
-                "noAssertion",
-                "yes"
-            ]
+                "enum": [
+                    "no",
+                    "noAssertion",
+                    "yes"
+                ]
         },
         "prop_dataset_DatasetPackage_dataset_intendedUse": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_dataset_DatasetPackage_dataset_knownBias": {
-            "type": "string"
+                    "type": "string"
         },
         "prop_dataset_DatasetPackage_dataset_sensor": {
-            "$ref": "#/$defs/DictionaryEntry_derived"
+                "$ref": "#/$defs/DictionaryEntry_derived"
         },
         "IRI": {
             "type": "string",
