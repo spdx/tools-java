@@ -1,13 +1,13 @@
 /**
- * Copyright (c) 2020 Source Auditor Inc.
- *
+ * SPDX-FileCopyrightText: Copyright (c) 2020 Source Auditor Inc.
+ * SPDX-FileType: SOURCE
  * SPDX-License-Identifier: Apache-2.0
- * 
+ *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
  *   You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *   Unless required by applicable law or agreed to in writing, software
  *   distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,7 +15,6 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  *
- * SPDX-License-Identifier: Apache-2.0
  */
 package org.spdx.tools;
 
@@ -41,10 +40,9 @@ import org.spdx.tools.compare.MultiDocumentSpreadsheet;
 import junit.framework.TestCase;
 
 /**
- * @author Gary O'Neall
- * 
  * Test cases for CompareSpdxDocs
  *
+ * @author Gary O'Neall
  */
 public class CompareSpdxDocsTest extends TestCase {
 
@@ -65,7 +63,7 @@ public class CompareSpdxDocsTest extends TestCase {
 	static final String TEST_XML_FILE_PATH_23 = TEST_DIR + File.separator + "SPDXXMLExample-v2.3.spdx.xml";
 	static final String TEST_YAML_FILE_PATH_23 = TEST_DIR + File.separator + "SPDXYAMLExample-2.3.spdx.yaml";
 
-	static final String TEST_DIFF_FILE_COMMNENT_FILE_PATH = TEST_DIR + File.separator + "DifferentFileComment.spdx.yaml";
+	static final String TEST_DIFF_FILE_COMMENT_FILE_PATH = TEST_DIR + File.separator + "DifferentFileComment.spdx.yaml";
 	
 
 
@@ -137,7 +135,7 @@ public class CompareSpdxDocsTest extends TestCase {
 	public void testDifferentDocuments() throws OnlineToolException, SpreadsheetException {
 		String outputFilePath = tempDirPath + File.separator + "comp.xlsx";
 		String[] params = new String[] {outputFilePath, 
-				TEST_YAML_FILE_PATH_22, TEST_DIFF_FILE_COMMNENT_FILE_PATH
+				TEST_YAML_FILE_PATH_22, TEST_DIFF_FILE_COMMENT_FILE_PATH
 		};
 		CompareSpdxDocs.onlineFunction(params);
 		MultiDocumentSpreadsheet result = new MultiDocumentSpreadsheet(new File(outputFilePath), false, true);

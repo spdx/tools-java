@@ -1,12 +1,14 @@
 /**
- * Copyright (c) 2013 Source Auditor Inc.
- * Copyright (c) 2013 Black Duck Software Inc.
+ * SPDX-FileCopyrightText: Copyright (c) 2013 Source Auditor Inc.
+ * SPDX-FileCopyrightText: Copyright (c) 2013 Black Duck Software Inc.
+ * SPDX-FileType: SOURCE
+ * SPDX-License-Identifier: Apache-2.0
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
  *   You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *   Unless required by applicable law or agreed to in writing, software
  *   distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,7 +16,7 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  *
-*/
+ */
 package org.spdx.tools;
 
 import java.io.File;
@@ -44,7 +46,6 @@ import org.spdx.utility.compare.SpdxComparer;
  * Document files can be either in RDF/XML  or tag/value format
  *
  * @author Gary O'Neall
- *
  */
 public class CompareSpdxDocs {
 	static final int MIN_ARGS = 2;
@@ -77,6 +78,7 @@ public class CompareSpdxDocs {
 	}
 
 	/**
+	 * Invoke SPDX document processing functions from the online tool
 	 *
 	 * @param args args[0] is the output Excel file name, all other args are SPDX document file names
 	 * @throws OnlineToolException Exception caught by JPype and displayed to the user

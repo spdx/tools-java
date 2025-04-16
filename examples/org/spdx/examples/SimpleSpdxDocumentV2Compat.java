@@ -1,6 +1,7 @@
 /**
+ * SPDX-FileCopyrightText: Copyright (c) 2021 Source Auditor Inc.
+ * SPDX-FileType: SOURCE
  * SPDX-License-Identifier: Apache-2.0
- * Copyright (c) 2021 Source Auditor Inc.
  */
 package org.spdx.examples;
 
@@ -35,7 +36,6 @@ import org.spdx.storage.simple.InMemSpdxStore;
  * This example depends on the Spdx-Java-Library and the spdx-java-jackson store libraries
  * 
  * @author Gary O'Neall
- *
  */
 public class SimpleSpdxDocumentV2Compat {
 
