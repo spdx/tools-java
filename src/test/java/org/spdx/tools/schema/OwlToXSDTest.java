@@ -1,3 +1,8 @@
+/**
+ * SPDX-FileCopyrightText: Copyright (c) 2020 Source Auditor Inc.
+ * SPDX-FileType: SOURCE
+ * SPDX-License-Identifier: Apache-2.0
+ */
 package org.spdx.tools.schema;
 
 import java.io.File;
