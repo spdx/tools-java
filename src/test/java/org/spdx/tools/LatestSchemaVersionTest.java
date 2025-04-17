@@ -1,7 +1,13 @@
+/**
+ * SPDX-FileContributor: Arthit Suriyawongkul
+ * SPDX-FileCopyrightText: 2025 SPDX contributors
+ * SPDX-FileType: SOURCE
+ * SPDX-License-Identifier: Apache-2.0
+ */
 package org.spdx.tools;
 
 import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,9 +39,7 @@ public class LatestSchemaVersionTest extends TestCase {
         // Step 2: Compare the content of the file with the content from the URL
         String localSchemaContent = Files.readString(schemaFilePath);
         String remoteSchemaUrl = "https://spdx.org/schema/" + version + "/spdx-json-schema.json";
-        String remoteSchemaContent = IOUtils.toString(new URL(remoteSchemaUrl), "UTF-8");
-
-        // Step 3: Assert if the contents match
+        String remoteSchemaContent = IOUtils.toString(URI.create(remoteSchemaUrl).toURL(), "UTF-8");
         assertEquals("The local SPDX schema file does not match the remote schema content.",
                 localSchemaContent.trim(), remoteSchemaContent.trim());
     }
