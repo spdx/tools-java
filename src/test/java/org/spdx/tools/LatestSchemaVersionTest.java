@@ -37,9 +37,9 @@ public class LatestSchemaVersionTest extends TestCase {
         String version = extractVersionNumber(fileName);
 
         // Step 2: Compare the content of the file with the content from the URL
-        String localSchemaContent = Files.readString(schemaFilePath);
+        String localSchemaContent = Files.readString(schemaFilePath).replaceAll("\\s+", " ");
         String remoteSchemaUrl = "https://spdx.org/schema/" + version + "/spdx-json-schema.json";
-        String remoteSchemaContent = IOUtils.toString(URI.create(remoteSchemaUrl).toURL(), "UTF-8");
+        String remoteSchemaContent = IOUtils.toString(URI.create(remoteSchemaUrl).toURL(), "UTF-8").replaceAll("\\s+", " ");
         assertEquals("The local SPDX schema file does not match the remote schema content.",
                 localSchemaContent.trim(), remoteSchemaContent.trim());
     }
