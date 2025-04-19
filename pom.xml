@@ -112,6 +112,11 @@
 	    <version>1.27.1</version>
 	  </dependency>
 	  <dependency>
+	  	<groupId>org.apache.ws.xmlschema</groupId>
+	  	<artifactId>xmlschema-core</artifactId>
+	  	<version>2.3.0</version>
+	  </dependency>
+	  <dependency>
 	    <groupId>junit</groupId>
 	    <artifactId>junit</artifactId>
 	    <version>4.13.1</version>
@@ -120,32 +125,32 @@
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>java-spdx-library</artifactId>
-	  	<version>2.0.0-RC2</version>
+	  	<version>2.0.0</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>spdx-rdf-store</artifactId>
-	  	<version>2.0.0-RC2</version>
+	  	<version>2.0.0</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>spdx-jackson-store</artifactId>
-	  	<version>2.0.0-RC2</version>
-	  </dependency>
-	  <dependency>
-	  	<groupId>org.apache.ws.xmlschema</groupId>
-	  	<artifactId>xmlschema-core</artifactId>
-	  	<version>2.3.0</version>
+	  	<version>2.0.0</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>spdx-spreadsheet-store</artifactId>
-	  	<version>2.0.0-RC2</version>
+	  	<version>2.0.0</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>org.spdx</groupId>
 	  	<artifactId>spdx-tagvalue-store</artifactId>
-	  	<version>2.0.0-RC2</version>
+	  	<version>2.0.0</version>
+	  </dependency>
+	  <dependency>
+	  	<groupId>org.spdx</groupId>
+	  	<artifactId>spdx-v3jsonld-store</artifactId>
+	  	<version>1.0.0</version>
 	  </dependency>
 	  <dependency>
 	  	<groupId>com.networknt</groupId>
@@ -157,11 +162,6 @@
 	  	<artifactId>slf4j-simple</artifactId>
 	  	<version>2.0.13</version>
 	  	<optional>true</optional>
-	  </dependency>
-	  <dependency>
-	  	<groupId>org.spdx</groupId>
-	  	<artifactId>spdx-v3jsonld-store</artifactId>
-	  	<version>1.0.0-RC3</version>
 	  </dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
