@@ -285,7 +285,7 @@
 		    <plugin>
 			    <groupId>org.apache.maven.plugins</groupId>
 			    <artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.4</version>
+				<version>3.6.1</version>
 				<!-- DO NOT USE LATER VERSIONS OF THE SHADE PLUGIN - SEE ISSUE 201 FOR CONTEXT -->
 			    <configuration>
 			        <shadedArtifactAttached>true</shadedArtifactAttached>
