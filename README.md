@@ -1,5 +1,7 @@
 # SPDX Tools
 
+
+[![Maven Central Version](https://img.shields.io/maven-central/v/org.spdx/tools-java)](https://central.sonatype.com/artifact/org.spdx/tools-java)
 [![javadoc](https://javadoc.io/badge2/org.spdx/tools-java/javadoc.svg)](https://javadoc.io/doc/org.spdx/tools-java)
 
 A command-line utility for creating, converting, comparing,
