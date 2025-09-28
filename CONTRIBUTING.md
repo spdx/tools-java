@@ -22,11 +22,11 @@ If you would like to work on a fix for any issue, please assign the issue to you
 Patches
 -------
 
-The source code for `spdx-tools` is hosted on [github.com/spdx/tools-java](https://github.com/spdx/tools-java). Please review [open pull requests](https://github.com/spdx/tools-java/pulls) and [active branches](https://github.com/spdx/tools-java/branches) before committing time to a substantial revision. Work along similar lines may already be in progress.
+The source code for `tools-java` is hosted on [github.com/spdx/tools-java](https://github.com/spdx/tools-java). Please review [open pull requests](https://github.com/spdx/tools-java/pulls) and [active branches](https://github.com/spdx/tools-java/branches) before committing time to a substantial revision. Work along similar lines may already be in progress.
 
 To submit a patch via GitHub, fork the repository, create a topic branch from `master` for your work, and send a pull request when ready. If you would prefer to send a patch or grant access to pull from your own Git repository, please contact the project's contributors by e-mail.
 
-To contribute an implementation of a feature defined by a version of the SPDX specification later than the one supported by the current SPDX Tools release, clone the branch `spec/X.X`, where X.X is the major.minor version of the targeted specification (e.g. "3.0").
+To contribute an implementation of a feature defined by a version of the SPDX specification later than the one supported by the current SPDX Tools release, clone the branch `spec/X.X`, where X.X is the major.minor version of the targeted specification (e.g. "3.1").
 
 Once implemented, submit a pull request with `spec/X.X` branch as the parent branch.
 
