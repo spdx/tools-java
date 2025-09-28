@@ -1,6 +1,5 @@
 # SPDX Tools
 
-
 [![Maven Central Version](https://img.shields.io/maven-central/v/org.spdx/tools-java)](https://central.sonatype.com/artifact/org.spdx/tools-java)
 [![javadoc](https://javadoc.io/badge2/org.spdx/tools-java/javadoc.svg)](https://javadoc.io/doc/org.spdx/tools-java)
 
@@ -28,7 +27,7 @@ This utility supports versions 2.0, 2.1, 2.2, 2.3 and 3.0.1 of the SPDX specific
 
 ## Getting Starting
 
-The SPDX Tools binaries can be downloaded from the [releases page](https://github.com/spdx/tools-java/releases) under the respective release.  The package is also available in [Maven Central](https://search.maven.org/artifact/org.spdx/tools-java) (organization org.spdx, artifact tools-java).
+The SPDX Tools binaries can be downloaded from the [releases page](https://github.com/spdx/tools-java/releases) under the respective release.  The package is also available in [Maven Central](https://central.sonatype.com/artifact/org.spdx/tools-java) (organization `org.spdx`, artifact `tools-java`).
 
 See the Syntax section below for the commands available.
 
