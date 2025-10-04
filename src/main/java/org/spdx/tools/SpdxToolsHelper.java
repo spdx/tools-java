@@ -389,7 +389,7 @@ public class SpdxToolsHelper {
 			throw new InvalidSPDXAnalysisException("No SPDX version 3 documents in model store");
 		}
 		if (docs.size() > 1) {
-			throw new InvalidSPDXAnalysisException("Multiple SPDX version 3 documents in modelSTore.  There can only be one SPDX document.");
+			throw new InvalidSPDXAnalysisException("Multiple SPDX version 3 documents in modelStore.  There can only be one SPDX document.");
 		}
 		return docs.get(0);
 	}
