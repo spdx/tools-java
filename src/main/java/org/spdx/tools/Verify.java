@@ -70,7 +70,7 @@ public class Verify {
 			System.exit(ERROR_STATUS);
 		}
 		if (args.length > MAX_ARGS) {
-			System.out.printf("Warning: Extra arguments will be ignored");
+			System.out.println("Warning: Extra arguments will be ignored");
 		}
 		SpdxToolsHelper.initialize();
 		List<String> verify = null;
@@ -104,20 +104,20 @@ public class Verify {
 				errors.add(verifyMsg);
 			}
 		}
-		if (errors.size() > 0) {
+		if (!errors.isEmpty()) {
 			System.out.println("This SPDX Document is not valid due to:");
 			for (String errorMsg:errors) {
 				System.out.print("\t" + errorMsg+"\n");
 			}
 		}
-		if (warnings.size() > 0) {
+		if (!warnings.isEmpty()) {
 			System.out.println("Warning: Deprecated license identifiers were found that should no longer be used.\n"
 					+ "References to the following deprecated license ID's should be updated:");
 			for (String warningMsg:warnings) {
 				System.out.print("\t" + warningMsg+"\n");
 			}
 		}
-		if (errors.size() == 0) {
+		if (errors.isEmpty()) {
 			System.out.println("This SPDX Document is valid.");
 		} else {
 			System.exit(ERROR_STATUS);
@@ -127,10 +127,7 @@ public class Verify {
 	/**
 	 * Verify a an SPDX file
 	 * @param filePath File path to the SPDX file to be verified
-	 * @param fileType 
 	 * @return A list of verification errors - if empty, the SPDX file is valid
-	 * @throws InvalidFileNameException on invalid file name or file not found
-	 * @throws IOException on IO error
 	 * @throws SpdxVerificationException where the SPDX file can not be parsed or the filename is invalid
 	 */
 	public static List<String> verify(String filePath, SerFileType fileType) throws SpdxVerificationException {
