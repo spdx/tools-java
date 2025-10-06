@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"org.spdx.tools"},{"l":"org.spdx.tools.compare"},{"l":"org.spdx.tools.schema"}];updateSearchResults();
