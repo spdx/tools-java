@@ -43,13 +43,6 @@
 		<system>Github Actions</system>
 		<url>https://github.com/spdx/tools-java/actions</url>
 	</ciManagement>
-    <distributionManagement>
-      <repository>
-        <id>ossrh</id>
-        <name>spdx-spdx-tools</name>
-        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-      </repository>
-	</distributionManagement>
     <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	  <sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -209,6 +202,15 @@
 			</testResource>
 		</testResources>
 		<plugins>
+			<plugin>
+				<groupId>org.sonatype.central</groupId>
+				<artifactId>central-publishing-maven-plugin</artifactId>
+				<version>0.7.0</version>
+				<extensions>true</extensions>
+				<configuration>
+					<publishingServerId>central</publishingServerId>
+				</configuration>
+			</plugin>
 			<plugin>
    				<groupId>org.owasp</groupId>
    				<artifactId>dependency-check-maven</artifactId>
