@@ -253,19 +253,15 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.4</version>
+				<version>3.11.3</version>
 				<configuration>
 					<quiet>true</quiet>
-					<source>8</source>
-					<javadocExecutable>${env.JAVA_HOME}/bin/javadoc</javadocExecutable>
-					<additionalparam>-Xdoclint:none</additionalparam>
+					<notimestamp>true</notimestamp>
+					<doclint>all,-missing</doclint>
 				</configuration>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
-						<configuration>
-							<additionalparam>${javadoc.opts}</additionalparam>
-						</configuration>
 						<goals>
 							<goal>jar</goal>
 						</goals>
