@@ -40,10 +40,10 @@ import org.spdx.tools.SpdxToolsHelper.SerFileType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.networknt.schema.JsonSchema;
-import com.networknt.schema.JsonSchemaFactory;
-import com.networknt.schema.SpecVersion.VersionFlag;
-import com.networknt.schema.ValidationMessage;
+import com.networknt.schema.Schema;
+import com.networknt.schema.SchemaRegistry;
+import com.networknt.schema.SpecificationVersion;
+import com.networknt.schema.Error;
 
 /**
  * Verifies an SPDX document and lists any verification errors
@@ -172,17 +172,18 @@ public class Verify {
 				} else {
 					jsonSchemaResource = JSON_SCHEMA_RESOURCE_V3;
 				}
-				JsonSchemaFactory jsonSchemaFactory = JsonSchemaFactory.getInstance(VersionFlag.V202012);
-				JsonSchema schema;
+				SchemaRegistry schemaRegistry =
+						SchemaRegistry.withDefaultDialect(SpecificationVersion.DRAFT_2020_12);
+				Schema schema;
 				try (InputStream is = Verify.class.getResourceAsStream("/" + jsonSchemaResource)) {
-					schema = jsonSchemaFactory.getSchema(is);
+					schema = schemaRegistry.getSchema(is);
 				}
 				JsonNode root;
 				try (InputStream is = new FileInputStream(file)) {
 					root = JSON_MAPPER.readTree(is);
 				}
-				Set<ValidationMessage> messages = schema.validate(root);
-				for (ValidationMessage msg:messages) {
+				List<Error> messages = schema.validate(root);
+				for (Error msg:messages) {
 					retval.add(msg.toString());
 				}
 			} catch (IOException e) {
