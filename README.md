@@ -37,7 +37,7 @@ If you are a developer, there are examples in the [examples folder](examples/org
 
 The command line interface of the SPDX Tools can be used like this:
 
-    java -jar tools-java-2.0.1-jar-with-dependencies.jar <function> <parameters>
+    java -jar tools-java-2.0.2-jar-with-dependencies.jar <function> <parameters>
 
 ## SPDX format converters
 
