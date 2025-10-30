@@ -30,9 +30,9 @@ import org.spdx.storage.simple.InMemSpdxStore;
  * for this example is assumed to be JSON (e.g. the output of the SimpleSpdxDocumentV2Compat example).
  * Different format can be used by using the associated store rather than the spdx-jackson store
  * (e.g. spdx-spreadsheet-store, spdx-tagvalue-store, or the spdx-rdf-store).
- * 
+ * <p>
  * This example depends on the Spdx-Java-Library and the spdx-java-jackson store libraries
- * 
+ * <p>
  * @author Gary O'Neall
  */
 public class ExistingSpdxDocumentV2Compat {
