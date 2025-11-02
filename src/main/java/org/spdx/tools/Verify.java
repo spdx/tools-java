@@ -54,9 +54,9 @@ public class Verify {
 	static final int MIN_ARGS = 1;
 	static final int MAX_ARGS = 2;
 	static final int ERROR_STATUS = 1;
-	private static final String JSON_SCHEMA_RESOURCE_V2_3 = "resources/spdx-schema-v2.3.json";
-	private static final String JSON_SCHEMA_RESOURCE_V2_2 = "resources/spdx-schema-v2.2.json";
-	private static final String JSON_SCHEMA_RESOURCE_V3 = "resources/spdx-schema-v3.0.1.json";
+	public static final String JSON_SCHEMA_RESOURCE_V2_3 = "resources/spdx-schema-v2.3.json";
+	public static final String JSON_SCHEMA_RESOURCE_V2_2 = "resources/spdx-schema-v2.2.json";
+	public static final String JSON_SCHEMA_RESOURCE_V3 = "resources/spdx-schema-v3.0.1.json";
 	
 	static final ObjectMapper JSON_MAPPER = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 	
