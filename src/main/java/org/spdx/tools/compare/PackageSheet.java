@@ -296,7 +296,7 @@ public class PackageSheet extends AbstractSheet {
 		}
 		Row licenseCommentRow = this.addRow();
 		licenseCommentRow.createCell(FIELD_COL).setCellValue(LICENSE_COMMENT_FIELD_TEXT);
-		if (comparer.isLicenseCommmentsEquals()) {
+		if (comparer.isLicenseCommentsEquals()) {
 			setCellEqualValue(licenseCommentRow.createCell(EQUALS_COL), allDocsPresent);
 		} else {
 			setCellDifferentValue(licenseCommentRow.createCell(EQUALS_COL));
