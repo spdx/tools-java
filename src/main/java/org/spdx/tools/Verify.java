@@ -182,8 +182,12 @@ public class Verify {
 					root = JSON_MAPPER.readTree(is);
 				}
 				Set<ValidationMessage> messages = schema.validate(root);
-				for (ValidationMessage msg:messages) {
-					retval.add(msg.toString());
+//				for (ValidationMessage msg:messages) {
+//					retval.add(msg.toString());
+//				}
+				// TODO: Improve validation messages - currently, not very useful
+				if (!messages.isEmpty()) {
+					retval.add("JSON Schema did not pass validation");
 				}
 			} catch (IOException e) {
 				retval.add("Unable to validate JSON file against schema due to I/O Error");
