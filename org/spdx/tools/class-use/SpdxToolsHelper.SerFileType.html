@@ -69,10 +69,14 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static <a href="../SpdxToolsHelper.SerFileType.html" title="enum in org.spdx.tools">SpdxToolsHelper.SerFileType</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SpdxToolsHelper.</span><code><a href="../SpdxToolsHelper.html#fileToFileType(java.io.File)" class="member-name-link">fileToFileType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/File.html" title="class or interface in java.io" class="external-link">File</a>&nbsp;file)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Determine the file type based on the file name and extension</div>
+</div>
 <div class="col-first odd-row-color"><code>static <a href="../SpdxToolsHelper.SerFileType.html" title="enum in org.spdx.tools">SpdxToolsHelper.SerFileType</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SpdxToolsHelper.</span><code><a href="../SpdxToolsHelper.html#strToFileType(java.lang.String)" class="member-name-link">strToFileType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;str)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Determine the file type based on the file extension or string</div>
+</div>
 <div class="col-first even-row-color"><code>static <a href="../SpdxToolsHelper.SerFileType.html" title="enum in org.spdx.tools">SpdxToolsHelper.SerFileType</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SpdxToolsHelper.SerFileType.</span><code><a href="../SpdxToolsHelper.SerFileType.html#valueOf(java.lang.String)" class="member-name-link">valueOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
 <div class="col-last even-row-color">
@@ -110,14 +114,22 @@ the order they are declared.</div>
 <div class="col-first even-row-color"><code>static org.spdx.library.model.v3_0_1.core.SpdxDocument</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SpdxToolsHelper.</span><code><a href="../SpdxToolsHelper.html#deserializeDocument(java.io.File,org.spdx.tools.SpdxToolsHelper.SerFileType)" class="member-name-link">deserializeDocument</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/File.html" title="class or interface in java.io" class="external-link">File</a>&nbsp;file,
  <a href="../SpdxToolsHelper.SerFileType.html" title="enum in org.spdx.tools">SpdxToolsHelper.SerFileType</a>&nbsp;fileType)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Deserializes an SPDX document from a file</div>
+</div>
 <div class="col-first odd-row-color"><code>static org.spdx.library.model.v2.SpdxDocument</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SpdxToolsHelper.</span><code><a href="../SpdxToolsHelper.html#deserializeDocumentCompatV2(java.io.File,org.spdx.tools.SpdxToolsHelper.SerFileType)" class="member-name-link">deserializeDocumentCompatV2</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/File.html" title="class or interface in java.io" class="external-link">File</a>&nbsp;file,
  <a href="../SpdxToolsHelper.SerFileType.html" title="enum in org.spdx.tools">SpdxToolsHelper.SerFileType</a>&nbsp;fileType)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Deserializes an SPDX document from a file,
+ compatible with SPDX version 2</div>
+</div>
 <div class="col-first even-row-color"><code>static org.spdx.storage.ISerializableModelStore</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SpdxToolsHelper.</span><code><a href="../SpdxToolsHelper.html#fileTypeToStore(org.spdx.tools.SpdxToolsHelper.SerFileType)" class="member-name-link">fileTypeToStore</a><wbr>(<a href="../SpdxToolsHelper.SerFileType.html" title="enum in org.spdx.tools">SpdxToolsHelper.SerFileType</a>&nbsp;fileType)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Determine the appropriate in memory based model store which supports
+ serialization for the fileType</div>
+</div>
 <div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">Verify.</span><code><a href="../Verify.html#verify(java.lang.String,org.spdx.tools.SpdxToolsHelper.SerFileType)" class="member-name-link">verify</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;filePath,
  <a href="../SpdxToolsHelper.SerFileType.html" title="enum in org.spdx.tools">SpdxToolsHelper.SerFileType</a>&nbsp;fileType)</code></div>
