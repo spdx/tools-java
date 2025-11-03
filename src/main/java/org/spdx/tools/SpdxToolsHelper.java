@@ -58,6 +58,9 @@ import org.spdx.v3jsonldstore.JsonLDStore;
  */
 public class SpdxToolsHelper {
 
+	/**
+	 * Supported serialization file types
+	 */
 	public enum SerFileType {
 		JSON, RDFXML, XML, XLS, XLSX, YAML, TAG, RDFTTL, JSONLD
 	}
@@ -84,6 +87,9 @@ public class SpdxToolsHelper {
 	}
 
 	/**
+	 * Determine the appropriate in memory based model store which supports
+	 * serialization for the fileType
+	 *
 	 * @param fileType
 	 *            file type for the store
 	 * @return the appropriate in memory based model store which supports
@@ -129,6 +135,8 @@ public class SpdxToolsHelper {
 	}
 
 	/**
+	 * Determine the file type based on the file name and extension
+	 *
 	 * @param file
 	 * @return the file type based on the file name and file extension
 	 * @throws InvalidFileNameException
@@ -188,6 +196,8 @@ public class SpdxToolsHelper {
 	}
 
 	/**
+	 * Determine the file type based on the file extension or string
+	 *
 	 * @param str
 	 * @return the file type based on the file extension or string
 	 */
@@ -197,6 +207,9 @@ public class SpdxToolsHelper {
 	}
 
 	/**
+	 * Deserializes an SPDX document from a file,
+	 * compatible with SPDX version 2
+	 *
 	 * @param file
 	 *            file containing an SPDX document with the standard file
 	 *            extension for the serialization formats
@@ -215,6 +228,9 @@ public class SpdxToolsHelper {
 		return readDocumentFromFileCompatV2(store, file);
 	}
 	/**
+	 * Deserializes an SPDX document from a file,
+	 * compatible with SPDX version 2
+	 *
 	 * @param file
 	 *            file containing an SPDX document in one of the supported
 	 *            SerFileTypes
@@ -235,6 +251,8 @@ public class SpdxToolsHelper {
 	}
 	
 	/**
+	 * Deserializes an SPDX document from a file
+	 *
 	 * @param file
 	 *            file containing an SPDX document with the standard file
 	 *            extension for the serialization formats
@@ -253,6 +271,8 @@ public class SpdxToolsHelper {
 		return readDocumentFromFileV3(store, file);
 	}
 	/**
+	 * Deserializes an SPDX document from a file
+	 *
 	 * @param file
 	 *            file containing an SPDX document in one of the supported
 	 *            SerFileTypes
@@ -308,6 +328,8 @@ public class SpdxToolsHelper {
 	}
 	
 	/**
+	 * Is the store supporting SPDX version 3
+	 *
 	 * @param store model store
 	 * @return true of the model store support SPDX spec version 3
 	 */
@@ -316,6 +338,8 @@ public class SpdxToolsHelper {
 	}
 	
 	/**
+	 * Is the store supporting SPDX version 2
+	 *
 	 * @param store model store
 	 * @return true of the model store support SPDX spec version 2
 	 */
@@ -358,7 +382,9 @@ public class SpdxToolsHelper {
 	}
 	
 	/**
-	 * Reads an SPDX Document from a file
+	 * Reads an SPDX Document from a file,
+	 * compatible with SPDX version 2
+	 *
 	 * @param store Store where the document is to be stored
 	 * @param file File to read the store from
 	 * @return SPDX Document from the store
@@ -375,6 +401,8 @@ public class SpdxToolsHelper {
 	}
 	
 	/**
+	 * Gets an SPDX document from the model store
+	 *
 	 * @param store model store
 	 * @return returns a document if a single document is found in the model store
 	 * @throws InvalidSPDXAnalysisException
@@ -395,6 +423,9 @@ public class SpdxToolsHelper {
 	}
 	
 	/**
+	 * Gets an SPDX document from the model store,
+	 * compatible with SPDX version 2
+	 *
 	 * @param store model store
 	 * @return returns a document if a single document is found in the model store
 	 * @throws InvalidSPDXAnalysisException
