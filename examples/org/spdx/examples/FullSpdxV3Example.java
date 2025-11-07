@@ -1,3 +1,12 @@
+/**
+ * SPDX-FileContributor: Gary O'Neall
+ * SPDX-FileCopyrightText: Copyright (c) 2025 Source Auditor Inc.
+ * SPDX-FileType: SOURCE
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Full example of an SPDX document using all classes
+ */
+
 package org.spdx.examples;
 
 import com.fasterxml.jackson.databind.JsonNode;
