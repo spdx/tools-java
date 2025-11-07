@@ -1,13 +1,12 @@
 package org.spdx.examples;
 
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.networknt.schema.JsonSchema;
-import com.networknt.schema.JsonSchemaFactory;
-import com.networknt.schema.SpecVersion;
-import com.networknt.schema.ValidationMessage;
+import com.networknt.schema.Error;
+import com.networknt.schema.Schema;
+import com.networknt.schema.SchemaRegistry;
+import com.networknt.schema.SpecificationVersion;
 import org.spdx.core.DefaultModelStore;
 import org.spdx.core.IModelCopyManager;
 import org.spdx.core.InvalidSPDXAnalysisException;
@@ -26,7 +25,6 @@ import org.spdx.library.model.v3_0_1.dataset.DatasetAvailabilityType;
 import org.spdx.library.model.v3_0_1.dataset.DatasetPackage;
 import org.spdx.library.model.v3_0_1.dataset.DatasetType;
 import org.spdx.library.model.v3_0_1.expandedlicensing.ExtendableLicense;
-import org.spdx.library.model.v3_0_1.extension.Extension;
 import org.spdx.library.model.v3_0_1.security.*;
 import org.spdx.library.model.v3_0_1.simplelicensing.AnyLicenseInfo;
 import org.spdx.library.model.v3_0_1.simplelicensing.SimpleLicensingText;
@@ -39,9 +37,7 @@ import org.spdx.v3jsonldstore.JsonLDStore;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.spdx.tools.Verify.JSON_SCHEMA_RESOURCE_V3;
 
@@ -61,10 +57,9 @@ public class FullSpdxV3Example {
     static final ObjectMapper JSON_MAPPER = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 
     static class ExampleBuilder {
-        private String prefix = null;
-        private SpdxDocument doc = null;
+        private final String prefix;
+        private final SpdxDocument doc;
         private Sbom sBom = null;
-        private Bom aiBom = null;
         private SpdxPackage pkg = null;
 
         public ExampleBuilder(String prefix, SpdxDocument doc) {
@@ -88,17 +83,19 @@ public class FullSpdxV3Example {
         }
 
         private void addExtensionClasses() throws InvalidSPDXAnalysisException {
-            // SpdxExtensionExample extension = new SpdxExtensionExample(doc.getModelStore(), prefix + "extension", doc.getCopyManager(), true, prefix);
-            // This currently causes a schema validation issue and depends on a fix in the v3JsonLD store
-            // extension.setExtensionProperty("Extension property value");
-            // TODO: Add this back in after validation issues are addressed
-            Extension extension = doc.createCdxPropertiesExtension(prefix + "extension")
+            //TODO: The following is causing a schema validation error - uncomment when resolved
+//            ModelRegistry.getModelRegistry().registerExtensionType("Extension.example",
+//                    SpdxExtensionExample.class);
+//            SpdxExtensionExample extension = new SpdxExtensionExample(doc.getModelStore(),
+//                    prefix + "extension", doc.getCopyManager(), true, prefix);
+//            extension.setExtensionProperty("Extension property value");
+//            doc.getExtensions().add(extension);
+            doc.getExtensions().add(doc.createCdxPropertiesExtension(getNextAnonId())
                     .addCdxProperty(doc.createCdxPropertyEntry(getNextAnonId())
-                            .setCdxPropName("cdxProperty")
-                            .setCdxPropValue("value")
+                            .setCdxPropName("CDXProperty")
+                            .setCdxPropValue("Property Value")
                             .build())
-                    .build();
-            doc.getExtensions().add(extension);
+                    .build());
         }
 
         private void addBuildClasses() throws InvalidSPDXAnalysisException {
@@ -173,7 +170,7 @@ public class FullSpdxV3Example {
             // ConjunctiveLicenseSet
             AnyLicenseInfo complexLicense = doc.createConjunctiveLicenseSet(prefix + "complexlicense")
                     // CustomLicense
-                    .addMember(doc.createCustomLicense(prefix + "LicenseRef-customlicense1")
+                    .addMember(doc.createCustomLicense(prefix + "LicenseRef-customlicense3")
                             .setLicenseText("This is the license text for my custom license")
                             .setName("Gary's Custom License")
                             .addSeeAlso("https://example.com")
@@ -181,7 +178,7 @@ public class FullSpdxV3Example {
                     // OrLaterOperator
                     .addMember(doc.createOrLaterOperator(prefix + "complexorlater")
                             // ListedLicense
-                            .setSubjectLicense(doc.createListedLicense("https://spdx.org/licenses/EPL-1.0")
+                            .setSubjectLicense(doc.createListedLicense("http://spdx.org/licenses/EPL-1.0")
                                     .setName("Eclipse Public License 1.0")
                                     .setLicenseText("Eclipse Public License - v 1.0\n\nTHE ACCOMPANYING PROGRAM IS PROVIDED" +
                                             " UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICENSE (\"AGREEMENT\"). ANY USE, REPRODUCTION " +
@@ -378,20 +375,20 @@ public class FullSpdxV3Example {
             // ExploitCatalogVulnAssessmentRelationship
             //TODO: The schema has "locator" for the field while the generated Java code has "securityLocator"
             //Need to regenerate the library then uncomment the example below
-//            ExploitCatalogVulnAssessmentRelationship excat = doc.createExploitCatalogVulnAssessmentRelationship(prefix + "exploitcat")
-//                    .setRelationshipType(RelationshipType.HAS_ASSESSMENT_FOR)
-//                    .setFrom(vuln)
-//                    .addTo(log4j)
-//                    .setCatalogType(ExploitCatalogType.KEV)
-//                    .setSecurityLocator("https://www.cisa.gov/known-exploited-vulnerabilities-catalog")
-//                    .setExploited(true)
-//                    .setAssessedElement(log4j)
-//                    .setSuppliedBy(supplierAgent)
-//                    .setPublishedTime(LocalDateTime.of(2023, 9, 18, 0, 0)
-//                            .format(SPDX_DATE_FORMATTER))
-//                    .build();
-//            doc.getElements().add(excat);
-//            securityBundle.getElements().add(excat);
+            ExploitCatalogVulnAssessmentRelationship excat = doc.createExploitCatalogVulnAssessmentRelationship(prefix + "exploitcat")
+                    .setRelationshipType(RelationshipType.HAS_ASSESSMENT_FOR)
+                    .setFrom(vuln)
+                    .addTo(log4j)
+                    .setCatalogType(ExploitCatalogType.KEV)
+                    .setSecurityLocator("https://www.cisa.gov/known-exploited-vulnerabilities-catalog")
+                    .setExploited(true)
+                    .setAssessedElement(log4j)
+                    .setSuppliedBy(supplierAgent)
+                    .setPublishedTime(LocalDateTime.of(2023, 9, 18, 0, 0)
+                            .format(SPDX_DATE_FORMATTER))
+                    .build();
+            doc.getElements().add(excat);
+            securityBundle.getElements().add(excat);
 
             // SsvcVulnAssessmentRelationship
             SsvcVulnAssessmentRelationship ssvs = doc.createSsvcVulnAssessmentRelationship(prefix + "ssvs")
@@ -527,7 +524,6 @@ public class FullSpdxV3Example {
                             .addLocator("org.spdx:tools-java")
                             .build())
                     .build());
-
         }
 
         private void addSoftwareClasses() throws InvalidSPDXAnalysisException {
@@ -668,7 +664,7 @@ public class FullSpdxV3Example {
         }
 
         private void addAIandDataClasses() throws InvalidSPDXAnalysisException {
-            aiBom = doc.createBom(prefix + "aibom")
+            Bom aiBom = doc.createBom(prefix + "aibom")
                     .setName("AI SBOM")
                     .addProfileConformance(ProfileIdentifierType.CORE)
                     .addProfileConformance(ProfileIdentifierType.SOFTWARE)
@@ -758,6 +754,8 @@ public class FullSpdxV3Example {
                     .addTo(aiPackage)
                     .setCompleteness(RelationshipCompleteness.INCOMPLETE)
                     .build();
+            doc.getElements().add(usesData);
+            aiBom.getElements().add(usesData);
         }
     }
 
@@ -809,22 +807,40 @@ public class FullSpdxV3Example {
             doc.setIdPrefix(prefix);
             ExampleBuilder builder = new ExampleBuilder(prefix, doc);
             builder.build();
+            List<String> warnings = new ArrayList<>();
+            // Add all the elements to the doc to make sure everything gets serialized
+            Collection<Element> docElements = doc.getElements();
+            SpdxModelFactory.getSpdxObjects(modelStore, copyManager, null, null, prefix).forEach(
+                    modelObject -> {
+                        if (modelObject instanceof Element) {
+                            Element element = (Element)modelObject;
+                            if (!docElements.contains(element) && !element.equals(doc)) {
+                                warnings.add("Element not in the document elements: " + element.getObjectUri());
+                                docElements.add(element);
+                            }
+                        }
+                    }
+            );
 
-            List<String> warnings = doc.verify();
+            // Verify using the SPDX Java Library
+            warnings.addAll(doc.verify());
             try (OutputStream outStream = new FileOutputStream(outFile)) {
-                modelStore.serialize(outStream);
+                modelStore.serialize(outStream, doc);
             }
-            JsonSchemaFactory jsonSchemaFactory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V202012);
-            JsonSchema schema;
+
+            // Validate using the schema
+            SchemaRegistry schemaRegistry =
+                    SchemaRegistry.withDefaultDialect(SpecificationVersion.DRAFT_2020_12);
+            Schema schema;
             try (InputStream is = Verify.class.getResourceAsStream("/" + JSON_SCHEMA_RESOURCE_V3)) {
-                schema = jsonSchemaFactory.getSchema(is);
+                schema = schemaRegistry.getSchema(is);
             }
             JsonNode root;
             try (InputStream is = new FileInputStream(outFile)) {
                 root = JSON_MAPPER.readTree(is);
             }
-            Set<ValidationMessage> messages = schema.validate(root);
-            for (ValidationMessage msg:messages) {
+            List<Error> messages = schema.validate(root);
+            for (Error msg:messages) {
                 warnings.add(msg.toString());
             }
             if (!warnings.isEmpty()) {
