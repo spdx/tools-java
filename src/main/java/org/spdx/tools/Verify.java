@@ -29,6 +29,14 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.core.JsonParseException;
 
+import org.apache.jena.graph.Graph;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.shacl.ShaclValidator;
+import org.apache.jena.shacl.ValidationReport;
+import org.apache.jena.shacl.validation.ReportEntry;
 import org.spdx.core.CoreModelObject;
 import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.library.model.v2.Version;
@@ -56,6 +64,7 @@ public class Verify {
 	public static final String JSON_SCHEMA_RESOURCE_V2_3 = "resources/spdx-schema-v2.3.json";
 	public static final String JSON_SCHEMA_RESOURCE_V2_2 = "resources/spdx-schema-v2.2.json";
 	public static final String JSON_SCHEMA_RESOURCE_V3 = "resources/spdx-schema-v3.0.1.json";
+	public static final String SHACL_MODEL_RESOURCE_V3 = "resources/spdx-shacl-v3.0.1.ttl";
 	
 	static final ObjectMapper JSON_MAPPER = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 	
@@ -192,6 +201,19 @@ public class Verify {
 			}
 		}
 		if (SerFileType.JSONLD.equals(fileType)) {
+			Model shaclModel = ModelFactory.createDefaultModel();
+			try (InputStream is = Verify.class.getResourceAsStream("/" + SHACL_MODEL_RESOURCE_V3)) {
+				RDFDataMgr.read(shaclModel, is, Lang.TURTLE);
+			} catch (IOException e) {
+				retval.add("Unable to validate JSON file against schema due to I/O Error reading the SHACL file");
+            }
+            Graph dataGraph = RDFDataMgr.loadGraph(file.getPath(), Lang.JSONLD);
+			ValidationReport report = ShaclValidator.get().validate(shaclModel.getGraph(), dataGraph);
+			if (!report.conforms()) {
+				for (ReportEntry entry : report.getEntries()) {
+					retval.add(entry.toString());
+				}
+			}
 			//TODO: Implement verification against the OWL schema
 		}
 		List<String> verify;
