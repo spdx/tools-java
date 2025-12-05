@@ -2,13 +2,13 @@
  * SPDX-FileCopyrightText: Copyright (c) 2015 Source Auditor Inc.
  * SPDX-FileType: SOURCE
  * SPDX-License-Identifier: Apache-2.0
- *
+ * <br/>
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
  *   You may obtain a copy of the License at
- *
+ * <br/>
  *       https://www.apache.org/licenses/LICENSE-2.0
- *
+ * <br/>
  *   Unless required by applicable law or agreed to in writing, software
  *   distributed under the License is distributed on an "AS IS" BASIS,
  *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import com.fasterxml.jackson.core.JsonParseException;
 
@@ -39,10 +40,11 @@ import org.spdx.tools.SpdxToolsHelper.SerFileType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.networknt.schema.Schema;
-import com.networknt.schema.SchemaRegistry;
-import com.networknt.schema.SpecificationVersion;
-import com.networknt.schema.Error;
+
+import com.networknt.schema.JsonSchema;
+import com.networknt.schema.JsonSchemaFactory;
+import com.networknt.schema.SpecVersion.VersionFlag;
+import com.networknt.schema.ValidationMessage;
 
 /**
  * Verifies an SPDX document and lists any verification errors
@@ -171,18 +173,17 @@ public class Verify {
 				} else {
 					jsonSchemaResource = JSON_SCHEMA_RESOURCE_V3;
 				}
-				SchemaRegistry schemaRegistry =
-						SchemaRegistry.withDefaultDialect(SpecificationVersion.DRAFT_2020_12);
-				Schema schema;
+				JsonSchemaFactory jsonSchemaFactory = JsonSchemaFactory.getInstance(VersionFlag.V202012);
+				JsonSchema schema;
 				try (InputStream is = Verify.class.getResourceAsStream("/" + jsonSchemaResource)) {
-					schema = schemaRegistry.getSchema(is);
+					schema = jsonSchemaFactory.getSchema(is);
 				}
 				JsonNode root;
 				try (InputStream is = new FileInputStream(file)) {
 					root = JSON_MAPPER.readTree(is);
 				}
-				List<Error> messages = schema.validate(root);
-				for (Error msg:messages) {
+				Set<ValidationMessage> messages = schema.validate(root);
+				for (ValidationMessage msg:messages) {
 					retval.add(msg.toString());
 				}
 			} catch (IOException e) {
