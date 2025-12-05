@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (c) 2025 Source Auditor Inc.
  * SPDX-FileType: SOURCE
  * SPDX-License-Identifier: Apache-2.0
- *
+ * <br/>
  * Full example of an SPDX document using all classes
  */
 
@@ -12,10 +12,10 @@ package org.spdx.examples;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.networknt.schema.Error;
-import com.networknt.schema.Schema;
-import com.networknt.schema.SchemaRegistry;
-import com.networknt.schema.SpecificationVersion;
+import com.networknt.schema.JsonSchema;
+import com.networknt.schema.JsonSchemaFactory;
+import com.networknt.schema.SpecVersion.VersionFlag;
+import com.networknt.schema.ValidationMessage;
 import org.spdx.core.DefaultModelStore;
 import org.spdx.core.IModelCopyManager;
 import org.spdx.core.InvalidSPDXAnalysisException;
@@ -838,18 +838,17 @@ public class FullSpdxV3Example {
             }
 
             // Validate using the schema
-            SchemaRegistry schemaRegistry =
-                    SchemaRegistry.withDefaultDialect(SpecificationVersion.DRAFT_2020_12);
-            Schema schema;
+            JsonSchemaFactory jsonSchemaFactory = JsonSchemaFactory.getInstance(VersionFlag.V202012);
+            JsonSchema schema;
             try (InputStream is = Verify.class.getResourceAsStream("/" + JSON_SCHEMA_RESOURCE_V3)) {
-                schema = schemaRegistry.getSchema(is);
+                schema = jsonSchemaFactory.getSchema(is);
             }
             JsonNode root;
             try (InputStream is = new FileInputStream(outFile)) {
                 root = JSON_MAPPER.readTree(is);
             }
-            List<Error> messages = schema.validate(root);
-            for (Error msg:messages) {
+            Set<ValidationMessage> messages = schema.validate(root);
+            for (ValidationMessage msg:messages) {
                 warnings.add(msg.toString());
             }
             if (!warnings.isEmpty()) {

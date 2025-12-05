@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (c) 2025 Source Auditor Inc.
  * SPDX-FileType: SOURCE
  * SPDX-License-Identifier: Apache-2.0
- *
+ * <br/>
  * Example of serializing a single expanded license
  */
 
@@ -12,10 +12,10 @@ package org.spdx.examples;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.networknt.schema.Error;
-import com.networknt.schema.Schema;
-import com.networknt.schema.SchemaRegistry;
-import com.networknt.schema.SpecificationVersion;
+import com.networknt.schema.JsonSchema;
+import com.networknt.schema.JsonSchemaFactory;
+import com.networknt.schema.SpecVersion.VersionFlag;
+import com.networknt.schema.ValidationMessage;
 import org.spdx.core.DefaultModelStore;
 import org.spdx.core.IModelCopyManager;
 import org.spdx.library.LicenseInfoFactory;
@@ -37,6 +37,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import static org.spdx.tools.Verify.JSON_SCHEMA_RESOURCE_V3;
 
@@ -158,18 +159,17 @@ public class ExpandedLicenseExampleV3 {
             try (OutputStream outStream = new FileOutputStream(outFile)) {
                 modelStore.serialize(outStream, doc);
             }
-            SchemaRegistry schemaRegistry =
-                    SchemaRegistry.withDefaultDialect(SpecificationVersion.DRAFT_2020_12);
-            Schema schema;
+            JsonSchemaFactory jsonSchemaFactory = JsonSchemaFactory.getInstance(VersionFlag.V202012);
+            JsonSchema schema;
             try (InputStream is = Verify.class.getResourceAsStream("/" + JSON_SCHEMA_RESOURCE_V3)) {
-                schema = schemaRegistry.getSchema(is);
+                schema = jsonSchemaFactory.getSchema(is);
             }
             JsonNode root;
             try (InputStream is = new FileInputStream(outFile)) {
                 root = JSON_MAPPER.readTree(is);
             }
-            List<com.networknt.schema.Error> messages = schema.validate(root);
-            for (Error msg:messages) {
+            Set<ValidationMessage> messages = schema.validate(root);
+            for (ValidationMessage msg:messages) {
                 warnings.add(msg.toString());
             }
             if (!warnings.isEmpty()) {
