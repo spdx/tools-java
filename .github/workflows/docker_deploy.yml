@@ -31,6 +31,9 @@ jobs:
       - name: Checkout main repository
         uses: actions/checkout@v5
 
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
 
@@ -45,6 +48,8 @@ jobs:
         id: meta_base
         uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v51.0.0
         with:
+          images: |
+            ${{ env.REGISTRY }}/${{ github.repository }}
           tags: |
             type=ref,event=tag
             type=semver,pattern={{version}}
@@ -57,6 +62,7 @@ jobs:
           context: .
           push: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') }}
           load: false
+          platforms: linux/amd64,linux/arm64
           tags: |
             ${{ steps.meta_base.outputs.tags }}
           labels: ${{ steps.meta_base.outputs.labels }}
