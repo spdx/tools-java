@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.junit.After;
 import org.junit.Before;
@@ -117,6 +118,25 @@ public class SpdxConverterTestV3 extends TestCase {
 		assertEquals("http://spdx.org/spdxdocs/spdx-tools-v1.2-3F2504E0-4F89-41D3-9A0C-0305E82C3301#", map.get().getNamespace());
 		assertEquals("DocumentRef-spdx-tool-1.2", map.get().getPrefix());
 		// TODO: create a more extensive set of checks
+	}
+
+	public void testV2JsonToV3JsonLDStableIds() throws SpdxConverterException, InvalidSPDXAnalysisException, IOException {
+		Path outFilePath1 = tempDirPath.resolve("result-stable-1.jsonld");
+		Path outFilePath2 = tempDirPath.resolve("result-stable-2.jsonld");
+		SpdxConverter.convert(TEST_JSON_FILE_PATH, outFilePath1.toString(), SerFileType.JSON, SerFileType.JSONLD, false, true);
+		SpdxConverter.convert(TEST_JSON_FILE_PATH, outFilePath2.toString(), SerFileType.JSON, SerFileType.JSONLD, false, true);
+		SpdxDocument resultDoc1 = SpdxToolsHelper.deserializeDocument(outFilePath1.toFile(), SerFileType.JSONLD);
+		SpdxDocument resultDoc2 = SpdxToolsHelper.deserializeDocument(outFilePath2.toFile(), SerFileType.JSONLD);
+		assertEquals(resultDoc1.getId(), resultDoc2.getId());
+		List<String> rootIds1 = resultDoc1.getRootElements().stream()
+				.map(Element::getId)
+				.sorted()
+				.collect(Collectors.toList());
+		List<String> rootIds2 = resultDoc2.getRootElements().stream()
+				.map(Element::getId)
+				.sorted()
+				.collect(Collectors.toList());
+		assertEquals(rootIds1, rootIds2);
 	}
 
 }

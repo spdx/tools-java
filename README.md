@@ -56,7 +56,7 @@ Example to convert a SPDX file from Tag to RDF format:
 
     java -jar tools-java-2.0.2-jar-with-dependencies.jar Convert ../testResources/SPDXTagExample-v2.2.spdx TagToRDF.rdf
 
-The file formats can optionally be provided as the 3rd and 4th parameter for the input and output formats respectively.  An optional 5th option `excludeLicenseDetails` will not copy the listed license properties to the output file.  The following example will copy a JSON format to an RDF Turtle format without including the listed license properties:
+The file formats can optionally be provided as the 3rd and 4th parameter for the input and output formats respectively.  An optional 5th option `excludeLicenseDetails` will not copy the listed license properties to the output file.  An additional optional flag `--stable-ids` makes SPDX 2 to SPDX 3 conversions deterministic by preserving SPDX IDs when possible and otherwise using deterministic IDs. The following example will copy a JSON format to an RDF Turtle format without including the listed license properties:
 
     java -jar tools-java-2.0.2-jar-with-dependencies.jar Convert ../testResources/SPDXTagExample-v2.2.spdx TagToRDF.ttl TAG RDFTTL excludeLicenseDetails
 
@@ -66,6 +66,10 @@ To convert from SPDX 2 to SPDX 3.0.1:
 * or add the options for the from and to file types:
 
     java -jar tools-java-2.0.2-jar-with-dependencies.jar Convert hello.spdx hello.spdx.json TAG JSONLD
+
+To convert from SPDX 2 to SPDX 3.0.1 with deterministic SPDX IDs:
+
+    java -jar tools-java-2.0.2-jar-with-dependencies.jar Convert hello.spdx hello.spdx.json TAG JSONLD --stable-ids
 
 ## Compare utilities
 

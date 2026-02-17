@@ -22,6 +22,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import org.slf4j.Logger;
@@ -55,7 +58,7 @@ public class SpdxConverter {
 	static final int ERROR_STATUS = 1;
 	
 	static final int MIN_ARGS = 2;
-	static final int MAX_ARGS = 5;
+	static final int MAX_ARGS = 6;
 	
 	/**
 	 * @param args
@@ -73,16 +76,31 @@ public class SpdxConverter {
 		if (args.length > MAX_ARGS) {
 			System.out.printf("Warning: Extra arguments will be ignored");
 		}
-		if (args.length == 3) {
+		boolean excludeLicenseDetails = false;
+		boolean stableIds = false;
+		if (args.length == 3 && !isOptionArg(args[2])) {
 			System.out.printf("Warning: only the input file type specified - it will be ignored");
 		}
-		boolean excludeLicenseDetails = false;
-		if (args.length == 5 && "excludelicensedetails".equals(args[4].toLowerCase())) {
-			excludeLicenseDetails = true;
+		if (args.length == 3 && isOptionArg(args[2])) {
+			excludeLicenseDetails = isExcludeLicenseDetails(args[2]);
+			stableIds = DeterministicSpdxIdHelper.isStableIdsFlag(args[2]);
+		}
+		if (args.length >= 5) {
+			for (int i = 4; i < args.length; i++) {
+				String option = args[i];
+				if (Objects.isNull(option)) {
+					continue;
+				}
+				if (isExcludeLicenseDetails(option)) {
+					excludeLicenseDetails = true;
+				} else if (DeterministicSpdxIdHelper.isStableIdsFlag(option)) {
+					stableIds = true;
+				}
+			}
 		}
 		if (args.length < 4) {
 			try {
-				convert(args[0], args[1]);
+				convert(args[0], args[1], excludeLicenseDetails, stableIds);
 			} catch (SpdxConverterException e) {
 				System.err.println("Error converting: "+e.getMessage());
 				System.exit(ERROR_STATUS);
@@ -107,7 +125,7 @@ public class SpdxConverter {
 				System.exit(ERROR_STATUS);
 			}
 			try {
-				convert(args[0], args[1], fromFileType, toFileType, excludeLicenseDetails);
+				convert(args[0], args[1], fromFileType, toFileType, excludeLicenseDetails, stableIds);
 			} catch (SpdxConverterException e) {
 				System.err.println("Error converting: "+e.getMessage());
 				System.exit(ERROR_STATUS);
@@ -122,6 +140,19 @@ public class SpdxConverter {
 	 * @throws SpdxConverterException
 	 */
 	public static void convert(String fromFilePath, String toFilePath) throws SpdxConverterException {
+		convert(fromFilePath, toFilePath, false, false);
+	}
+
+	/**
+	 * Convert an SPDX file from the fromFilePath to a new file at the toFilePath using the file extensions to determine the serialization type
+	 * @param fromFilePath Path of the file to convert from
+	 * @param toFilePath Path of output file for the conversion
+	 * @param excludeLicenseDetails If true, don't copy over properties of the listed licenses
+	 * @param stableIds If true, preserve SPDX IDs when possible during SPDX 2 to 3 conversion
+	 * @throws SpdxConverterException
+	 */
+	public static void convert(String fromFilePath, String toFilePath, boolean excludeLicenseDetails,
+			boolean stableIds) throws SpdxConverterException {
 		SerFileType fromFileType;
 		try {
 			fromFileType = SpdxToolsHelper.fileToFileType(new File(fromFilePath));
@@ -134,7 +165,7 @@ public class SpdxConverter {
 		} catch (InvalidFileNameException e) {
 			throw new SpdxConverterException("To file "+toFilePath+" does not end with a valid SPDX file extension.");
 		}
-		convert(fromFilePath, toFilePath, fromFileType, toFileType);
+		convert(fromFilePath, toFilePath, fromFileType, toFileType, excludeLicenseDetails, stableIds);
 	}
 	
 	/**
@@ -147,7 +178,7 @@ public class SpdxConverter {
 	 */
 	public static void convert(String fromFilePath, String toFilePath, SerFileType fromFileType, 
 			SerFileType toFileType) throws SpdxConverterException {
-		convert(fromFilePath, toFilePath, fromFileType, toFileType, false);
+		convert(fromFilePath, toFilePath, fromFileType, toFileType, false, false);
 		
 	}
 	
@@ -160,8 +191,23 @@ public class SpdxConverter {
 	 * @param excludeLicenseDetails If true, don't copy over properties of the listed licenses
 	 * @throws SpdxConverterException 
 	 */
-	public static void convert(String fromFilePath, String toFilePath, SerFileType fromFileType, 
+	public static void convert(String fromFilePath, String toFilePath, SerFileType fromFileType,
 			SerFileType toFileType, boolean excludeLicenseDetails) throws SpdxConverterException {
+		convert(fromFilePath, toFilePath, fromFileType, toFileType, excludeLicenseDetails, false);
+	}
+
+	/**
+	 * Convert an SPDX file from the fromFilePath to a new file at the toFilePath
+	 * @param fromFilePath Path of the file to convert from
+	 * @param toFilePath Path of output file for the conversion
+	 * @param fromFileType Serialization type of the file to convert from
+	 * @param toFileType Serialization type of the file to convert to
+	 * @param excludeLicenseDetails If true, don't copy over properties of the listed licenses
+	 * @param stableIds If true, preserve SPDX IDs when possible during SPDX 2 to 3 conversion
+	 * @throws SpdxConverterException
+	 */
+	public static void convert(String fromFilePath, String toFilePath, SerFileType fromFileType, 
+			SerFileType toFileType, boolean excludeLicenseDetails, boolean stableIds) throws SpdxConverterException {
 		File fromFile = new File(fromFilePath);
 		if (!fromFile.exists()) {
 			throw new SpdxConverterException("Input file "+fromFilePath+" does not exist.");
@@ -204,7 +250,7 @@ public class SpdxConverter {
 			if (fromVersion == SpdxMajorVersion.VERSION_3) {
 				copyV3ToV3(fromStore, toStore, excludeLicenseDetails);
 			} else if (toVersion  == SpdxMajorVersion.VERSION_3) {
-				copyV2ToV3(fromStore, toStore, excludeLicenseDetails);
+				copyV2ToV3(fromStore, toStore, excludeLicenseDetails, stableIds);
 			} else {
 				copyV2ToV2(fromStore, toStore, excludeLicenseDetails);
 			}
@@ -285,7 +331,7 @@ public class SpdxConverter {
 	 * @throws InvalidSPDXAnalysisException on copy errors
 	 */
 	private static void copyV2ToV3(ISerializableModelStore fromStore,
-			ISerializableModelStore toStore, boolean excludeLicenseDetails) throws InvalidSPDXAnalysisException {
+			ISerializableModelStore toStore, boolean excludeLicenseDetails, boolean stableIds) throws InvalidSPDXAnalysisException {
 		ModelCopyManager copyManager = new ModelCopyManager();
 		org.spdx.library.model.v2.SpdxDocument fromDoc = SpdxToolsHelper.getDocFromStoreCompatV2(fromStore);
 		String toUriPrefix = fromDoc.getDocumentUri() + "-specv3/";
@@ -326,6 +372,85 @@ public class SpdxConverter {
 						}
 					}
 				});
+		if (stableIds) {
+			applyStableIds(fromStore, toStore, copyManager, fromDoc);
+		}
+	}
+
+	private static void applyStableIds(ISerializableModelStore fromStore,
+			ISerializableModelStore toStore,
+			ModelCopyManager copyManager,
+			org.spdx.library.model.v2.SpdxDocument fromDoc) throws InvalidSPDXAnalysisException {
+		Map<String, String> toUriToType = new HashMap<>();
+		toStore.getAllItems(null, null).forEach(tv -> toUriToType.put(tv.getObjectUri(), tv.getType()));
+		SpdxModelFactory.getSpdxObjects(fromStore, copyManager, SpdxConstantsCompatV2.CLASS_SPDX_ELEMENT,
+				fromDoc.getDocumentUri(), fromDoc.getDocumentUri()).forEach(fromElement -> {
+			String fromObjectUri = invokeStringGetter(fromElement, "getObjectUri");
+			if (Objects.isNull(fromObjectUri)) {
+				return;
+			}
+			String fromId = firstNonEmpty(invokeStringGetter(fromElement, "getId"),
+					invokeStringGetter(fromElement, "getSpdxId"));
+			if (Objects.isNull(fromId) || fromId.isEmpty()) {
+				return;
+			}
+			String toObjectUri = copyManager.getCopiedObjectUri(fromStore, fromObjectUri, toStore);
+			if (Objects.isNull(toObjectUri)) {
+				return;
+			}
+			String toType = toUriToType.get(toObjectUri);
+			if (Objects.isNull(toType)) {
+				return;
+			}
+			try {
+				Object toObject = SpdxModelFactory.inflateModelObject(toStore, toObjectUri, toType, copyManager, false, null);
+				String stableId = DeterministicSpdxIdHelper.isValidV3Id(fromId) ? fromId :
+						DeterministicSpdxIdHelper.deterministicFallbackId(fromObjectUri);
+				if (!invokeSetId(toObject, stableId)) {
+					logger.warn("Unable to apply stable SPDX ID for {}", toObjectUri);
+				}
+			} catch (InvalidSPDXAnalysisException e) {
+				throw new RuntimeException("Error applying stable SPDX ID for " + fromObjectUri, e);
+			}
+		});
+	}
+
+	private static String invokeStringGetter(Object target, String methodName) {
+		if (Objects.isNull(target)) {
+			return null;
+		}
+		try {
+			Method method = target.getClass().getMethod(methodName);
+			Object value = method.invoke(target);
+			return value instanceof String ? (String)value : null;
+		} catch (ReflectiveOperationException e) {
+			return null;
+		}
+	}
+
+	private static boolean invokeSetId(Object target, String id) {
+		if (Objects.isNull(target)) {
+			return false;
+		}
+		try {
+			Method method = target.getClass().getMethod("setId", String.class);
+			method.invoke(target, id);
+			return true;
+		} catch (ReflectiveOperationException e) {
+			return false;
+		}
+	}
+
+	private static String firstNonEmpty(String... values) {
+		if (Objects.isNull(values)) {
+			return null;
+		}
+		for (String value : values) {
+			if (Objects.nonNull(value) && !value.isEmpty()) {
+				return value;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -355,6 +480,15 @@ public class SpdxConverter {
 		System.out.println("\t[fromFileType] - optional file type of the input file.  One of JSON, XLS, XLSX, TAG, RDFXML, RDFTTL, YAML, XML or JSONLD.  If not provided the file type will be determined by the file extension");
 		System.out.println("\t[toFileType] - optional file type of the output file.  One of JSON, XLS, XLSX, TAG, RDFXML, RDFTTL, YAML, XML or JSONLD.  If not provided the file type will be determined by the file extension");
 		System.out.println("\t[excludeLicenseDetails] - If present, listed license and listed exception properties will not be included in the output file");
+		System.out.println("\t[--stable-ids] - If present and converting SPDX 2 to 3, preserve SPDX IDs when possible, otherwise use deterministic IDs");
+	}
+
+	private static boolean isOptionArg(String arg) {
+		return isExcludeLicenseDetails(arg) || DeterministicSpdxIdHelper.isStableIdsFlag(arg);
+	}
+
+	private static boolean isExcludeLicenseDetails(String arg) {
+		return Objects.nonNull(arg) && "excludelicensedetails".equals(arg.toLowerCase());
 	}
 
 }
