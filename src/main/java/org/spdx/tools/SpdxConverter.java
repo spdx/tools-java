@@ -98,6 +98,24 @@ public class SpdxConverter {
 				}
 			}
 		}
+		// Handle the case where the fourth argument is an option flag rather than a file type.
+		// In this situation, treat it like the 3-argument-with-option form and ignore any
+		// explicitly specified input file type, for consistency with the 3-argument handling.
+		if (args.length == 4 && isOptionArg(args[3])) {
+			if (isExcludeLicenseDetails(args[3])) {
+				excludeLicenseDetails = true;
+			}
+			if (DeterministicSpdxIdHelper.isStableIdsFlag(args[3])) {
+				stableIds = true;
+			}
+			try {
+				convert(args[0], args[1], excludeLicenseDetails, stableIds);
+			} catch (SpdxConverterException e) {
+				System.err.println("Error converting: "+e.getMessage());
+				System.exit(ERROR_STATUS);
+			}
+			return;
+		}
 		if (args.length < 4) {
 			try {
 				convert(args[0], args[1], excludeLicenseDetails, stableIds);
