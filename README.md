@@ -37,7 +37,7 @@ If you are a developer, there are examples in the [examples folder](examples/org
 
 The command line interface of the SPDX Tools can be used like this:
 
-    java -jar tools-java-2.0.2-jar-with-dependencies.jar <function> <parameters>
+    java -jar tools-java-2.0.4-jar-with-dependencies.jar <function> <parameters>
 
 ## SPDX format converters
 
@@ -54,18 +54,18 @@ The following converter tools support SPDX format:
 
 Example to convert a SPDX file from Tag to RDF format:
 
-    java -jar tools-java-2.0.2-jar-with-dependencies.jar Convert ../testResources/SPDXTagExample-v2.2.spdx TagToRDF.rdf
+    java -jar tools-java-2.0.4-jar-with-dependencies.jar Convert ../testResources/SPDXTagExample-v2.2.spdx TagToRDF.rdf
 
 The file formats can optionally be provided as the 3rd and 4th parameter for the input and output formats respectively.  An optional 5th option `excludeLicenseDetails` will not copy the listed license properties to the output file.  The following example will copy a JSON format to an RDF Turtle format without including the listed license properties:
 
-    java -jar tools-java-2.0.2-jar-with-dependencies.jar Convert ../testResources/SPDXTagExample-v2.2.spdx TagToRDF.ttl TAG RDFTTL excludeLicenseDetails
+    java -jar tools-java-2.0.4-jar-with-dependencies.jar Convert ../testResources/SPDXTagExample-v2.2.spdx TagToRDF.ttl TAG RDFTTL excludeLicenseDetails
 
 To convert from SPDX 2 to SPDX 3.0.1:
 
 * use the file extension `.jsonld.json` or `.jsonld`;
 * or add the options for the from and to file types:
 
-    java -jar tools-java-2.0.2-jar-with-dependencies.jar Convert hello.spdx hello.spdx.json TAG JSONLD
+    java -jar tools-java-2.0.4-jar-with-dependencies.jar Convert hello.spdx hello.spdx.json TAG JSONLD
 
 ## Compare utilities
 
@@ -75,13 +75,13 @@ The following tools can be used to compare one or more SPDX documents:
 
     Example to compare multiple SPDX files provided in RDF format and provide a spreadsheet with the results:
 
-        java -jar tools-java-2.0.2-jar-with-dependencies.jar CompareDocs output.xlsx doc1 doc2 ... docN
+        java -jar tools-java-2.0.4-jar-with-dependencies.jar CompareDocs output.xlsx doc1 doc2 ... docN
 
 * CompareMultipleSpdxDocs with directory
 
     Example to compare all SPDX documents in a directory "/home/me/spdxdocs" and provide a spreadsheet with the results:
 
-        java -jar tools-java-2.0.2-jar-with-dependencies.jar CompareDocs output.xlsx /home/me/spdxdocs
+        java -jar tools-java-2.0.4-jar-with-dependencies.jar CompareDocs output.xlsx /home/me/spdxdocs
 
 ## SPDX Viewer
 
@@ -91,7 +91,7 @@ The following tool can be used to "Pretty Print" an SPDX document.
 
 Sample usage:
 
-    java -jar tools-java-2.0.2-jar-with-dependencies.jar SPDXViewer ../testResources/SPDXRdfExample-v2.2.spdx.rdf
+    java -jar tools-java-2.0.4-jar-with-dependencies.jar SPDXViewer ../testResources/SPDXRdfExample-v2.2.spdx.rdf
 
 ## Verifier
 
@@ -101,7 +101,7 @@ The following tool can be used to verify an SPDX document:
 
 Sample usage:
 
-    java -jar tools-java-2.0.2-jar-with-dependencies.jar Verify ../testResources/SPDXRdfExample-v2.2.spdx.rdf
+    java -jar tools-java-2.0.4-jar-with-dependencies.jar Verify ../testResources/SPDXRdfExample-v2.2.spdx.rdf
 
 ## Generators
 
@@ -111,7 +111,7 @@ The following tool can be used to generate an SPDX verification code from a dire
 
   Sample usage:
 
-        java -jar tools-java-2.0.2-jar-with-dependencies.jar GenerateVerificationCode sourceDirectory [ignoredFilesRegex]
+        java -jar tools-java-2.0.4-jar-with-dependencies.jar GenerateVerificationCode sourceDirectory [ignoredFilesRegex]
 
 ## SPDX Validation Tool
 
