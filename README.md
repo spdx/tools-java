@@ -138,6 +138,10 @@ You need [Apache Maven](http://maven.apache.org/) to build the project:
 
     mvn clean install
 
+### Test fixtures
+
+SPDX 2 to SPDX 3 stable-ID conversion fixtures live in `testResources/spdx2tospdx3conversion` and are auto-discovered by the unit tests. Add new SPDX2 files to that folder to extend coverage.
+
 ## Contributing
 
 See the file [CONTRIBUTING.md](./CONTRIBUTING.md) for information on

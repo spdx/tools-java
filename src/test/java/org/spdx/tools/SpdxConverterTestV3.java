@@ -11,9 +11,15 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.junit.After;
@@ -27,6 +33,7 @@ import org.spdx.library.model.v3_0_1.core.NamespaceMap;
 import org.spdx.library.model.v3_0_1.core.SpdxDocument;
 import org.spdx.library.model.v3_0_1.software.SpdxFile;
 import org.spdx.library.model.v3_0_1.software.SpdxPackage;
+import org.spdx.storage.ISerializableModelStore;
 import org.spdx.storage.simple.InMemSpdxStore;
 import org.spdx.tools.SpdxToolsHelper.SerFileType;
 import org.spdx.utility.compare.SpdxCompareException;
@@ -41,6 +48,7 @@ import junit.framework.TestCase;
 public class SpdxConverterTestV3 extends TestCase {
 	
 	static final String TEST_DIR = "testResources";
+	static final String STABLE_ID_FIXTURE_DIR = "spdx2tospdx3conversion";
 	static final String TEST_JSON_FILE_PATH = TEST_DIR + File.separator + "SPDXJSONExample-v2.3.spdx.json";
 
 	Path tempDirPath;
@@ -137,6 +145,90 @@ public class SpdxConverterTestV3 extends TestCase {
 				.sorted()
 				.collect(Collectors.toList());
 		assertEquals(rootIds1, rootIds2);
+	}
+
+	public void testStableIdsForSourceConversion() throws SpdxConverterException, InvalidSPDXAnalysisException, IOException {
+		List<String> sourcePaths = getStableIdFixturePaths();
+		assertFalse("No SPDX2 fixtures found in " + STABLE_ID_FIXTURE_DIR, sourcePaths.isEmpty());
+		int index = 0;
+		for (String sourcePath : sourcePaths) {
+			runStableIdTestForSourceFile(sourcePath, index++);
+		}
+	}
+
+	private List<String> getStableIdFixturePaths() throws IOException {
+		Path fixtureDir = Paths.get(TEST_DIR, STABLE_ID_FIXTURE_DIR);
+		if (!Files.isDirectory(fixtureDir, LinkOption.NOFOLLOW_LINKS)) {
+			return Collections.emptyList();
+		}
+		try (java.util.stream.Stream<Path> paths = Files.list(fixtureDir)) {
+			return paths
+					.filter(path -> Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS))
+					.sorted(Comparator.comparing(Path::toString))
+					.map(Path::toString)
+					.collect(Collectors.toList());
+		}
+	}
+
+	private void runStableIdTestForSourceFile(String sourcePath, int index)
+			throws SpdxConverterException, InvalidSPDXAnalysisException, IOException {
+		Path outFilePath1 = tempDirPath.resolve("source-stable-" + index + "-1.jsonld");
+		Path outFilePath2 = tempDirPath.resolve("source-stable-" + index + "-2.jsonld");
+		SpdxConverter.convert(sourcePath, outFilePath1.toString(), SerFileType.JSON, SerFileType.JSONLD, false, true);
+		SpdxConverter.convert(sourcePath, outFilePath2.toString(), SerFileType.JSON, SerFileType.JSONLD, false, true);
+		Map<String, List<String>> ids1 = collectTypeToIds(outFilePath1.toFile());
+		Map<String, List<String>> ids2 = collectTypeToIds(outFilePath2.toFile());
+		assertEquals(buildIdDiff(ids1, ids2), ids1, ids2);
+	}
+
+	private Map<String, List<String>> collectTypeToIds(File jsonLdFile) throws InvalidSPDXAnalysisException, IOException {
+		ISerializableModelStore store = SpdxToolsHelper.fileTypeToStore(SerFileType.JSONLD);
+		SpdxToolsHelper.readDocumentFromFileV3(store, jsonLdFile);
+		Map<String, List<String>> typeToIds = new TreeMap<>();
+		store.getAllItems(null, null).forEach(tv -> {
+			try {
+				Object object = SpdxModelFactory.inflateModelObject(store, tv.getObjectUri(), tv.getType(), new ModelCopyManager(), false, null);
+				String id = invokeIdGetter(object);
+				if (Objects.nonNull(id) && !id.isEmpty()) {
+					typeToIds.computeIfAbsent(tv.getType(), type -> new ArrayList<>()).add(id);
+				}
+			} catch (InvalidSPDXAnalysisException e) {
+				throw new RuntimeException("Error inflating SPDX object for ID collection", e);
+			}
+		});
+		typeToIds.values().forEach(Collections::sort);
+		return typeToIds;
+	}
+
+	private String invokeIdGetter(Object object) {
+		if (Objects.isNull(object)) {
+			return null;
+		}
+		try {
+			return (String)object.getClass().getMethod("getId").invoke(object);
+		} catch (ReflectiveOperationException e) {
+			return null;
+		}
+	}
+
+	private String buildIdDiff(Map<String, List<String>> left, Map<String, List<String>> right) {
+		if (left.equals(right)) {
+			return "";
+		}
+		StringBuilder diff = new StringBuilder("Stable ID mismatch between runs.\n");
+		Map<String, List<String>> allKeys = new TreeMap<>();
+		allKeys.putAll(left);
+		right.keySet().forEach(key -> allKeys.putIfAbsent(key, Collections.emptyList()));
+		for (String key : allKeys.keySet()) {
+			List<String> leftIds = left.getOrDefault(key, Collections.emptyList());
+			List<String> rightIds = right.getOrDefault(key, Collections.emptyList());
+			if (!leftIds.equals(rightIds)) {
+				diff.append("Type: ").append(key).append("\n");
+				diff.append("  left: ").append(leftIds).append("\n");
+				diff.append("  right: ").append(rightIds).append("\n");
+			}
+		}
+		return diff.toString();
 	}
 
 }

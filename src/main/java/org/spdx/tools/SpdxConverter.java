@@ -401,15 +401,9 @@ public class SpdxConverter {
 			org.spdx.library.model.v2.SpdxDocument fromDoc) throws InvalidSPDXAnalysisException {
 		Map<String, String> toUriToType = new HashMap<>();
 		toStore.getAllItems(null, null).forEach(tv -> toUriToType.put(tv.getObjectUri(), tv.getType()));
-		SpdxModelFactory.getSpdxObjects(fromStore, copyManager, SpdxConstantsCompatV2.CLASS_SPDX_ELEMENT,
-				fromDoc.getDocumentUri(), fromDoc.getDocumentUri()).forEach(fromElement -> {
-			String fromObjectUri = invokeStringGetter(fromElement, "getObjectUri");
+		fromStore.getAllItems(null, null).forEach(tv -> {
+			String fromObjectUri = tv.getObjectUri();
 			if (Objects.isNull(fromObjectUri)) {
-				return;
-			}
-			String fromId = firstNonEmpty(invokeStringGetter(fromElement, "getId"),
-					invokeStringGetter(fromElement, "getSpdxId"));
-			if (Objects.isNull(fromId) || fromId.isEmpty()) {
 				return;
 			}
 			String toObjectUri = copyManager.getCopiedObjectUri(fromStore, fromObjectUri, toStore);
@@ -421,9 +415,16 @@ public class SpdxConverter {
 				return;
 			}
 			try {
+				Object fromObject = SpdxModelFactory.inflateModelObject(fromStore, fromObjectUri, tv.getType(), copyManager, false, null);
+				String fromId = firstNonEmpty(
+						invokeStringGetter(fromObject, "getId"),
+						invokeStringGetter(fromObject, "getSpdxId"),
+						invokeStringGetter(fromObject, "getSpdxID"),
+						invokeStringGetter(fromObject, "getLicenseId"));
+				String stableId = Objects.nonNull(fromId) && DeterministicSpdxIdHelper.isValidV3Id(fromId)
+						? fromId
+						: DeterministicSpdxIdHelper.deterministicFallbackId(fromObjectUri);
 				Object toObject = SpdxModelFactory.inflateModelObject(toStore, toObjectUri, toType, copyManager, false, null);
-				String stableId = DeterministicSpdxIdHelper.isValidV3Id(fromId) ? fromId :
-						DeterministicSpdxIdHelper.deterministicFallbackId(fromObjectUri);
 				if (!invokeSetId(toObject, stableId)) {
 					logger.warn("Unable to apply stable SPDX ID for {}", toObjectUri);
 				}
