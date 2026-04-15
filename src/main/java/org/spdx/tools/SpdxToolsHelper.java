@@ -70,6 +70,7 @@ public class SpdxToolsHelper {
 	static Map<String, SerFileType> EXT_TO_FILETYPE;
 	static {
 		HashMap<String, SerFileType> temp = new HashMap<>();
+		temp.put("spdx3.json", SerFileType.JSONLD);
 		temp.put("jsonld.json", SerFileType.JSONLD);
 		temp.put("jsonld", SerFileType.JSONLD);
 		temp.put("json", SerFileType.JSON);
@@ -159,9 +160,13 @@ public class SpdxToolsHelper {
 			if (fileName.endsWith("rdf.ttl")) {
 				ext = "rdf.ttl";
 			}
-		}if ("json".equals(ext)) {
+		}
+		if ("json".equals(ext)) {
 			if (fileName.endsWith("jsonld.json")) {
 				ext = "jsonld.json";
+			}
+			if (fileName.endsWith("spdx3.json")) {
+				ext = "spdx3.json";
 			}
 		}
 		SerFileType retval = EXT_TO_FILETYPE.get(ext);
