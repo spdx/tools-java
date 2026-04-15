@@ -62,7 +62,7 @@ The file formats can optionally be provided as the 3rd and 4th parameter for the
 
 To convert from SPDX 2 to SPDX 3.0.1:
 
-* use the file extension `.jsonld.json` or `.jsonld`;
+* use the file extension `.spdx3.json` or `.jsonld.json` or `.jsonld`;
 * or add the options for the from and to file types:
 
     java -jar tools-java-2.0.5-jar-with-dependencies.jar Convert hello.spdx hello.spdx.json TAG JSONLD
