@@ -61,8 +61,11 @@ public class Verify {
 
 	static final int MIN_ARGS = 1;
 	static final int MAX_ARGS = 2;
+	/**
+	 * @deprecated unused - retained for compatibility, use {@link ExitCode} instead
+	 */
+	@Deprecated
 	static final int ERROR_STATUS = 1;
-	static final int USAGE_ERROR_STATUS = 2;
 	public static final String JSON_SCHEMA_RESOURCE_V2_3 = "resources/spdx-schema-v2.3.json";
 	public static final String JSON_SCHEMA_RESOURCE_V2_2 = "resources/spdx-schema-v2.2.json";
 	public static final String JSON_SCHEMA_RESOURCE_V3 = "resources/spdx-schema-v3.0.1.json";
@@ -70,6 +73,8 @@ public class Verify {
 	static final ObjectMapper JSON_MAPPER = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 	
 	/**
+	 * Main entry point for the Verify tool
+	 *
 	 * @param args args[0] SPDX file path; args[1] [RDFXML|JSON|XLS|XLSX|YAML|TAG] an optional file type - if not present, file type of the to file will be used
 	 */
 	public static void main(String[] args) {
@@ -79,14 +84,15 @@ public class Verify {
 	/**
 	 * Runs the Verify command logic and reports results to standard out/error,
 	 * without terminating the JVM - allows the logic to be unit tested.
+	 *
 	 * @param args args[0] SPDX file path; args[1] [RDFXML|JSON|XLS|XLSX|YAML|TAG] an optional file type - if not present, file type of the to file will be used
-	 * @return process exit status - 0 valid, {@link #ERROR_STATUS} invalid document, {@link #USAGE_ERROR_STATUS} invalid usage
+	 * @return process exit status, see {@link ExitCode}
 	 */
 	static int run(String[] args) {
 		if (args.length < MIN_ARGS) {
 			System.err
 					.println("Usage:\n Verify file\nwhere file is the file path to an SPDX file");
-			return USAGE_ERROR_STATUS;
+			return ExitCode.USAGE_ERROR;
 		}
 		if (args.length > MAX_ARGS) {
 			System.out.println("Warning: Extra arguments will be ignored");
@@ -100,7 +106,7 @@ public class Verify {
 					fileType = SpdxToolsHelper.strToFileType(args[1]);
 				} catch (Exception ex) {
 					System.err.println("Invalid file type: "+args[1]);
-					return USAGE_ERROR_STATUS;
+					return ExitCode.USAGE_ERROR;
 				}
 			} else {
 				fileType = SpdxToolsHelper.fileToFileType(new File(args[0]));
@@ -108,10 +114,10 @@ public class Verify {
 			verify = verify(args[0], fileType);
 		} catch (SpdxVerificationException e) {
 			System.out.println(e.getMessage());
-			return ERROR_STATUS;
+			return ExitCode.ERROR;
 		} catch (InvalidFileNameException e) {
 			System.err.println("Invalid file name: "+args[0]);
-			return USAGE_ERROR_STATUS;
+			return ExitCode.USAGE_ERROR;
 		}
 		// separate out the warning from errors
 		List<String> warnings = new ArrayList<>();
@@ -138,9 +144,9 @@ public class Verify {
 		}
 		if (errors.isEmpty()) {
 			System.out.println("This SPDX Document is valid.");
-			return 0;
+			return ExitCode.SUCCESS;
 		} else {
-			return ERROR_STATUS;
+			return ExitCode.ERROR;
 		}
 	}
 
