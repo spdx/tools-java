@@ -48,6 +48,13 @@ import com.networknt.schema.ValidationMessage;
 
 /**
  * Verifies an SPDX document and lists any verification errors
+ * <br/>
+ * Exit codes:
+ * <ul>
+ *   <li>0 - the SPDX document is valid</li>
+ *   <li>1 - the SPDX document is invalid, or could not be read/parsed</li>
+ *   <li>2 - the command was invoked incorrectly (missing/invalid arguments)</li>
+ * </ul>
  * @author Gary O'Neall
  */
 public class Verify {
@@ -55,6 +62,7 @@ public class Verify {
 	static final int MIN_ARGS = 1;
 	static final int MAX_ARGS = 2;
 	static final int ERROR_STATUS = 1;
+	static final int USAGE_ERROR_STATUS = 2;
 	public static final String JSON_SCHEMA_RESOURCE_V2_3 = "resources/spdx-schema-v2.3.json";
 	public static final String JSON_SCHEMA_RESOURCE_V2_2 = "resources/spdx-schema-v2.2.json";
 	public static final String JSON_SCHEMA_RESOURCE_V3 = "resources/spdx-schema-v3.0.1.json";
@@ -72,13 +80,13 @@ public class Verify {
 	 * Runs the Verify command logic and reports results to standard out/error,
 	 * without terminating the JVM - allows the logic to be unit tested.
 	 * @param args args[0] SPDX file path; args[1] [RDFXML|JSON|XLS|XLSX|YAML|TAG] an optional file type - if not present, file type of the to file will be used
-	 * @return process exit status
+	 * @return process exit status - 0 valid, {@link #ERROR_STATUS} invalid document, {@link #USAGE_ERROR_STATUS} invalid usage
 	 */
 	static int run(String[] args) {
 		if (args.length < MIN_ARGS) {
 			System.err
 					.println("Usage:\n Verify file\nwhere file is the file path to an SPDX file");
-			return ERROR_STATUS;
+			return USAGE_ERROR_STATUS;
 		}
 		if (args.length > MAX_ARGS) {
 			System.out.println("Warning: Extra arguments will be ignored");
@@ -92,7 +100,7 @@ public class Verify {
 					fileType = SpdxToolsHelper.strToFileType(args[1]);
 				} catch (Exception ex) {
 					System.err.println("Invalid file type: "+args[1]);
-					return ERROR_STATUS;
+					return USAGE_ERROR_STATUS;
 				}
 			} else {
 				fileType = SpdxToolsHelper.fileToFileType(new File(args[0]));
@@ -103,7 +111,7 @@ public class Verify {
 			return ERROR_STATUS;
 		} catch (InvalidFileNameException e) {
 			System.err.println("Invalid file name: "+args[0]);
-			return ERROR_STATUS;
+			return USAGE_ERROR_STATUS;
 		}
 		// separate out the warning from errors
 		List<String> warnings = new ArrayList<>();
