@@ -65,10 +65,20 @@ public class Verify {
 	 * @param args args[0] SPDX file path; args[1] [RDFXML|JSON|XLS|XLSX|YAML|TAG] an optional file type - if not present, file type of the to file will be used
 	 */
 	public static void main(String[] args) {
+		System.exit(run(args));
+	}
+
+	/**
+	 * Runs the Verify command logic and reports results to standard out/error,
+	 * without terminating the JVM - allows the logic to be unit tested.
+	 * @param args args[0] SPDX file path; args[1] [RDFXML|JSON|XLS|XLSX|YAML|TAG] an optional file type - if not present, file type of the to file will be used
+	 * @return process exit status
+	 */
+	static int run(String[] args) {
 		if (args.length < MIN_ARGS) {
 			System.err
 					.println("Usage:\n Verify file\nwhere file is the file path to an SPDX file");
-			System.exit(ERROR_STATUS);
+			return ERROR_STATUS;
 		}
 		if (args.length > MAX_ARGS) {
 			System.out.println("Warning: Extra arguments will be ignored");
@@ -82,7 +92,7 @@ public class Verify {
 					fileType = SpdxToolsHelper.strToFileType(args[1]);
 				} catch (Exception ex) {
 					System.err.println("Invalid file type: "+args[1]);
-					System.exit(ERROR_STATUS);
+					return ERROR_STATUS;
 				}
 			} else {
 				fileType = SpdxToolsHelper.fileToFileType(new File(args[0]));
@@ -90,10 +100,10 @@ public class Verify {
 			verify = verify(args[0], fileType);
 		} catch (SpdxVerificationException e) {
 			System.out.println(e.getMessage());
-			System.exit(ERROR_STATUS);
+			return ERROR_STATUS;
 		} catch (InvalidFileNameException e) {
 			System.err.println("Invalid file name: "+args[0]);
-			System.exit(ERROR_STATUS);
+			return ERROR_STATUS;
 		}
 		// separate out the warning from errors
 		List<String> warnings = new ArrayList<>();
@@ -120,8 +130,9 @@ public class Verify {
 		}
 		if (errors.isEmpty()) {
 			System.out.println("This SPDX Document is valid.");
+			return 0;
 		} else {
-			System.exit(ERROR_STATUS);
+			return ERROR_STATUS;
 		}
 	}
 
