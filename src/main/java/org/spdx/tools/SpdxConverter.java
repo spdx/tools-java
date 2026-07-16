@@ -47,28 +47,50 @@ import org.spdx.v3jsonldstore.JsonLDStore;
  * arg[4] excludeLicenseDetails If present, listed license and listed exception properties will not be included in the output file
  * 
  * the <code>covert(...)</code> methods can be called programmatically to convert files
+ * <br/>
+ * Exit codes:
+ * <ul>
+ *   <li>0 - the conversion succeeded</li>
+ *   <li>1 - the conversion failed</li>
+ *   <li>2 - the command was invoked incorrectly (missing/invalid arguments)</li>
+ * </ul>
  * @author Gary O'Neall
  */
 public class SpdxConverter {
     static final Logger logger = LoggerFactory.getLogger(SpdxConverter.class);
     
+	/**
+	 * @deprecated unused - retained for binary/source compatibility, use {@link ExitCode} instead
+	 */
+	@Deprecated
 	static final int ERROR_STATUS = 1;
 	
 	static final int MIN_ARGS = 2;
 	static final int MAX_ARGS = 5;
 	
 	/**
+	 * Main entry point for the SpdxConverter tool.
+	 * Delegates to {@link #run(String[])} and terminates the JVM with its exit status.
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
+		System.exit(run(args));
+	}
+
+	/**
+	 * Runs the SpdxConverter command logic and reports results to standard
+	 * out/error, without terminating the JVM - allows the logic to be unit tested.
+	 * @param args
+	 * @return process exit status, see {@link ExitCode}
+	 */
+	static int run(String[] args) {
 		SpdxToolsHelper.initialize();
 		if (args.length < MIN_ARGS) {
 			
 			System.err
 					.println("Invalid number of arguments");
 			usage();
-			System.exit(ERROR_STATUS);
+			return ExitCode.USAGE_ERROR;
 		}
 		if (args.length > MAX_ARGS) {
 			System.out.printf("Warning: Extra arguments will be ignored");
@@ -85,7 +107,7 @@ public class SpdxConverter {
 				convert(args[0], args[1]);
 			} catch (SpdxConverterException e) {
 				System.err.println("Error converting: "+e.getMessage());
-				System.exit(ERROR_STATUS);
+				return ExitCode.ERROR;
 			}
 		} else {
 			SerFileType fromFileType = null;
@@ -95,7 +117,7 @@ public class SpdxConverter {
 				System.err
 				.println("From file type is not a valid SPDX file type: "+args[2]);
 				usage();
-				System.exit(ERROR_STATUS);
+				return ExitCode.USAGE_ERROR;
 			}
 			SerFileType toFileType = null;
 			try {
@@ -104,15 +126,16 @@ public class SpdxConverter {
 				System.err
 				.println("To file type is not a valid SPDX file type: "+args[3]);
 				usage();
-				System.exit(ERROR_STATUS);
+				return ExitCode.USAGE_ERROR;
 			}
 			try {
 				convert(args[0], args[1], fromFileType, toFileType, excludeLicenseDetails);
 			} catch (SpdxConverterException e) {
 				System.err.println("Error converting: "+e.getMessage());
-				System.exit(ERROR_STATUS);
+				return ExitCode.ERROR;
 			}
 		}
+		return ExitCode.SUCCESS;
 	}
 	
 	/**
