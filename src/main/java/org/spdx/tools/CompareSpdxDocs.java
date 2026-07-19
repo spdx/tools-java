@@ -57,13 +57,7 @@ import org.spdx.utility.compare.SpdxComparer;
 public class CompareSpdxDocs {
 	static final int MIN_ARGS = 2;
 	static final int MAX_ARGS = MultiDocumentSpreadsheet.MAX_DOCUMENTS + 1;
-	/**
-	 * @deprecated unused - retained for binary/source compatibility, use {@link ExitCode} instead
-	 */
-	@Deprecated
-	static final int ERROR_STATUS = 1;
 	static final Logger logger = LoggerFactory.getLogger(CompareSpdxDocs.class);
-
 
 	/**
 	 * Main entry point for the CompareSpdxDocs tool.
