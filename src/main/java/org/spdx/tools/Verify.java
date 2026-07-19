@@ -61,11 +61,6 @@ public class Verify {
 
 	static final int MIN_ARGS = 1;
 	static final int MAX_ARGS = 2;
-	/**
-	 * @deprecated unused - retained for compatibility, use {@link ExitCode} instead
-	 */
-	@Deprecated
-	static final int ERROR_STATUS = 1;
 	public static final String JSON_SCHEMA_RESOURCE_V2_3 = "resources/spdx-schema-v2.3.json";
 	public static final String JSON_SCHEMA_RESOURCE_V2_2 = "resources/spdx-schema-v2.2.json";
 	public static final String JSON_SCHEMA_RESOURCE_V3 = "resources/spdx-schema-v3.0.1.json";
