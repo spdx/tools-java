@@ -288,8 +288,17 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="org/spdx/tools/compare/CompareHelper.html#equivalent(java.util.Optional,java.util.Optional)" class="member-name-link">equivalent(Optional&lt;? extends ModelObjectV2&gt;, Optional&lt;? extends ModelObjectV2&gt;)</a> - Static method in class org.spdx.tools.compare.<a href="org/spdx/tools/compare/CompareHelper.html" title="class in org.spdx.tools.compare">CompareHelper</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="org/spdx/tools/ExitCode.html#ERROR" class="member-name-link">ERROR</a> - Static variable in class org.spdx.tools.<a href="org/spdx/tools/ExitCode.html" title="class in org.spdx.tools">ExitCode</a></dt>
+<dd>
+<div class="block">The command failed - e.g. the SPDX document is invalid, or could
+ not be read/parsed.</div>
+</dd>
 <dt><a href="org/spdx/tools/compare/PackageSheet.html#excludeFilesToString(java.util.Collection)" class="member-name-link">excludeFilesToString(Collection&lt;String&gt;)</a> - Method in class org.spdx.tools.compare.<a href="org/spdx/tools/compare/PackageSheet.html" title="class in org.spdx.tools.compare">PackageSheet</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="org/spdx/tools/ExitCode.html" class="type-name-link" title="class in org.spdx.tools">ExitCode</a> - Class in <a href="org/spdx/tools/package-summary.html">org.spdx.tools</a></dt>
+<dd>
+<div class="block">Shared process exit status codes for the command line tools.</div>
+</dd>
 <dt><a href="org/spdx/tools/compare/MultiDocumentSpreadsheet.html#EXTERNAL_REFERENCES_SHEET_NAME" class="member-name-link">EXTERNAL_REFERENCES_SHEET_NAME</a> - Static variable in class org.spdx.tools.compare.<a href="org/spdx/tools/compare/MultiDocumentSpreadsheet.html" title="class in org.spdx.tools.compare">MultiDocumentSpreadsheet</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/spdx/tools/compare/MultiDocumentSpreadsheet.html#externalReferencesSheet" class="member-name-link">externalReferencesSheet</a> - Variable in class org.spdx.tools.compare.<a href="org/spdx/tools/compare/MultiDocumentSpreadsheet.html" title="class in org.spdx.tools.compare">MultiDocumentSpreadsheet</a></dt>
@@ -652,7 +661,9 @@ loadScripts(document, 'script');</script>
 <div class="block">Pretty Printer for an SPDX Document</div>
 </dd>
 <dt><a href="org/spdx/tools/Verify.html#main(java.lang.String%5B%5D)" class="member-name-link">main(String[])</a> - Static method in class org.spdx.tools.<a href="org/spdx/tools/Verify.html" title="class in org.spdx.tools">Verify</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Main entry point for the Verify tool</div>
+</dd>
 <dt><a href="org/spdx/tools/Main.html" class="type-name-link" title="class in org.spdx.tools">Main</a> - Class in <a href="org/spdx/tools/package-summary.html">org.spdx.tools</a></dt>
 <dd>
 <div class="block">Dispatch individual tools</div>
@@ -938,6 +949,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Determine the file type based on the file extension or string</div>
 </dd>
+<dt><a href="org/spdx/tools/ExitCode.html#SUCCESS" class="member-name-link">SUCCESS</a> - Static variable in class org.spdx.tools.<a href="org/spdx/tools/ExitCode.html" title="class in org.spdx.tools">ExitCode</a></dt>
+<dd>
+<div class="block">The command completed successfully.</div>
+</dd>
 <dt><a href="org/spdx/tools/compare/PackageSheet.html#SUMMARY_FIELD_TEXT" class="member-name-link">SUMMARY_FIELD_TEXT</a> - Static variable in class org.spdx.tools.compare.<a href="org/spdx/tools/compare/PackageSheet.html" title="class in org.spdx.tools.compare">PackageSheet</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/spdx/tools/compare/PackageSheet.html#SUPPLIER_FIELD_TEXT" class="member-name-link">SUPPLIER_FIELD_TEXT</a> - Static variable in class org.spdx.tools.compare.<a href="org/spdx/tools/compare/PackageSheet.html" title="class in org.spdx.tools.compare">PackageSheet</a></dt>
@@ -966,6 +981,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="org/spdx/tools/Verify.html#usage()" class="member-name-link">usage()</a> - Method in class org.spdx.tools.<a href="org/spdx/tools/Verify.html" title="class in org.spdx.tools">Verify</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="org/spdx/tools/ExitCode.html#USAGE_ERROR" class="member-name-link">USAGE_ERROR</a> - Static variable in class org.spdx.tools.<a href="org/spdx/tools/ExitCode.html" title="class in org.spdx.tools">ExitCode</a></dt>
+<dd>
+<div class="block">The command was invoked incorrectly - e.g. missing or invalid
+ arguments.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:V">V</h2>
 <dl class="index">
@@ -1022,7 +1042,14 @@ the order they are declared.</div>
 </dd>
 <dt><a href="org/spdx/tools/Verify.html" class="type-name-link" title="class in org.spdx.tools">Verify</a> - Class in <a href="org/spdx/tools/package-summary.html">org.spdx.tools</a></dt>
 <dd>
-<div class="block">Verifies an SPDX document and lists any verification errors</div>
+<div class="block">Verifies an SPDX document and lists any verification errors
+ <br/>
+ Exit codes:
+ 
+   0 - the SPDX document is valid
+   1 - the SPDX document is invalid, or could not be read/parsed
+   2 - the command was invoked incorrectly (missing/invalid arguments)
+ </div>
 </dd>
 <dt><a href="org/spdx/tools/Verify.html#%3Cinit%3E()" class="member-name-link">Verify()</a> - Constructor for class org.spdx.tools.<a href="org/spdx/tools/Verify.html" title="class in org.spdx.tools">Verify</a></dt>
 <dd>&nbsp;</dd>
