@@ -44,37 +44,58 @@ import org.spdx.utility.compare.SpdxComparer;
  * where output.xls is a file name for the output spreadsheet file
  * and docX are SPDX document files to compare or directories containing SPDX documents.  
  * Document files can be either in RDF/XML  or tag/value format
+ * <br/>
+ * Exit codes:
+ * <ul>
+ *   <li>0 - the documents were compared and the output spreadsheet was written</li>
+ *   <li>1 - the comparison failed, or the output spreadsheet could not be written</li>
+ *   <li>2 - the command was invoked incorrectly (missing/invalid arguments)</li>
+ * </ul>
  *
  * @author Gary O'Neall
  */
 public class CompareSpdxDocs {
 	static final int MIN_ARGS = 2;
 	static final int MAX_ARGS = MultiDocumentSpreadsheet.MAX_DOCUMENTS + 1;
-	static final int ERROR_STATUS = 1;
+
 	static final Logger logger = LoggerFactory.getLogger(CompareSpdxDocs.class);
 
-
 	/**
+	 * Main entry point for the CompareSpdxDocs tool.
+	 * Delegates to {@link #run(String[])} and terminates the JVM with its exit status.
+	 *
 	 * @param args args[0] is the output Excel file name, all other args are SPDX document file names
 	 */
 	public static void main(String[] args) {
+		System.exit(run(args));
+	}
+
+	/**
+	 * Runs the CompareSpdxDocs command logic and reports results to standard
+	 * out, without terminating the JVM - allows the logic to be unit tested.
+	 *
+	 * @param args args[0] is the output Excel file name, all other args are SPDX document file names
+	 * @return process exit status, see {@link ExitCode}
+	 */
+	static int run(String[] args) {
 		if (args.length < MIN_ARGS) {
 			System.out.println("Insufficient arguments");
 			usage();
-			System.exit(ERROR_STATUS);
+			return ExitCode.USAGE_ERROR;
 		}
 		if (args.length > MAX_ARGS) {
 			System.out.println("Too many SPDX documents specified.  Must be less than "+String.valueOf(MAX_ARGS-1)+" document filenames");
 			usage();
-			System.exit(ERROR_STATUS);
+			return ExitCode.USAGE_ERROR;
 		}
 		SpdxToolsHelper.initialize();
 		try {
 			onlineFunction(args);
 		} catch (OnlineToolException e){
 			System.out.println(e.getMessage());
-			System.exit(ERROR_STATUS);
+			return ExitCode.ERROR;
 		}
+		return ExitCode.SUCCESS;
 	}
 
 	/**
