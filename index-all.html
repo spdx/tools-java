@@ -655,7 +655,9 @@ loadScripts(document, 'script');</script>
 <dt><a href="org/spdx/tools/RdfSchemaToXsd.html#main(java.lang.String%5B%5D)" class="member-name-link">main(String[])</a> - Static method in class org.spdx.tools.<a href="org/spdx/tools/RdfSchemaToXsd.html" title="class in org.spdx.tools">RdfSchemaToXsd</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/spdx/tools/SpdxConverter.html#main(java.lang.String%5B%5D)" class="member-name-link">main(String[])</a> - Static method in class org.spdx.tools.<a href="org/spdx/tools/SpdxConverter.html" title="class in org.spdx.tools">SpdxConverter</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Main entry point for the SpdxConverter tool.</div>
+</dd>
 <dt><a href="org/spdx/tools/SpdxViewer.html#main(java.lang.String%5B%5D)" class="member-name-link">main(String[])</a> - Static method in class org.spdx.tools.<a href="org/spdx/tools/SpdxViewer.html" title="class in org.spdx.tools">SpdxViewer</a></dt>
 <dd>
 <div class="block">Pretty Printer for an SPDX Document</div>
@@ -891,7 +893,14 @@ loadScripts(document, 'script');</script>
  arg[3] to file type [RDFXML|RDFTTL|JSON|XLS|XLSX|YAML|TAG] - if not present, file type of the to file will be used
  arg[4] excludeLicenseDetails If present, listed license and listed exception properties will not be included in the output file
  
- the <code>covert(...)</code> methods can be called programmatically to convert files</div>
+ the <code>covert(...)</code> methods can be called programmatically to convert files
+ <br/>
+ Exit codes:
+ 
+   0 - the conversion succeeded
+   1 - the conversion failed
+   2 - the command was invoked incorrectly (missing/invalid arguments)
+ </div>
 </dd>
 <dt><a href="org/spdx/tools/SpdxConverter.html#%3Cinit%3E()" class="member-name-link">SpdxConverter()</a> - Constructor for class org.spdx.tools.<a href="org/spdx/tools/SpdxConverter.html" title="class in org.spdx.tools">SpdxConverter</a></dt>
 <dd>&nbsp;</dd>

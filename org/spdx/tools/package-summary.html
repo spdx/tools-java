@@ -142,7 +142,14 @@ loadScripts(document, 'script');</script>
  arg[3] to file type [RDFXML|RDFTTL|JSON|XLS|XLSX|YAML|TAG] - if not present, file type of the to file will be used
  arg[4] excludeLicenseDetails If present, listed license and listed exception properties will not be included in the output file
  
- the <code>covert(...)</code> methods can be called programmatically to convert files</div>
+ the <code>covert(...)</code> methods can be called programmatically to convert files
+ <br/>
+ Exit codes:
+ 
+   0 - the conversion succeeded
+   1 - the conversion failed
+   2 - the command was invoked incorrectly (missing/invalid arguments)
+ </div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab5"><a href="SpdxConverterException.html" title="class in org.spdx.tools">SpdxConverterException</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab5">

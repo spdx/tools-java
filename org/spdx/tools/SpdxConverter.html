@@ -85,7 +85,14 @@ loadScripts(document, 'script');</script>
  arg[3] to file type [RDFXML|RDFTTL|JSON|XLS|XLSX|YAML|TAG] - if not present, file type of the to file will be used
  arg[4] excludeLicenseDetails If present, listed license and listed exception properties will not be included in the output file
  
- the <code>covert(...)</code> methods can be called programmatically to convert files</div>
+ the <code>covert(...)</code> methods can be called programmatically to convert files
+ <br/>
+ Exit codes:
+ <ul>
+   <li>0 - the conversion succeeded</li>
+   <li>1 - the conversion failed</li>
+   <li>2 - the command was invoked incorrectly (missing/invalid arguments)</li>
+ </ul></div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>Gary O'Neall</dd>
@@ -142,7 +149,9 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#main(java.lang.String%5B%5D)" class="member-name-link">main</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;args)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Main entry point for the SpdxConverter tool.</div>
+</div>
 </div>
 </div>
 </div>
@@ -178,6 +187,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="main(java.lang.String[])">
 <h3>main</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">main</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;args)</span></div>
+<div class="block">Main entry point for the SpdxConverter tool.
+ Delegates to <code>run(String[])</code> and terminates the JVM with its exit status.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>args</code> - </dd>
