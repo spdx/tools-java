@@ -1,44 +1,115 @@
-# -----------------------------------------------------------------------------
-# Copyright Helio Chissini de Castro 2023.
+# SPDX-FileContributor: Helio Chissini de Castro
+# SPDX-FileContributor: Arthit Suriyawongkul
+# SPDX-FileCopyrightText: 2023 Helio Chissini de Castro
+# SPDX-FileCopyrightText: 2026 SPDX Contributors
+# SPDX-FileType: SOURCE
 # SPDX-License-Identifier: Apache-2.0
-# -----------------------------------------------------------------------------
 
-name: Docker Build
+name: Docker build & publish
 
 on:
   workflow_dispatch:
   pull_request:
     paths:
       - Dockerfile
+      - scripts/tools-java-wrapper.sh
       - .github/workflows/docker_deploy.yml
   push:
-    paths-ignore:
-      - '**.md'
     tags:
       - 'v*'
 env:
   REGISTRY: ghcr.io
 
 jobs:
+  smoke_test:
+    name: Lint & smoke test Docker image
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout main repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Lint Dockerfile
+        uses: hadolint/hadolint-action@2332a7b74a6de0dda2e2221d575162eba76ba5e5 # v3.3.0
+        with:
+          dockerfile: Dockerfile
+          failure-threshold: warning
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
+
+      - name: Build test image (single-arch, local load)
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
+        with:
+          context: .
+          push: false
+          load: true
+          tags: tools-java:ci-test
+          cache-from: type=gha,scope=tools_java_smoke
+          cache-to: type=gha,scope=tools_java_smoke,mode=max
+
+      - name: Smoke test - entrypoint runs without error
+        run: |
+          output=$(docker run --rm tools-java:ci-test 2>&1) || true
+          echo "$output"
+          if echo "$output" | grep -qi "Unable to access jarfile"; then
+            echo "::error::Container failed to find its jar file"
+            exit 1
+          fi
+          echo "$output" | grep -q "^Usage:" || { echo "::error::Expected usage banner not found"; exit 1; }
+
+      - name: Smoke test - Version command
+        run: |
+          docker run --rm tools-java:ci-test Version \
+            || { echo "::error::Version command failed"; exit 1; }
+
+      - name: Smoke test - wrapper script version substitution
+        run: |
+          script=$(docker run --rm --entrypoint sh tools-java:ci-test -c 'cat /usr/bin/tools-java') || true
+          echo "$script"
+          if echo "$script" | grep -q '@@VERSION@@'; then
+            echo "::error::Version placeholder was never substituted in wrapper script"
+            exit 1
+          fi
+          if echo "$script" | grep -q -- '--jar-with-dependencies'; then
+            echo "::error::Version was substituted with an empty string (double dash in jar name)"
+            exit 1
+          fi
+
+      - name: Smoke test - referenced jar file exists
+        run: |
+          jar_path=$(docker run --rm --entrypoint sh tools-java:ci-test -c \
+            "sed -n 's/.*-jar \\(\\/[^ ]*\\.jar\\).*/\\1/p' /usr/bin/tools-java")
+          echo "Resolved jar path: $jar_path"
+          [ -n "$jar_path" ] \
+            || { echo "::error::Could not parse jar path from wrapper script"; exit 1; }
+          docker run --rm --entrypoint sh tools-java:ci-test -c "test -f '$jar_path'" \
+            || { echo "::error::Jar file referenced by wrapper script does not exist: $jar_path"; exit 1; }
+
   docker_push:
     name: Build Docker Image
-    runs-on: ubuntu-22.04
+    needs: smoke_test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
     permissions:
       contents: read
       packages: write
 
     steps:
       - name: Checkout main repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Setup QEMU
-        uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130
+        uses: docker/setup-qemu-action@96fe6ef7f33517b61c61be40b68a1882f3264fb8 # v4.2.0
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
+        uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v3.6.0
+        uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0 # v4.4.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -46,18 +117,17 @@ jobs:
 
       - name: Extract components metadata
         id: meta_base
-        uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v51.0.0
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
         with:
           images: |
             ${{ env.REGISTRY }}/${{ github.repository }}
           tags: |
             type=ref,event=tag
             type=semver,pattern={{version}}
-            type=raw,value=main,enable=${{ github.ref == 'refs/heads/main' }}
           labels: org.opencontainers.image.licenses=Apache-2.0
 
-      - name: Build Container
-        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
+      - name: Build image & push to ghcr.io
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
         with:
           context: .
           push: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') }}
@@ -66,5 +136,5 @@ jobs:
           tags: |
             ${{ steps.meta_base.outputs.tags }}
           labels: ${{ steps.meta_base.outputs.labels }}
-          cache-from: type=gha,scope=tools_java
-          cache-to: type=gha,scope=tools_java,mode=max
+          cache-from: type=gha,scope=tools_java_release
+          cache-to: type=gha,scope=tools_java_release,mode=max
