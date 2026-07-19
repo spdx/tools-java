@@ -58,16 +58,10 @@ import org.spdx.v3jsonldstore.JsonLDStore;
  */
 public class SpdxConverter {
     static final Logger logger = LoggerFactory.getLogger(SpdxConverter.class);
-    
-	/**
-	 * @deprecated unused - retained for binary/source compatibility, use {@link ExitCode} instead
-	 */
-	@Deprecated
-	static final int ERROR_STATUS = 1;
-	
+
 	static final int MIN_ARGS = 2;
 	static final int MAX_ARGS = 5;
-	
+
 	/**
 	 * Main entry point for the SpdxConverter tool.
 	 * Delegates to {@link #run(String[])} and terminates the JVM with its exit status.
