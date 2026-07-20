@@ -26,12 +26,11 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import org.apache.jena.ontology.OntClass;
-import org.apache.jena.ontology.OntModel;
-import org.apache.jena.ontology.OntProperty;
-import org.apache.jena.ontology.Ontology;
+import org.apache.jena.ontapi.model.OntClass;
+import org.apache.jena.ontapi.model.OntID;
+import org.apache.jena.ontapi.model.OntModel;
+import org.apache.jena.ontapi.model.OntProperty;
 import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.util.iterator.ExtendedIterator;
 import org.spdx.jacksonstore.MultiFormatStore;
 import org.spdx.jacksonstore.SpdxJsonLDContext;
 import org.spdx.library.model.v2.ReferenceType;
@@ -90,20 +89,18 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 	public ObjectNode convertToJsonSchema() {
 		ObjectNode root = jsonMapper.createObjectNode();
 		root.put("$schema", SCHEMA_VERSION_URI);
-		ExtendedIterator<Ontology> ontologyIter = model.listOntologies();
+		OntID ont = model.getID();
 		String version = null;
-		if (ontologyIter.hasNext()) {
-			Ontology ont = ontologyIter.next();
-			if (ont.isURIResource()) {
-				version = ont.getVersionInfo();
-				String ontologyUri = version == null ? ont.getURI() : ont.getURI() + "/" + version;
-				if (Objects.nonNull(ontologyUri)) {
-					root.put("$id", ontologyUri);
-				}
-				String title = ont.getLabel(null);
-				if (Objects.nonNull(title)) {
-					root.put("title", title);
-				}
+		if (ont != null && ont.isURIResource()) {
+			version = ont.getVersionInfo();
+			String ontologyUri = version == null ? ont.getURI()
+					: ont.getURI() + "/" + version;
+			if (Objects.nonNull(ontologyUri)) {
+				root.put("$id", ontologyUri);
+			}
+			String title = ont.getLabel(null);
+			if (Objects.nonNull(title)) {
+				root.put("title", title);
 			}
 		}
 		root.put(JSON_RESTRICTION_TYPE,JSON_TYPE_OBJECT);
@@ -129,7 +126,9 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 		ObjectNode describesProperty = toArraySchema(createSimpleTypeSchema(JSON_TYPE_STRING, "SPDX ID for each Package, File, or Snippet."), 
 		        "DEPRECATED: use relationships instead of this field. Packages, files and/or Snippets described by this SPDX document", 0);
 		describesProperty.put("deprecated", true);
-		describesProperty.put("$comment", "This field has been deprecated as it is a duplicate of using the SPDXRef-DOCUMENT DESCRIBES relationship");
+		describesProperty.put("$comment",
+				"This field has been deprecated as it is a duplicate of "
+						+ "using the SPDXRef-DOCUMENT DESCRIBES relationship");
 		properties.set(SpdxConstantsCompatV2.PROP_DOCUMENT_DESCRIBES.getName(), describesProperty);
         
 		OntClass packageClass = model.getOntClass(SpdxConstantsCompatV2.SPDX_NAMESPACE + SpdxConstantsCompatV2.CLASS_SPDX_PACKAGE);
