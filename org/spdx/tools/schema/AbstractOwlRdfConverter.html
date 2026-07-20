@@ -99,7 +99,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>protected org.apache.jena.ontology.OntModel</code></div>
+<div class="col-first even-row-color"><code>protected org.apache.jena.ontapi.model.OntModel</code></div>
 <div class="col-second even-row-color"><code><a href="#model" class="member-name-link">model</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
@@ -121,7 +121,7 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(org.apache.jena.ontology.OntModel)" class="member-name-link">AbstractOwlRdfConverter</a><wbr>(org.apache.jena.ontology.OntModel&nbsp;model)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(org.apache.jena.ontapi.model.OntModel)" class="member-name-link">AbstractOwlRdfConverter</a><wbr>(org.apache.jena.ontapi.model.OntModel&nbsp;model)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -143,17 +143,17 @@ loadScripts(document, 'script');</script>
 <div class="block">Checks to see if an OWL property name has been renamed for the JSON/YAML formats</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.spdx.tools.schema.AbstractOwlRdfConverter.PropertyRestrictions</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPropertyRestrictions(org.apache.jena.ontology.OntClass,org.apache.jena.ontology.OntProperty)" class="member-name-link">getPropertyRestrictions</a><wbr>(org.apache.jena.ontology.OntClass&nbsp;ontClass,
- org.apache.jena.ontology.OntProperty&nbsp;property)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPropertyRestrictions(org.apache.jena.ontapi.model.OntClass,org.apache.jena.ontapi.model.OntProperty)" class="member-name-link">getPropertyRestrictions</a><wbr>(org.apache.jena.ontapi.model.OntClass&nbsp;ontClass,
+ org.apache.jena.ontapi.model.OntProperty&nbsp;property)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;org.apache.jena.rdf.model.Resource&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPropertyType(org.apache.jena.ontology.OntProperty)" class="member-name-link">getPropertyType</a><wbr>(org.apache.jena.ontology.OntProperty&nbsp;property)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPropertyType(org.apache.jena.ontapi.model.OntProperty)" class="member-name-link">getPropertyType</a><wbr>(org.apache.jena.ontapi.model.OntProperty&nbsp;property)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;org.apache.jena.ontology.OntProperty&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#propertiesFromClassRestrictions(org.apache.jena.ontology.OntClass)" class="member-name-link">propertiesFromClassRestrictions</a><wbr>(org.apache.jena.ontology.OntClass&nbsp;oClass)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;org.apache.jena.ontapi.model.OntProperty&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#propertiesFromClassRestrictions(org.apache.jena.ontapi.model.OntClass)" class="member-name-link">propertiesFromClassRestrictions</a><wbr>(org.apache.jena.ontapi.model.OntClass&nbsp;oClass)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;org.apache.jena.ontology.OntProperty&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#propertiesFromClassRestrictions(org.apache.jena.ontology.OntClass,boolean)" class="member-name-link">propertiesFromClassRestrictions</a><wbr>(org.apache.jena.ontology.OntClass&nbsp;oClass,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;org.apache.jena.ontapi.model.OntProperty&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#propertiesFromClassRestrictions(org.apache.jena.ontapi.model.OntClass,boolean)" class="member-name-link">propertiesFromClassRestrictions</a><wbr>(org.apache.jena.ontapi.model.OntClass&nbsp;oClass,
  boolean&nbsp;excludeSuperClassProperties)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
@@ -189,7 +189,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="model">
 <h3>model</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">org.apache.jena.ontology.OntModel</span>&nbsp;<span class="element-name">model</span></div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">org.apache.jena.ontapi.model.OntModel</span>&nbsp;<span class="element-name">model</span></div>
 </section>
 </li>
 </ul>
@@ -201,9 +201,9 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(org.apache.jena.ontology.OntModel)">
+<section class="detail" id="&lt;init&gt;(org.apache.jena.ontapi.model.OntModel)">
 <h3>AbstractOwlRdfConverter</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">AbstractOwlRdfConverter</span><wbr><span class="parameters">(org.apache.jena.ontology.OntModel&nbsp;model)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">AbstractOwlRdfConverter</span><wbr><span class="parameters">(org.apache.jena.ontapi.model.OntModel&nbsp;model)</span></div>
 </section>
 </li>
 </ul>
@@ -215,10 +215,10 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="getPropertyRestrictions(org.apache.jena.ontology.OntClass,org.apache.jena.ontology.OntProperty)">
+<section class="detail" id="getPropertyRestrictions(org.apache.jena.ontapi.model.OntClass,org.apache.jena.ontapi.model.OntProperty)">
 <h3>getPropertyRestrictions</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">org.spdx.tools.schema.AbstractOwlRdfConverter.PropertyRestrictions</span>&nbsp;<span class="element-name">getPropertyRestrictions</span><wbr><span class="parameters">(org.apache.jena.ontology.OntClass&nbsp;ontClass,
- org.apache.jena.ontology.OntProperty&nbsp;property)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">org.spdx.tools.schema.AbstractOwlRdfConverter.PropertyRestrictions</span>&nbsp;<span class="element-name">getPropertyRestrictions</span><wbr><span class="parameters">(org.apache.jena.ontapi.model.OntClass&nbsp;ontClass,
+ org.apache.jena.ontapi.model.OntProperty&nbsp;property)</span></div>
 </section>
 </li>
 <li>
@@ -235,9 +235,9 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="propertiesFromClassRestrictions(org.apache.jena.ontology.OntClass,boolean)">
+<section class="detail" id="propertiesFromClassRestrictions(org.apache.jena.ontapi.model.OntClass,boolean)">
 <h3>propertiesFromClassRestrictions</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;org.apache.jena.ontology.OntProperty&gt;</span>&nbsp;<span class="element-name">propertiesFromClassRestrictions</span><wbr><span class="parameters">(org.apache.jena.ontology.OntClass&nbsp;oClass,
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;org.apache.jena.ontapi.model.OntProperty&gt;</span>&nbsp;<span class="element-name">propertiesFromClassRestrictions</span><wbr><span class="parameters">(org.apache.jena.ontapi.model.OntClass&nbsp;oClass,
  boolean&nbsp;excludeSuperClassProperties)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -249,9 +249,9 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="propertiesFromClassRestrictions(org.apache.jena.ontology.OntClass)">
+<section class="detail" id="propertiesFromClassRestrictions(org.apache.jena.ontapi.model.OntClass)">
 <h3>propertiesFromClassRestrictions</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;org.apache.jena.ontology.OntProperty&gt;</span>&nbsp;<span class="element-name">propertiesFromClassRestrictions</span><wbr><span class="parameters">(org.apache.jena.ontology.OntClass&nbsp;oClass)</span></div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;org.apache.jena.ontapi.model.OntProperty&gt;</span>&nbsp;<span class="element-name">propertiesFromClassRestrictions</span><wbr><span class="parameters">(org.apache.jena.ontapi.model.OntClass&nbsp;oClass)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>oClass</code> - </dd>
@@ -261,9 +261,9 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="getPropertyType(org.apache.jena.ontology.OntProperty)">
+<section class="detail" id="getPropertyType(org.apache.jena.ontapi.model.OntProperty)">
 <h3>getPropertyType</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;org.apache.jena.rdf.model.Resource&gt;</span>&nbsp;<span class="element-name">getPropertyType</span><wbr><span class="parameters">(org.apache.jena.ontology.OntProperty&nbsp;property)</span>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;org.apache.jena.rdf.model.Resource&gt;</span>&nbsp;<span class="element-name">getPropertyType</span><wbr><span class="parameters">(org.apache.jena.ontapi.model.OntProperty&nbsp;property)</span>
                                                                 throws <span class="exceptions"><a href="SchemaException.html" title="class in org.spdx.tools.schema">SchemaException</a></span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
