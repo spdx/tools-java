@@ -73,14 +73,13 @@ public class SpdxConverter {
 
 	/**
 	 * Runs the SpdxConverter command logic and reports results to standard
-	 * out/error, without terminating the JVM - allows the logic to be unit tested.
+	 * out/error.
 	 * @param args
 	 * @return process exit status, see {@link ExitCode}
 	 */
 	static int run(String[] args) {
 		SpdxToolsHelper.initialize();
 		if (args.length < MIN_ARGS) {
-			
 			System.err
 					.println("Invalid number of arguments");
 			usage();
@@ -131,7 +130,7 @@ public class SpdxConverter {
 		}
 		return ExitCode.SUCCESS;
 	}
-	
+
 	/**
 	 * Convert an SPDX file from the fromFilePath to a new file at the toFilePath using the file extensions to determine the serialization type
 	 * @param fromFilePath Path of the file to convert from
