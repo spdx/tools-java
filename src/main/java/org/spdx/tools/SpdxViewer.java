@@ -61,7 +61,7 @@ public class SpdxViewer {
 
 	/**
 	 * Runs the SpdxViewer command logic and reports results to standard
-	 * out/error, without terminating the JVM - allows the logic to be unit tested.
+	 * out/error.
 	 * @param args args[0] SPDX file path; args[1] [RDFXML|JSON|XLS|XLSX|YAML|TAG] an optional file type - if not present, file type of the to file will be used
 	 * @return process exit status, see {@link ExitCode}
 	 */
@@ -105,7 +105,7 @@ public class SpdxViewer {
 			} catch (InvalidSPDXAnalysisException e) {
 				throw new SpdxVerificationException("Error converting fileType to store",e);
 			}
-			
+
 			try {
 				doc = SpdxToolsHelper.readDocumentFromFileCompatV2(store, file);
 			} catch (Exception ex) {
