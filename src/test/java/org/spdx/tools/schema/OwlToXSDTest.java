@@ -10,9 +10,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.jena.ontology.OntModel;
-import org.apache.jena.ontology.OntModelSpec;
-import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.ontapi.OntModelFactory;
+import org.apache.jena.ontapi.OntSpecification;
+import org.apache.jena.ontapi.model.OntModel;
 import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaSerializer.XmlSchemaSerializerException;
 
@@ -33,7 +33,7 @@ public class OwlToXSDTest extends TestCase {
 	public void testConvertToXsd() throws IOException, XmlSchemaSerializerException, SchemaException {
 		OwlToXsd otx = null;
 		try (InputStream is = new FileInputStream(new File(OWL_FILE_PATH))) {
-			OntModel model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+			OntModel model = OntModelFactory.createModel(OntSpecification.OWL2_DL_MEM);
 			model.read(is, "RDF/XML");
 			otx = new OwlToXsd(model);
 		}
