@@ -27,9 +27,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Objects;
 
-import org.apache.jena.ontology.OntModel;
-import org.apache.jena.ontology.OntModelSpec;
-import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.ontapi.OntModelFactory;
+import org.apache.jena.ontapi.OntSpecification;
+import org.apache.jena.ontapi.model.OntModel;
 import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaSerializer.XmlSchemaSerializerException;
 import org.spdx.tools.schema.OwlToXsd;
@@ -68,7 +68,7 @@ public class RdfSchemaToXsd {
 		OntModel model = null;
 		try {
 			is = new FileInputStream(fromFile);
-			model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+			model = OntModelFactory.createModel(OntSpecification.OWL2_DL_MEM);
 			model.read(is, "RDF/XML");
 		} catch (FileNotFoundException e) {
 			System.err.println("File not found for "+fromFile.getName());

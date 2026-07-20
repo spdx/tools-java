@@ -26,9 +26,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 
-import org.apache.jena.ontology.OntModel;
-import org.apache.jena.ontology.OntModelSpec;
-import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.ontapi.OntModelFactory;
+import org.apache.jena.ontapi.OntSpecification;
+import org.apache.jena.ontapi.model.OntModel;
 import org.spdx.tools.schema.OwlToJsonSchema;
 
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -70,7 +70,7 @@ public class RdfSchemaToJsonSchema {
 		OntModel model = null;
 		try {
 			is = new FileInputStream(fromFile);
-			model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+			model = OntModelFactory.createModel(OntSpecification.OWL2_DL_MEM);
 			model.read(is, "RDF/XML");
 		} catch (FileNotFoundException e) {
 			System.err.println("File not found for "+fromFile.getName());
