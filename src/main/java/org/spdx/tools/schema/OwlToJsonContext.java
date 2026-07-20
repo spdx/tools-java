@@ -25,9 +25,8 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.TreeMap;
 
-import org.apache.jena.ontology.OntModel;
-import org.apache.jena.ontology.OntProperty;
-import org.apache.jena.util.iterator.ExtendedIterator;
+import org.apache.jena.ontapi.model.OntModel;
+import org.apache.jena.ontapi.model.OntProperty;
 import org.spdx.jacksonstore.MultiFormatStore;
 import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 
@@ -79,16 +78,14 @@ public class OwlToJsonContext extends AbstractOwlRdfConverter {
 		contexts.put(SpdxConstantsCompatV2.SPDX_IDENTIFIER, "@id");
 		contexts.put(SpdxConstantsCompatV2.EXTERNAL_DOCUMENT_REF_IDENTIFIER, "@id");
 		TreeMap<String, OntProperty> sortedOntProperties = new TreeMap<>();
-		ExtendedIterator<OntProperty> iter = model.listAllOntProperties();
-		while (iter.hasNext()) {
-			OntProperty property = iter.next();
+		model.properties().forEach(property -> {
 			if (property.isURIResource()) {
 				String propNamespace = uriToNamespace(property.getURI());
 				String propName = uriToPropName(property.getURI());
 				String id = propNamespace + propName;
 				sortedOntProperties.put(id, property);
 			}
-		}
+		});
 		for (Entry<String, OntProperty> ontPropEntry:sortedOntProperties.entrySet()) {
 			String propNamespace = uriToNamespace(ontPropEntry.getValue().getURI());
 			String propName = uriToPropName(ontPropEntry.getValue().getURI());
