@@ -78,7 +78,14 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">GenerateVerificationCode</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Generates a verification code for a specific directory</div>
+<div class="block">Generates a verification code for a specific directory
+ <br/>
+ Exit codes:
+ <ul>
+   <li>0 - the verification code was generated successfully</li>
+   <li>1 - the verification code could not be generated</li>
+   <li>2 - the command was invoked incorrectly (missing/invalid arguments)</li>
+ </ul></div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>Gary O'Neall</dd>
@@ -158,7 +165,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">main</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;args)</span></div>
 <div class="block">Print an SPDX Verification code for a directory of files
  args[0] is the source directory containing the files
- args[1] is an optional regular expression of skipped files.  The expression is applied against a file path relative the the source directory supplied</div>
+ args[1] is an optional regular expression of skipped files.  The expression is applied against a file path relative the the source directory supplied
+ Delegates to <code>run(String[])</code> and terminates the JVM with its exit status.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>args</code> - </dd>
