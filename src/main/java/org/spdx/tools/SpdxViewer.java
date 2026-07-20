@@ -66,7 +66,7 @@ public class SpdxViewer {
 							+ "where file is the file path to a valid SPDX file\n"
 							+ "and [RDFXML|JSON|XLS|XLSX|YAML|TAG|JSONLD] is an optional file type\n"
 							+ "if not present, file type of the to file will be used");
-			return 0;
+			return ERROR_STATUS;
 		}
 		if (args.length > MAX_ARGS) {
 			System.out.printf("Warning: Extra arguments will be ignored");
@@ -105,7 +105,7 @@ public class SpdxViewer {
 			} catch (Exception ex) {
 		        System.out
 		                .print("Error creating SPDX Document: " + ex.getMessage());
-		        return 0;
+		        return ERROR_STATUS;
 		    }
 		    writer = new PrintWriter(System.out);
 			List<String> verify = doc.verify();
@@ -123,10 +123,11 @@ public class SpdxViewer {
 		} catch (InvalidSPDXAnalysisException e) {
 			System.out.print("Error pretty printing SPDX Document: "
 					+ e.getMessage());
-			return 0;
+			return ERROR_STATUS;
 		} catch (Exception e) {
 			System.out.print("Unexpected error displaying SPDX Document: "
 					+ e.getMessage());
+			return ERROR_STATUS;
 		} finally {
 		    if (Objects.nonNull(writer)) {
 		        writer.close();
