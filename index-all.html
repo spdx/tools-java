@@ -670,7 +670,15 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="org/spdx/tools/Main.html" class="type-name-link" title="class in org.spdx.tools">Main</a> - Class in <a href="org/spdx/tools/package-summary.html">org.spdx.tools</a></dt>
 <dd>
-<div class="block">Dispatch individual tools</div>
+<div class="block">Dispatch individual tools
+ <br/>
+ Each dispatched tool's main() calls System.exit() itself, which
+ terminates the process immediately with that tool's own exit status -
+ so the exit codes below only apply when no tool is actually dispatched:
+ 
+   0 - success (e.g. the "Version" command, which is handled here directly instead of being dispatched)
+   2 - the command was invoked incorrectly (missing/unrecognized tool name)
+ </div>
 </dd>
 <dt><a href="org/spdx/tools/Main.html#%3Cinit%3E()" class="member-name-link">Main()</a> - Constructor for class org.spdx.tools.<a href="org/spdx/tools/Main.html" title="class in org.spdx.tools">Main</a></dt>
 <dd>&nbsp;</dd>

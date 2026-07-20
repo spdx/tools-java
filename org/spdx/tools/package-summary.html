@@ -111,7 +111,15 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="Main.html" title="class in org.spdx.tools">Main</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Dispatch individual tools</div>
+<div class="block">Dispatch individual tools
+ <br/>
+ Each dispatched tool's main() calls System.exit() itself, which
+ terminates the process immediately with that tool's own exit status -
+ so the exit codes below only apply when no tool is actually dispatched:
+ 
+   0 - success (e.g. the "Version" command, which is handled here directly instead of being dispatched)
+   2 - the command was invoked incorrectly (missing/unrecognized tool name)
+ </div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="MatchingStandardLicenses.html" title="class in org.spdx.tools">MatchingStandardLicenses</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">

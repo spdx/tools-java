@@ -78,7 +78,15 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Main</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Dispatch individual tools</div>
+<div class="block">Dispatch individual tools
+ <br/>
+ Each dispatched tool's main() calls System.exit() itself, which
+ terminates the process immediately with that tool's own exit status -
+ so the exit codes below only apply when no tool is actually dispatched:
+ <ul>
+   <li>0 - success (e.g. the "Version" command, which is handled here directly instead of being dispatched)</li>
+   <li>2 - the command was invoked incorrectly (missing/unrecognized tool name)</li>
+ </ul></div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>Gary O'Neall</dd>
