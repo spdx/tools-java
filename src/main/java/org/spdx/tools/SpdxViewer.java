@@ -51,6 +51,8 @@ public class SpdxViewer {
 	static final int MAX_ARGS = 2;
 
 	/**
+	 * Pretty Printer for an SPDX Document
+	 *
 	 * Main entry point for the SpdxViewer tool.
 	 * Delegates to {@link #run(String[])} and terminates the JVM with its exit status.
      * @param args args[0] SPDX file path; args[1] [RDFXML|JSON|XLS|XLSX|YAML|TAG] an optional file type - if not present, file type of the to file will be used
