@@ -34,6 +34,13 @@ import org.spdx.tools.SpdxToolsHelper.SerFileType;
  * Simple pretty printer for SPDX RDF XML files. Writes output to System.out.
  * Usage: PrettyPrinter SPDXRdfXMLFile > textFile where SPDXRdfXMLFile is a
  * valid SPDX RDF XML file
+ * <br/>
+ * Exit codes:
+ * <ul>
+ *   <li>0 - the document was pretty-printed successfully</li>
+ *   <li>1 - the document could not be read, parsed, or printed</li>
+ *   <li>2 - the command was invoked incorrectly (missing/invalid arguments)</li>
+ * </ul>
  *
  * @author Gary O'Neall
  * @version 0.1
@@ -42,11 +49,10 @@ public class SpdxViewer {
 
 	static final int MIN_ARGS = 1;
 	static final int MAX_ARGS = 2;
-	static final int ERROR_STATUS = 1;
 
 	/**
-	 * Pretty Printer for an SPDX Document
-	 *
+	 * Main entry point for the SpdxViewer tool.
+	 * Delegates to {@link #run(String[])} and terminates the JVM with its exit status.
      * @param args args[0] SPDX file path; args[1] [RDFXML|JSON|XLS|XLSX|YAML|TAG] an optional file type - if not present, file type of the to file will be used
 	 */
 	public static void main(String[] args) {
@@ -57,7 +63,7 @@ public class SpdxViewer {
 	 * Runs the SpdxViewer command logic and reports results to standard
 	 * out/error, without terminating the JVM - allows the logic to be unit tested.
 	 * @param args args[0] SPDX file path; args[1] [RDFXML|JSON|XLS|XLSX|YAML|TAG] an optional file type - if not present, file type of the to file will be used
-	 * @return process exit status
+	 * @return process exit status, see {@link ExitCode}
 	 */
 	static int run(String[] args) {
 		if (args.length < MIN_ARGS) {
@@ -66,7 +72,7 @@ public class SpdxViewer {
 							+ "where file is the file path to a valid SPDX file\n"
 							+ "and [RDFXML|JSON|XLS|XLSX|YAML|TAG|JSONLD] is an optional file type\n"
 							+ "if not present, file type of the to file will be used");
-			return ERROR_STATUS;
+			return ExitCode.USAGE_ERROR;
 		}
 		if (args.length > MAX_ARGS) {
 			System.out.printf("Warning: Extra arguments will be ignored");
@@ -89,7 +95,7 @@ public class SpdxViewer {
 					fileType = SpdxToolsHelper.strToFileType(args[1]);
 				} catch (Exception ex) {
 					System.err.println("Invalid file type: "+args[1]);
-					return ERROR_STATUS;
+					return ExitCode.USAGE_ERROR;
 				}
 			} else {
 				fileType = SpdxToolsHelper.fileToFileType(file);
@@ -105,7 +111,7 @@ public class SpdxViewer {
 			} catch (Exception ex) {
 		        System.out
 		                .print("Error creating SPDX Document: " + ex.getMessage());
-		        return ERROR_STATUS;
+		        return ExitCode.ERROR;
 		    }
 		    writer = new PrintWriter(System.out);
 			List<String> verify = doc.verify();
@@ -123,11 +129,11 @@ public class SpdxViewer {
 		} catch (InvalidSPDXAnalysisException e) {
 			System.out.print("Error pretty printing SPDX Document: "
 					+ e.getMessage());
-			return ERROR_STATUS;
+			return ExitCode.ERROR;
 		} catch (Exception e) {
 			System.out.print("Unexpected error displaying SPDX Document: "
 					+ e.getMessage());
-			return ERROR_STATUS;
+			return ExitCode.ERROR;
 		} finally {
 		    if (Objects.nonNull(writer)) {
 		        writer.close();
@@ -140,6 +146,6 @@ public class SpdxViewer {
                 }
 		    }
 		}
-		return 0;
+		return ExitCode.SUCCESS;
 	}
 }
