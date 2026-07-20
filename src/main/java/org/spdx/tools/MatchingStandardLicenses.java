@@ -31,6 +31,13 @@ import org.spdx.utility.compare.SpdxCompareException;
  * Tool to compare a license text to standard licenses.  Lists all standard
  * license ID's that are equivalent using the SPDX Legal team's license matching
  * guidelines (http://spdx.org/spdx-license-list/matching-guidelines)
+ * <br/>
+ * Exit codes:
+ * <ul>
+ *   <li>0 - the comparison completed (with or without a match)</li>
+ *   <li>1 - the comparison failed - e.g. the input file could not be read or the standard licenses could not be compared</li>
+ *   <li>2 - the command was invoked incorrectly (missing/invalid arguments)</li>
+ * </ul>
  * @author Gary O'Neall
  */
 public class MatchingStandardLicenses {
@@ -44,15 +51,27 @@ public class MatchingStandardLicenses {
 
 	static int MIN_ARGS = 1;
 	static int MAX_ARGS = 1;
-	static final int ERROR_STATUS = 1;
+
 	/**
+	 * Main entry point for the MatchingStandardLicenses tool.
+	 * Delegates to {@link #run(String[])} and terminates the JVM with its exit status.
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		System.exit(run(args));
+	}
+
+	/**
+	 * Runs the MatchingStandardLicenses command logic and reports results to
+	 * standard out, without terminating the JVM - allows the logic to be unit tested.
+	 * @param args
+	 * @return process exit status, see {@link ExitCode}
+	 */
+	static int run(String[] args) {
 		if (args == null || args.length < MIN_ARGS || args.length > MAX_ARGS) {
 			System.out.println("Invalid arguments");
 			usage();
-			System.exit(ERROR_STATUS);
+			return ExitCode.USAGE_ERROR;
 		}
 		@SuppressWarnings("null")
 		File textFile = new File(args[0]);
@@ -60,16 +79,16 @@ public class MatchingStandardLicenses {
 		if (!textFile.exists()) {
 			System.out.println("Text file "+textFile.getName()+" does not exist");
 			usage();
-			System.exit(ERROR_STATUS);
+			return ExitCode.ERROR;
 		}
-		
+
 		SpdxToolsHelper.initialize();
 		String licenseText = null;
 		try {
 			licenseText = readAll(textFile);
 		} catch (IOException e) {
 			System.out.println("Error reading file: "+e.getMessage());
-			System.exit(ERROR_STATUS);
+			return ExitCode.ERROR;
 		}
 
 		String[] matchingLicenseIds = null;
@@ -77,10 +96,10 @@ public class MatchingStandardLicenses {
 			matchingLicenseIds = LicenseCompareHelper.matchingStandardLicenseIds(licenseText);
 		} catch (InvalidSPDXAnalysisException e) {
 			System.out.println("Error reading standard licenses: "+e.getMessage());
-			System.exit(ERROR_STATUS);
+			return ExitCode.ERROR;
 		} catch (SpdxCompareException e) {
 			System.out.println("Error comparing licenses: "+e.getMessage());
-			System.exit(ERROR_STATUS);
+			return ExitCode.ERROR;
 		}
 
 		if (matchingLicenseIds == null || matchingLicenseIds.length == 0) {
@@ -94,7 +113,7 @@ public class MatchingStandardLicenses {
 			}
 			System.out.println(sb.toString());
 		}
-		System.exit(0);
+		return ExitCode.SUCCESS;
 	}
 
 	/**
