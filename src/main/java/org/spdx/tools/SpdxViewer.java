@@ -50,13 +50,23 @@ public class SpdxViewer {
      * @param args args[0] SPDX file path; args[1] [RDFXML|JSON|XLS|XLSX|YAML|TAG] an optional file type - if not present, file type of the to file will be used
 	 */
 	public static void main(String[] args) {
+		System.exit(run(args));
+	}
+
+	/**
+	 * Runs the SpdxViewer command logic and reports results to standard
+	 * out/error, without terminating the JVM - allows the logic to be unit tested.
+	 * @param args args[0] SPDX file path; args[1] [RDFXML|JSON|XLS|XLSX|YAML|TAG] an optional file type - if not present, file type of the to file will be used
+	 * @return process exit status
+	 */
+	static int run(String[] args) {
 		if (args.length < MIN_ARGS) {
 			System.err
 					.println("Usage:\n SPDXViewer file [RDFXML|JSON|XLS|XLSX|YAML|TAG] \n"
 							+ "where file is the file path to a valid SPDX file\n"
 							+ "and [RDFXML|JSON|XLS|XLSX|YAML|TAG|JSONLD] is an optional file type\n"
 							+ "if not present, file type of the to file will be used");
-			return;
+			return 0;
 		}
 		if (args.length > MAX_ARGS) {
 			System.out.printf("Warning: Extra arguments will be ignored");
@@ -79,7 +89,7 @@ public class SpdxViewer {
 					fileType = SpdxToolsHelper.strToFileType(args[1]);
 				} catch (Exception ex) {
 					System.err.println("Invalid file type: "+args[1]);
-					System.exit(ERROR_STATUS);
+					return ERROR_STATUS;
 				}
 			} else {
 				fileType = SpdxToolsHelper.fileToFileType(file);
@@ -95,7 +105,7 @@ public class SpdxViewer {
 			} catch (Exception ex) {
 		        System.out
 		                .print("Error creating SPDX Document: " + ex.getMessage());
-		        return;
+		        return 0;
 		    }
 		    writer = new PrintWriter(System.out);
 			List<String> verify = doc.verify();
@@ -113,7 +123,7 @@ public class SpdxViewer {
 		} catch (InvalidSPDXAnalysisException e) {
 			System.out.print("Error pretty printing SPDX Document: "
 					+ e.getMessage());
-			return;
+			return 0;
 		} catch (Exception e) {
 			System.out.print("Unexpected error displaying SPDX Document: "
 					+ e.getMessage());
@@ -129,5 +139,6 @@ public class SpdxViewer {
                 }
 		    }
 		}
+		return 0;
 	}
 }
