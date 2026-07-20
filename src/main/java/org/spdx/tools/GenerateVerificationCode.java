@@ -37,6 +37,13 @@ import org.spdx.utility.verificationcode.VerificationCodeGenerator;
 
 /**
  * Generates a verification code for a specific directory
+ * <br/>
+ * Exit codes:
+ * <ul>
+ *   <li>0 - the verification code was generated successfully</li>
+ *   <li>1 - the verification code could not be generated</li>
+ *   <li>2 - the command was invoked incorrectly (missing/invalid arguments)</li>
+ * </ul>
  * @author Gary O'Neall
  */
 public class GenerateVerificationCode {
@@ -45,12 +52,23 @@ public class GenerateVerificationCode {
 	 * Print an SPDX Verification code for a directory of files
 	 * args[0] is the source directory containing the files
 	 * args[1] is an optional regular expression of skipped files.  The expression is applied against a file path relative the the source directory supplied
+	 * Delegates to {@link #run(String[])} and terminates the JVM with its exit status.
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		System.exit(run(args));
+	}
+
+	/**
+	 * Runs the GenerateVerificationCode command logic and reports results to
+	 * standard out.
+	 * @param args
+	 * @return process exit status, see {@link ExitCode}
+	 */
+	static int run(String[] args) {
 		if (args.length < 1 || args.length > 2) {
 			error("Incorrect number of arguments.");
-			System.exit(1);
+			return ExitCode.USAGE_ERROR;
 		}
 		String directoryPath = args[0];
 		String skippedRegex = null;
@@ -62,13 +80,13 @@ public class GenerateVerificationCode {
 		try {
 			SpdxPackageVerificationCode verificationCode = generateVerificationCode(directoryPath, skippedRegex);
 			printVerificationCode(verificationCode);
-			System.exit(0);
+			return ExitCode.SUCCESS;
 		} catch (Exception ex) {
 			error("Error creating verification code: "+ex.getMessage());
-			System.exit(1);
+			return ExitCode.ERROR;
 		}
 	}
-	
+
 	public static SpdxPackageVerificationCode generateVerificationCode(String directoryPath, @Nullable String skippedRegex) throws OnlineToolException {
 		Objects.requireNonNull(directoryPath, "Directory path must not be null");
 		File sourceDirectory = new File(directoryPath);
