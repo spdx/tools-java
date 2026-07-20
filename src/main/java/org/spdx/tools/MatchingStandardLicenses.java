@@ -63,7 +63,7 @@ public class MatchingStandardLicenses {
 
 	/**
 	 * Runs the MatchingStandardLicenses command logic and reports results to
-	 * standard out, without terminating the JVM - allows the logic to be unit tested.
+	 * standard out.
 	 * @param args
 	 * @return process exit status, see {@link ExitCode}
 	 */
@@ -73,8 +73,13 @@ public class MatchingStandardLicenses {
 			usage();
 			return ExitCode.USAGE_ERROR;
 		}
-		@SuppressWarnings("null")
-		File textFile = new File(args[0]);
+		String textFilePath = args[0];
+		if (textFilePath == null) {
+			System.out.println("Invalid arguments");
+			usage();
+			return ExitCode.USAGE_ERROR;
+		}
+		File textFile = new File(textFilePath);
 
 		if (!textFile.exists()) {
 			System.out.println("Text file "+textFile.getName()+" does not exist");
