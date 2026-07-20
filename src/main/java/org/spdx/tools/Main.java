@@ -23,7 +23,15 @@ import org.spdx.library.SpdxModelFactory;
 
 /**
  * Dispatch individual tools
- * 
+ * <br/>
+ * Each dispatched tool's main() calls System.exit() itself, which
+ * terminates the process immediately with that tool's own exit status -
+ * so the exit codes below only apply when no tool is actually dispatched:
+ * <ul>
+ *   <li>0 - success (e.g. the "Version" command, which is handled here directly instead of being dispatched)</li>
+ *   <li>2 - the command was invoked incorrectly (missing/unrecognized tool name)</li>
+ * </ul>
+ *
  * @author Gary O'Neall
  */
 public class Main {
@@ -32,9 +40,18 @@ public class Main {
 	 * @param args args[0] is the name of the tools with the remaining args being the tool parameters
 	 */
 	public static void main(String[] args) {
+		System.exit(run(args));
+	}
+
+	/**
+	 * Runs the Main dispatch logic and reports results to standard out.
+	 * @param args args[0] is the name of the tools with the remaining args being the tool parameters
+	 * @return process exit status, see {@link ExitCode}
+	 */
+	static int run(String[] args) {
 		if (args.length < 1) {
 			usage();
-			return;
+			return ExitCode.USAGE_ERROR;
 		}
 		SpdxModelFactory.init();
 		String spdxTool = args[0];
@@ -57,9 +74,11 @@ public class Main {
 			MatchingStandardLicenses.main(args);
 		} else {
 			usage();
+			return ExitCode.USAGE_ERROR;
 		}
+		return ExitCode.SUCCESS;
 	}
-	
+
 	private static void usage() {
 		System.out.println("Usage: java -jar spdx-tools-jar-with-dependencies.jar <function> <parameters> \n"
 						+ "function                 parameter                         example \n"
