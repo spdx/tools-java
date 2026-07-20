@@ -32,7 +32,6 @@ import java.util.Set;
 
 import org.apache.jena.ontapi.model.OntClass;
 import org.apache.jena.ontapi.model.OntID;
-import org.apache.jena.ontapi.model.OntIndividual;
 import org.apache.jena.ontapi.model.OntModel;
 import org.apache.jena.ontapi.model.OntProperty;
 import org.apache.jena.rdf.model.Property;
@@ -101,7 +100,8 @@ public class AbstractOwlRdfConverter {
 			Objects.requireNonNull(ontClass, "Missing required ontology class");
 			Objects.requireNonNull(property, "Missing required property");
 			this.property = property;
-			List<OntClass.Restriction> restrictions = getRestrictionsFromSuperclasses(ontClass, property);
+			List<OntClass.Restriction> restrictions =
+					getRestrictionsFromSuperclasses(ontClass, property);
 			interpretRestrictions(restrictions);
 		}
 
@@ -146,22 +146,28 @@ public class AbstractOwlRdfConverter {
 				}
 				// cardinality
 				Statement qualCardStmt = r.getProperty(qualCardProperty);
-				RDFNode qualCardPropValue = qualCardStmt != null ? qualCardStmt.getObject() : null;
+				RDFNode qualCardPropValue = qualCardStmt != null
+						? qualCardStmt.getObject() : null;
 				
 				Statement cardStmt = r.getProperty(cardProperty);
-				RDFNode cardPropValue = cardStmt != null ? cardStmt.getObject() : null;
+				RDFNode cardPropValue = cardStmt != null
+						? cardStmt.getObject() : null;
 				
 				Statement maxQualCardStmt = r.getProperty(maxQualCardProperty);
-				RDFNode maxQualCardPropValue = maxQualCardStmt != null ? maxQualCardStmt.getObject() : null;
+				RDFNode maxQualCardPropValue = maxQualCardStmt != null
+						? maxQualCardStmt.getObject() : null;
 				
 				Statement maxCardStmt = r.getProperty(maxCardProperty);
-				RDFNode maxCardPropValue = maxCardStmt != null ? maxCardStmt.getObject() : null;
+				RDFNode maxCardPropValue = maxCardStmt != null
+						? maxCardStmt.getObject() : null;
 				
 				Statement minCardStmt = r.getProperty(minCardProperty);
-				RDFNode minCardPropValue = minCardStmt != null ? minCardStmt.getObject() : null;
+				RDFNode minCardPropValue = minCardStmt != null
+						? minCardStmt.getObject() : null;
 				
 				Statement minQualCardStmt = r.getProperty(minQualCardProperty);
-				RDFNode minQualCardPropValue = minQualCardStmt != null ? minQualCardStmt.getObject() : null;
+				RDFNode minQualCardPropValue = minQualCardStmt != null
+						? minQualCardStmt.getObject() : null;
 
 				if (Objects.nonNull(qualCardPropValue) && qualCardPropValue.isLiteral()) {
 					absoluteCardinality = qualCardPropValue.asLiteral().getInt();
@@ -221,24 +227,40 @@ public class AbstractOwlRdfConverter {
 					}
 				});
 			}
+			if (Objects.isNull(typeUri)) {
+				try {
+					Optional<Resource> propType = getPropertyType(property);
+					if (propType.isPresent()) {
+						typeUri = propType.get().getURI();
+					}
+				} catch (Exception e) {
+					logger.warn("Error getting property type for " 
+							+ property.getLocalName(), e);
+				}
+			}
 			if (Objects.isNull(typeUri) && ("comment".equals(property.getLocalName()) || "seeAlso".equals(property.getLocalName()))) {
 				// A bit of a hack, the schema file can not store the type of rdfs:comment, so we must override it to xsd:string
 				typeUri = SpdxConstantsCompatV2.XML_SCHEMA_NAMESPACE + "string";
 			}
 		}
 
-		private List<OntClass.Restriction> getRestrictionsFromSuperclasses(OntClass ontClass, OntProperty property) {
+		private List<OntClass.Restriction> getRestrictionsFromSuperclasses(
+				OntClass ontClass, OntProperty property) {
 			List<OntClass.Restriction> retval = new ArrayList<>();
 			ontClass.superClasses(false).forEach(superClass -> {
 				if (superClass instanceof OntClass.UnionOf) {
 		            OntClass.UnionOf uClass = (OntClass.UnionOf) superClass;
 		            uClass.components().forEach(operand -> {
-		                if (operand instanceof OntClass.UnaryRestriction && property.equals(((OntClass.UnaryRestriction<?>) operand).getProperty())) {
+		                if (operand instanceof OntClass.UnaryRestriction
+		                        && property.equals(
+		                        		((OntClass.UnaryRestriction<?>) operand)
+		                        		.getProperty())) {
 		                    retval.add((OntClass.Restriction) operand);
 		                }
 		            });
 		        } else if (superClass instanceof OntClass.UnaryRestriction) {
-		            OntClass.UnaryRestriction<?> r = (OntClass.UnaryRestriction<?>) superClass;
+		            OntClass.UnaryRestriction<?> r =
+		            		(OntClass.UnaryRestriction<?>) superClass;
 					if (property.equals(r.getProperty())) {
 						retval.add(r);
 					}
@@ -252,8 +274,8 @@ public class AbstractOwlRdfConverter {
 			this.property = property;
 			List<OntClass.Restriction> propertyRestrictions = new ArrayList<>();
 			if (property instanceof org.apache.jena.ontapi.model.OntRelationalProperty) {
-				((org.apache.jena.ontapi.model.OntRelationalProperty) property).referringRestrictions()
-					.forEach(propertyRestrictions::add);
+				((org.apache.jena.ontapi.model.OntRelationalProperty) property)
+					.referringRestrictions().forEach(propertyRestrictions::add);
 			}
 			interpretRestrictions(propertyRestrictions);
 		}
@@ -436,7 +458,8 @@ public class AbstractOwlRdfConverter {
 	 * @throws SchemaException
 	 */
 	protected Optional<Resource> getPropertyType(OntProperty property) throws SchemaException {
-		java.util.Iterator<? extends Resource> rangeIter = property.ranges().iterator();
+		java.util.Iterator<? extends Resource> rangeIter =
+				property.ranges().iterator();
 		while (rangeIter.hasNext()) {
 			Resource range = rangeIter.next();
 			if (range.isURIResource()) {
@@ -505,7 +528,8 @@ public class AbstractOwlRdfConverter {
 				properties.add(property);
 			}
 		} else {
-			java.util.stream.Stream<OntClass> superClassStream = oClass.superClasses(excludeSuperClassProperties);
+			java.util.stream.Stream<OntClass> superClassStream =
+					oClass.superClasses(excludeSuperClassProperties);
 			if (excludeSuperClassProperties) {
 				superClassStream = superClassStream.filter(sc -> {
 					return !sc.isURIResource() || 
@@ -513,7 +537,8 @@ public class AbstractOwlRdfConverter {
 				});
 			}			
 			superClassStream.forEach(sc -> {
-				collectPropertiesFromRestrictions(sc, properties, reviewedClasses, excludeSuperClassProperties);
+				collectPropertiesFromRestrictions(sc, properties,
+						reviewedClasses, excludeSuperClassProperties);
 			});
 		}
 	}
