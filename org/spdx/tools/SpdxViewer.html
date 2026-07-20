@@ -80,7 +80,14 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Simple pretty printer for SPDX RDF XML files. Writes output to System.out.
  Usage: PrettyPrinter SPDXRdfXMLFile > textFile where SPDXRdfXMLFile is a
- valid SPDX RDF XML file</div>
+ valid SPDX RDF XML file
+ <br/>
+ Exit codes:
+ <ul>
+   <li>0 - the document was pretty-printed successfully</li>
+   <li>1 - the document could not be read, parsed, or printed</li>
+   <li>2 - the command was invoked incorrectly (missing/invalid arguments)</li>
+ </ul></div>
 <dl class="notes">
 <dt>Version:</dt>
 <dd>0.1</dd>
@@ -117,7 +124,9 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#main(java.lang.String%5B%5D)" class="member-name-link">main</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;args)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Pretty Printer for an SPDX Document</div>
+<div class="block">Pretty Printer for an SPDX Document
+
+ Main entry point for the SpdxViewer tool.</div>
 </div>
 </div>
 </div>
@@ -154,7 +163,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="main(java.lang.String[])">
 <h3>main</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">main</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;args)</span></div>
-<div class="block">Pretty Printer for an SPDX Document</div>
+<div class="block">Pretty Printer for an SPDX Document
+
+ Main entry point for the SpdxViewer tool.
+ Delegates to <code>run(String[])</code> and terminates the JVM with its exit status.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>args</code> - args[0] SPDX file path; args[1] [RDFXML|JSON|XLS|XLSX|YAML|TAG] an optional file type - if not present, file type of the to file will be used</dd>
