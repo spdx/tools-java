@@ -93,7 +93,8 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 		String version = null;
 		if (ont != null && ont.isURIResource()) {
 			version = ont.getVersionInfo();
-			String ontologyUri = version == null ? ont.getURI() : ont.getURI() + "/" + version;
+			String ontologyUri = version == null ? ont.getURI()
+					: ont.getURI() + "/" + version;
 			if (Objects.nonNull(ontologyUri)) {
 				root.put("$id", ontologyUri);
 			}
@@ -125,7 +126,9 @@ public class OwlToJsonSchema extends AbstractOwlRdfConverter {
 		ObjectNode describesProperty = toArraySchema(createSimpleTypeSchema(JSON_TYPE_STRING, "SPDX ID for each Package, File, or Snippet."), 
 		        "DEPRECATED: use relationships instead of this field. Packages, files and/or Snippets described by this SPDX document", 0);
 		describesProperty.put("deprecated", true);
-		describesProperty.put("$comment", "This field has been deprecated as it is a duplicate of using the SPDXRef-DOCUMENT DESCRIBES relationship");
+		describesProperty.put("$comment",
+				"This field has been deprecated as it is a duplicate of "
+						+ "using the SPDXRef-DOCUMENT DESCRIBES relationship");
 		properties.set(SpdxConstantsCompatV2.PROP_DOCUMENT_DESCRIBES.getName(), describesProperty);
         
 		OntClass packageClass = model.getOntClass(SpdxConstantsCompatV2.SPDX_NAMESPACE + SpdxConstantsCompatV2.CLASS_SPDX_PACKAGE);

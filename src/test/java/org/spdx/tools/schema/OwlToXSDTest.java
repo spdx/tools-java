@@ -18,6 +18,9 @@ import org.apache.ws.commons.schema.XmlSchemaSerializer.XmlSchemaSerializerExcep
 
 import junit.framework.TestCase;
 
+/**
+ * Tests generation of XML Schema Definitions (XSD) from SPDX OWL ontologies.
+ */
 public class OwlToXSDTest extends TestCase {
 
 	static final String OWL_FILE_PATH = "testResources" + File.separator + "spdx-2-2-revision-8-ontology.owl.xml";

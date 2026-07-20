@@ -83,7 +83,8 @@ public class OwlToXsd extends AbstractOwlRdfConverter {
 		schema.setNamespaceContext(namespaces);
 		addDocumentation(schema, schema, ontology.getComment(null));
 
-		java.util.List<OntClass.Named> classes = model.classes().collect(java.util.stream.Collectors.toList());
+		java.util.List<OntClass.Named> classes = model.classes()
+				.collect(java.util.stream.Collectors.toList());
 		for (OntClass.Named type : classes) {
 			addTypeToSchema(schema, type);
 		}
@@ -91,13 +92,17 @@ public class OwlToXsd extends AbstractOwlRdfConverter {
 		// Add the top level element
 		XmlSchemaElement documentElement = new XmlSchemaElement(schema, true);
 		documentElement.setName("Document");
-		documentElement.setSchemaTypeName(new QName(SpdxConstantsCompatV2.SPDX_NAMESPACE.substring(0, SpdxConstantsCompatV2.SPDX_NAMESPACE.length()-1), "SpdxDocument"));
+		documentElement.setSchemaTypeName(new QName(
+				SpdxConstantsCompatV2.SPDX_NAMESPACE.substring(0,
+						SpdxConstantsCompatV2.SPDX_NAMESPACE.length() - 1),
+				"SpdxDocument"));
 		addDocumentation(schema, documentElement, "Top level element for the SPDX document");
 		return schema;
 	}
 
 	private void addTypeToSchema(XmlSchema schema, OntClass type) throws XmlSchemaSerializerException, SchemaException {
-		java.util.List<OntIndividual> individuals = type.individuals().collect(java.util.stream.Collectors.toList());
+		java.util.List<OntIndividual> individuals = type.individuals()
+				.collect(java.util.stream.Collectors.toList());
 		if (!individuals.isEmpty()) {
 			// Enum type
 			addEnumTypeToSchema(schema, type, individuals);
@@ -112,7 +117,8 @@ public class OwlToXsd extends AbstractOwlRdfConverter {
 		addDocumentation(schema, xmlType, type.getComment(null));
 		XmlSchemaComplexContentExtension schemaExtension = null;
 		java.util.List<OntClass> superClasses = type.superClasses(true)
-				.filter(sc -> sc.isURIResource() && !"http://www.w3.org/2000/01/rdf-schema#Container".equals(sc.getURI()))
+				.filter(sc -> sc.isURIResource()
+						&& !"http://www.w3.org/2000/01/rdf-schema#Container".equals(sc.getURI()))
 				.collect(java.util.stream.Collectors.toList());
 		
 		if (!superClasses.isEmpty()) {
@@ -189,7 +195,9 @@ public class OwlToXsd extends AbstractOwlRdfConverter {
 		return xmlType;
 	}
 
-	private void addEnumTypeToSchema(XmlSchema schema, OntClass type, List<OntIndividual> individuals) throws XmlSchemaSerializerException {
+	private void addEnumTypeToSchema(XmlSchema schema, OntClass type,
+			List<OntIndividual> individuals)
+			throws XmlSchemaSerializerException {
 		XmlSchemaSimpleType xmlType = new XmlSchemaSimpleType(schema, true);
 		xmlType.setName(type.getLocalName());
 		addDocumentation(schema, xmlType, type.getComment(null));
