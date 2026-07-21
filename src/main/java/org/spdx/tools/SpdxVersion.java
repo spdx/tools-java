@@ -93,4 +93,62 @@ public class SpdxVersion {
     public static String getLicenseListVersion() {
         return ListedLicenses.getListedLicenses().getLicenseListVersion();
     }
+
+	public static final java.util.List<String> SUPPORTED_SPDX_VERSIONS =
+			java.util.Collections.unmodifiableList(
+					java.util.Arrays.asList(
+							"1.0", "1.1", "1.2", "2.0", "2.1", "2.2", "2.3",
+							"3.0", "3.0.1"
+					));
+
+	/**
+	 * Check if a version string is a valid supported SPDX version.
+	 * @param version
+	 * @return true if valid
+	 */
+	public static boolean isValidVersion(String version) {
+		if (version == null) {
+			return false;
+		}
+		String norm = version.startsWith("SPDX-")
+				? version.substring(5) : version;
+		return SUPPORTED_SPDX_VERSIONS.contains(norm);
+	}
+
+	/**
+	 * Compares two SPDX version strings.
+	 * @param versionA
+	 * @param versionB
+	 * @return negative if versionA < versionB, zero if equal, positive if
+	 *         versionA > versionB
+	 */
+	public static int compareVersions(String versionA, String versionB) {
+		if (versionA == null || versionB == null) {
+			return 0;
+		}
+		String normA = versionA.startsWith("SPDX-")
+				? versionA.substring(5) : versionA;
+		String normB = versionB.startsWith("SPDX-")
+				? versionB.substring(5) : versionB;
+		String[] partsA = normA.split("\\.");
+		String[] partsB = normB.split("\\.");
+		int length = Math.max(partsA.length, partsB.length);
+		for (int i = 0; i < length; i++) {
+			String partA = i < partsA.length ? partsA[i].trim() : "0";
+			String partB = i < partsB.length ? partsB[i].trim() : "0";
+			try {
+				int a = Integer.parseInt(partA);
+				int b = Integer.parseInt(partB);
+				if (a != b) {
+					return Integer.compare(a, b);
+				}
+			} catch (NumberFormatException e) {
+				int comp = partA.compareTo(partB);
+				if (comp != 0) {
+					return comp;
+				}
+			}
+		}
+		return 0;
+	}
 }
