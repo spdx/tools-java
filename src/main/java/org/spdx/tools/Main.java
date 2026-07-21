@@ -80,9 +80,9 @@ public class Main {
 	}
 
 	private static void usage() {
-		System.out.println("Usage: java -jar spdx-tools-jar-with-dependencies.jar <function> <parameters> \n"
+		System.out.println("Usage: java -jar spdx-tools-jar-with-dependencies.jar <function> <parameters>\n"
 						+ "function                 parameters\n"
-						+ "------------------------------------------------------------------------------- \n"
+						+ "-------------------------------------------------------------------------------\n"
 						+ "SPDXViewer      inputFile\n"
 						+ "Verify          inputFile [type]\n"
 						+ "Convert         inputFile outputFile [fromType] [toType] [--toVersion version]\n"
@@ -90,11 +90,11 @@ public class Main {
 						+ "GenerateVerificationCode sourceDirectory\n"
 						+ "MatchingStandardLicenses licenseTextFile\n"
 						+ "Version\n"
-						+ "------------------------------------------------------------------------------- \n"
+						+ "-------------------------------------------------------------------------------\n"
 						+ "Example:\n"
-						+ "java -jar spdx-tools...jar Convert example.spdx.json example.spdx\n"
-						+ "java -jar spdx-tools...jar Convert ex-2.2.spdx.json ex-2.3.spdx --toVersion 2.3\n"
-						+ "java -jar spdx-tools...jar CompareDocs output.xlsx ex1.spdx ex2.spdx.rdf\n"
+						+ "java -jar spdx-tools..jar Convert example.spdx.json example.spdx\n"
+						+ "java -jar spdx-tools..jar Convert ex-2.2.spdx.json ex-2.3.spdx --toVersion 2.3\n"
+						+ "java -jar spdx-tools..jar CompareDocs output.xlsx ex1.spdx ex2.spdx.rdf\n"
 					);
 	}
 
