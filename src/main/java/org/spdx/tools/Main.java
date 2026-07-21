@@ -81,7 +81,7 @@ public class Main {
 
 	private static void usage() {
 		System.out.println("Usage: java -jar spdx-tools-jar-with-dependencies.jar <function> <parameters>\n"
-						+ "function                 parameters\n"
+						+ "function        parameters\n"
 						+ "-------------------------------------------------------------------------------\n"
 						+ "SPDXViewer      inputFile\n"
 						+ "Verify          inputFile [type]\n"
