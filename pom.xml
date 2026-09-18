@@ -398,6 +398,25 @@
 				<artifactId>sonar-maven-plugin</artifactId>
 				<version>5.8.0.7211</version>
 			  </plugin>
+			  <plugin>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-maven-plugin</artifactId>
+				<version>4.9.3.2</version>
+				<configuration>
+					<failOnError>false</failOnError>
+					<effort>Max</effort>
+					<threshold>Medium</threshold>
+				</configuration>
+				<executions>
+					<execution>
+						<id>spotbugs-check</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			  </plugin>
 		</plugins>
   	</build>
 </project>
