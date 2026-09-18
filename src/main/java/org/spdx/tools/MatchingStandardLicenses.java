@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.util.List;
 
 import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.utility.compare.LicenseCompareHelper;
@@ -96,9 +97,9 @@ public class MatchingStandardLicenses {
 			return ExitCode.ERROR;
 		}
 
-		String[] matchingLicenseIds = null;
+		List<String> matchingLicenseIds = null;
 		try {
-			matchingLicenseIds = LicenseCompareHelper.matchingStandardLicenseIds(licenseText);
+			matchingLicenseIds = LicenseCompareHelper.listAllListedLicenseIdsMatched(licenseText);
 		} catch (InvalidSPDXAnalysisException e) {
 			System.out.println("Error reading standard licenses: "+e.getMessage());
 			return ExitCode.ERROR;
@@ -107,14 +108,14 @@ public class MatchingStandardLicenses {
 			return ExitCode.ERROR;
 		}
 
-		if (matchingLicenseIds == null || matchingLicenseIds.length == 0) {
+		if (matchingLicenseIds == null || matchingLicenseIds.isEmpty()) {
 			System.out.println("No standard licenses matched.");
 		} else {
 			StringBuilder sb = new StringBuilder("The following license id(s) match: ");
-			sb.append(matchingLicenseIds[0]);
-			for (int i = 1; i < matchingLicenseIds.length; i++) {
+			sb.append(matchingLicenseIds.get(0));
+			for (int i = 1; i < matchingLicenseIds.size(); i++) {
 				sb.append(", ");
-				sb.append(matchingLicenseIds[i]);
+				sb.append(matchingLicenseIds.get(i));
 			}
 			System.out.println(sb.toString());
 		}
