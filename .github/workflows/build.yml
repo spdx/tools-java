@@ -45,3 +45,5 @@ jobs:
         else
            mvn --batch-mode --update-snapshots verify
         fi
+    - name: SpotBugs analysis
+      run: mvn --batch-mode spotbugs:check
