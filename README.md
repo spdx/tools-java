@@ -25,9 +25,11 @@ This utility supports versions 2.0, 2.1, 2.2, 2.3 and 3.0.1 of the SPDX specific
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=tools-java&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=tools-java)
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=tools-java&metric=sqale_index)](https://sonarcloud.io/dashboard?id=tools-java)
 
-## Getting Starting
+## Getting Started
 
 The SPDX Tools binaries can be downloaded from the [releases page](https://github.com/spdx/tools-java/releases) under the respective release.  The package is also available in [Maven Central](https://central.sonatype.com/artifact/org.spdx/tools-java) (organization `org.spdx`, artifact `tools-java`).
+
+Running the tools requires a Java Runtime Environment (JRE) or Java Development Kit (JDK) version 11 or later.  Building from source requires JDK 11 or later and Apache Maven.
 
 See the Syntax section below for the commands available.
 
@@ -113,6 +115,40 @@ The following tool can be used to generate an SPDX verification code from a dire
 
         java -jar tools-java-2.0.7-jar-with-dependencies.jar GenerateVerificationCode sourceDirectory [ignoredFilesRegex]
 
+## License matching
+
+The following tool lists the SPDX License List identifiers whose text matches a license text file, using the [SPDX matching guidelines](https://spdx.org/licenses/matching-guidelines.html):
+
+* MatchingStandardLicenses licenseTextFile
+
+Sample usage:
+
+    java -jar tools-java-2.0.7-jar-with-dependencies.jar MatchingStandardLicenses LICENSE
+
+Prints the matching license ids, or `No standard licenses matched.`
+
+## Version
+
+The following command prints the version of the tool, the SPDX specification and the SPDX License List:
+
+* Version
+
+Sample usage:
+
+    java -jar tools-java-2.0.7-jar-with-dependencies.jar Version
+
+## Exit codes
+
+The tools return the following process exit codes, which can be used in scripts and CI:
+
+| Code | Meaning |
+| ---- | ------- |
+| 0 | Success - e.g. the document is valid, or the conversion completed |
+| 1 | Failure - e.g. the document is invalid or could not be read, or the operation failed |
+| 2 | Incorrect usage - missing, invalid or unrecognized arguments |
+
+For `MatchingStandardLicenses`, exit code 0 means the comparison completed, whether or not a license matched.
+
 ## SPDX Validation Tool
 
 The SPDX Workgroup provides an online interface to validate, compare, and convert SPDX documents in addition to the command line options above.
@@ -121,7 +157,7 @@ The [SPDX Online Tools](https://tools.spdx.org/) is an all-in-one portal to uplo
 
 ## License
 
-A complete SPDX file is available including dependencies is available in the bintray and Maven repos.
+A complete SPDX file, including dependencies, is available in the [Maven Central](https://central.sonatype.com/artifact/org.spdx/tools-java) repository.
 
     SPDX-License-Identifier: Apache-2.0
     PackageLicenseDeclared: Apache-2.0
