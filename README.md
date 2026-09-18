@@ -117,7 +117,9 @@ The following tool can be used to generate an SPDX verification code from a dire
 
 ## License matching
 
-The following tool lists the SPDX License List identifiers whose text matches a license text file, using the [SPDX matching guidelines](https://spdx.org/licenses/matching-guidelines.html):
+The following tool lists the SPDX License List identifiers whose text matches
+a license text file, using the
+[SPDX License List matching guidelines][matching]:
 
 * MatchingStandardLicenses licenseTextFile
 
@@ -125,11 +127,14 @@ Sample usage:
 
     java -jar tools-java-2.0.7-jar-with-dependencies.jar MatchingStandardLicenses LICENSE
 
-Prints the matching license ids, or `No standard licenses matched.`
+Prints the matching license IDs, or `No standard licenses matched.`
+
+[matching]: https://spdx.github.io/spdx-spec/v3.0/annexes/license-matching-guidelines-and-templates/
 
 ## Version
 
-The following command prints the version of the tool, the SPDX specification and the SPDX License List:
+The following command prints the version of the tool,
+the SPDX specification and the SPDX License List:
 
 * Version
 
@@ -139,7 +144,7 @@ Sample usage:
 
 ## Exit codes
 
-The tools return the following process exit codes, which can be used in scripts and CI:
+The tools return the following process exit codes:
 
 | Code | Meaning |
 | ---- | ------- |
@@ -147,7 +152,8 @@ The tools return the following process exit codes, which can be used in scripts 
 | 1 | Failure - e.g. the document is invalid or could not be read, or the operation failed |
 | 2 | Incorrect usage - missing, invalid or unrecognized arguments |
 
-For `MatchingStandardLicenses`, exit code 0 means the comparison completed, whether or not a license matched.
+For `MatchingStandardLicenses`, exit code 0 means the comparison completed,
+whether or not a license matched.
 
 ## SPDX Validation Tool
 
