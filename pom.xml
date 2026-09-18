@@ -371,6 +371,16 @@
 				<artifactId>sonar-maven-plugin</artifactId>
 				<version>5.8.0.7211</version>
 			  </plugin>
+			  <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>3.6.0</version>
+				<configuration>
+					<configLocation>checkstyle.xml</configLocation>
+					<failOnViolation>false</failOnViolation>
+					<violationSeverity>warning</violationSeverity>
+				</configuration>
+			  </plugin>
 		</plugins>
   	</build>
 </project>
