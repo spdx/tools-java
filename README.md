@@ -29,7 +29,9 @@ This utility supports versions 2.0, 2.1, 2.2, 2.3 and 3.0.1 of the SPDX specific
 
 The SPDX Tools binaries can be downloaded from the [releases page](https://github.com/spdx/tools-java/releases) under the respective release.  The package is also available in [Maven Central](https://central.sonatype.com/artifact/org.spdx/tools-java) (organization `org.spdx`, artifact `tools-java`).
 
-Running the tools requires a Java Runtime Environment (JRE) or Java Development Kit (JDK) version 11 or later.  Building from source requires JDK 11 or later and Apache Maven.
+Running the tools requires a Java Runtime Environment (JRE)
+or Java Development Kit (JDK) version 11 or later.
+Building from source requires JDK 11 or later and Apache Maven.
 
 See the Syntax section below for the commands available.
 
@@ -162,8 +164,6 @@ The SPDX Workgroup provides an online interface to validate, compare, and conver
 The [SPDX Online Tools](https://tools.spdx.org/) is an all-in-one portal to upload and parse SPDX documents for validation, comparison and conversion and search the SPDX license list.
 
 ## License
-
-A complete SPDX file, including dependencies, is available in the [Maven Central](https://central.sonatype.com/artifact/org.spdx/tools-java) repository.
 
     SPDX-License-Identifier: Apache-2.0
     PackageLicenseDeclared: Apache-2.0
