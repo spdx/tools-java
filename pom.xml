@@ -409,7 +409,7 @@
 				<version>3.6.0</version>
 				<configuration>
 					<configLocation>checkstyle.xml</configLocation>
-					<failOnViolation>false</failOnViolation>
+					<failOnViolation>true</failOnViolation>
 					<violationSeverity>warning</violationSeverity>
 				</configuration>
 			  </plugin>
