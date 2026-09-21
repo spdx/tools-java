@@ -228,10 +228,9 @@ public class Verify {
 			for (String verifyMsg:verify) {
 				if (!retval.contains(verifyMsg)) {
 					// Check for deprecated licenses - should be warnings, not errors
-					if (verifyMsg.contains(" is deprecated.")) {
-						verifyMsg = verifyMsg.replaceAll("error:", "warning:");
-					}
-					retval.add(verifyMsg);
+					String msg = verifyMsg.contains(" is deprecated.")
+							? verifyMsg.replaceAll("error:", "warning:") : verifyMsg;
+					retval.add(msg);
 				}
 			}
 		}

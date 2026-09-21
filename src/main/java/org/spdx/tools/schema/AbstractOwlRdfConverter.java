@@ -221,7 +221,7 @@ public class AbstractOwlRdfConverter {
 				// get the type from the range of the property
 				property.ranges().forEach(range -> {
 					if (range.isURIResource()) {
-						if (Objects.isNull(typeUri) || typeUri.equals("http://www.w3.org/2000/01/rdf-schema#Literal")) {
+						if (Objects.isNull(typeUri) || "http://www.w3.org/2000/01/rdf-schema#Literal".equals(typeUri)) {
 							typeUri = range.asResource().getURI();
 						}
 					}

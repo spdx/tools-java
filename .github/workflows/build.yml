@@ -45,5 +45,7 @@ jobs:
         else
            mvn --batch-mode --update-snapshots verify
         fi
+    - name: Checkstyle analysis
+      run: mvn --batch-mode checkstyle:check
     - name: SpotBugs analysis
       run: mvn --batch-mode spotbugs:check
