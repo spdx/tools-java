@@ -45,6 +45,7 @@ The following converter tools support SPDX format:
 
 * Tag
 * RDF/XML
+* ODS Spreadsheet
 * XLSX Spreadsheet
 * XLS Spreadsheet
 * JSON

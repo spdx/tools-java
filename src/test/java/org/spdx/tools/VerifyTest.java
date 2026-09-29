@@ -28,6 +28,7 @@ public class VerifyTest extends TestCase {
 	static final String JSON_BAD_VERSION_FILE_PATH = TEST_DIR + File.separator + "SPDXJSONExample-wrongversion.spdx.json";
 	static final String TEST_V23_FIELDS_IN_V22_FILE = TEST_DIR + File.separator + "SPDXWrongVersion.spdx.json";
 	static final String TEST_RDF_FILE_PATH = TEST_DIR + File.separator + "SPDXRdfExample-v2.3.spdx.rdf";
+	static final String TEST_SPREADSHEET_ODS_FILE_PATH = TEST_DIR + File.separator + "SPDXSpreadsheetExample-v2.3.ods";
 	static final String TEST_SPREADSHEET_XLS_FILE_PATH = TEST_DIR + File.separator + "SPDXSpreadsheetExample-v2.3.xls";
 	static final String TEST_SPREADSHEET_XLSX_FILE_PATH = TEST_DIR + File.separator + "SPDXSpreadsheetExample-v2.3.xlsx";
 	static final String TEST_TAG_FILE_PATH = TEST_DIR + File.separator + "SPDXTagExample-v2.3.spdx";
@@ -65,6 +66,8 @@ public class VerifyTest extends TestCase {
 
 	public void testVerify() throws SpdxVerificationException {
 		List<String> result = Verify.verify(TEST_JSON_FILE_PATH, SerFileType.JSON);
+		assertEquals(0, result.size());
+		result = Verify.verify(TEST_SPREADSHEET_ODS_FILE_PATH, SerFileType.ODS);
 		assertEquals(0, result.size());
 		result = Verify.verify(TEST_SPREADSHEET_XLS_FILE_PATH, SerFileType.XLS);
 		assertEquals(0, result.size());

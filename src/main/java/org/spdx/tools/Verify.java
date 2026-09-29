@@ -71,7 +71,7 @@ public class Verify {
 	/**
 	 * Main entry point for the Verify tool
 	 *
-	 * @param args args[0] SPDX file path; args[1] [RDFXML|JSON|XLS|XLSX|YAML|TAG] an optional file type - if not present, file type of the to file will be used
+	 * @param args args[0] SPDX file path; args[1] [RDFXML|JSON|ODS|XLS|XLSX|YAML|TAG] an optional file type - if not present, file type of the to file will be used
 	 */
 	public static void main(String[] args) {
 		System.exit(run(args));
@@ -81,7 +81,7 @@ public class Verify {
 	 * Runs the Verify command logic and reports results to standard out/error,
 	 * without terminating the JVM - allows the logic to be unit tested.
 	 *
-	 * @param args args[0] SPDX file path; args[1] [RDFXML|JSON|XLS|XLSX|YAML|TAG] an optional file type - if not present, file type of the to file will be used
+	 * @param args args[0] SPDX file path; args[1] [RDFXML|JSON|ODS|XLS|XLSX|YAML|TAG] an optional file type - if not present, file type of the to file will be used
 	 * @return process exit status, see {@link ExitCode}
 	 */
 	static int run(String[] args) {
@@ -258,7 +258,7 @@ public class Verify {
 	}
 	
 	public void usage() {
-		System.out.println("Verify filepath [RDFXML|JSON|XLS|XLSX|YAML|TAG|JSONLD]");
-		System.out.println("    where filepath is a path to the SPDX file and [RDFXML|JSON|XLS|XLSX|YAML|TAG] is an optional file type - if not present, file type of the to file will be used");
+		System.out.println("Verify filepath [RDFXML|JSON|ODS|XLS|XLSX|YAML|TAG|JSONLD]");
+		System.out.println("    where filepath is a path to the SPDX file and [RDFXML|JSON|ODS|XLS|XLSX|YAML|TAG] is an optional file type - if not present, file type of the to file will be used");
 	}
 }
