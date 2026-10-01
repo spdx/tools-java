@@ -12,7 +12,9 @@ Instead, please send a confidential email with details of the vulnerability and 
 [spdx-tools-security@lists.spdx.org](mailto:spdx-tools-security@lists.spdx.org)
 
 ### What to Include
+
 To help us quickly understand and address the issue, please include as much of the following information as possible:
+
 * Type of issue (e.g., buffer overflow)
 * Full paths of source file(s) related to the manifestation of the issue
 * Any special configuration required to reproduce the issue
