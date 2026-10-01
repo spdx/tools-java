@@ -22,6 +22,7 @@ To help us quickly understand and address the issue, please include as much of t
 * Impact of the issue, including how an attacker could exploit it
 
 ### Response & Handling Process
+
 * **Acknowledgment:** We will acknowledge receipt of your vulnerability report within a reasonable timeframe.
 * **Investigation:** The maintainers will investigate the issue and determine its impact and scope.
 * **Fix & Disclosure:** Once a fix is prepared and tested, a security update will be released. We appreciate your cooperation in keeping the vulnerability confidential until a patch is publicly available.
