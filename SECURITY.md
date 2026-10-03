@@ -8,8 +8,9 @@ This project is supported under the Linux Foundation CRA stewardship framework, 
 
 We take the security of this project seriously. If you believe you have found a security vulnerability, please do not report it publicly through a GitHub issue.
 
-Instead, please send a confidential email with details of the vulnerability and a reference to this tool-java repository to:
-[spdx-tools-security@lists.spdx.org](mailto:spdx-tools-security@lists.spdx.org)
+Instead, please send a confidential email with details of the vulnerability and a reference to this `tools-java` repository to:
+<spdx-tools-security@lists.spdx.org>.
+This is a private, restricted mailing list accessible only to authorized security maintainers.
 
 ### What to Include
 
