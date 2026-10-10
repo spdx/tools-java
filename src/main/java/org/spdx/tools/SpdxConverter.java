@@ -79,6 +79,28 @@ public class SpdxConverter {
 	 */
 	static int run(String[] args) {
 		SpdxToolsHelper.initialize();
+		String targetSpdxVersion = null;
+		int spdxVersionArgIndex = -1;
+		for (int i = 0; i < args.length; i++) {
+			if ("--toversion".equalsIgnoreCase(args[i])) {
+				spdxVersionArgIndex = i;
+				break;
+			}
+		}
+		if (spdxVersionArgIndex != -1) {
+			if (spdxVersionArgIndex + 1 >= args.length) {
+				System.err.println(
+						"Missing version value for --toversion");
+				usage();
+				return ExitCode.USAGE_ERROR;
+			}
+			targetSpdxVersion = args[spdxVersionArgIndex + 1];
+			args = org.apache.commons.lang3.ArrayUtils.remove(
+					args, spdxVersionArgIndex + 1);
+			args = org.apache.commons.lang3.ArrayUtils.remove(
+					args, spdxVersionArgIndex);
+		}
+
 		if (args.length < MIN_ARGS) {
 			System.err
 					.println("Invalid number of arguments");
@@ -95,15 +117,9 @@ public class SpdxConverter {
 		if (args.length == 5 && "excludelicensedetails".equals(args[4].toLowerCase())) {
 			excludeLicenseDetails = true;
 		}
-		if (args.length < 4) {
-			try {
-				convert(args[0], args[1]);
-			} catch (SpdxConverterException e) {
-				System.err.println("Error converting: "+e.getMessage());
-				return ExitCode.ERROR;
-			}
-		} else {
-			SerFileType fromFileType = null;
+
+		SerFileType fromFileType = null;
+		if (args.length > 2) {
 			try {
 				fromFileType = SpdxToolsHelper.strToFileType(args[2]);
 			} catch (IllegalArgumentException e) {
@@ -112,6 +128,59 @@ public class SpdxConverter {
 				usage();
 				return ExitCode.USAGE_ERROR;
 			}
+		} else {
+			try {
+				fromFileType = SpdxToolsHelper.fileToFileType(
+						new File(args[0]));
+			} catch (InvalidFileNameException e) {
+				System.err.println("Invalid input file name: " + args[0]);
+				usage();
+				return ExitCode.USAGE_ERROR;
+			}
+		}
+
+		String normalizedTargetVersion = targetSpdxVersion;
+		if (targetSpdxVersion != null) {
+			if (!SpdxVersion.isValidVersion(targetSpdxVersion)) {
+				System.err.println("Invalid target SPDX version: "
+						+ targetSpdxVersion);
+				usage();
+				return ExitCode.USAGE_ERROR;
+			}
+			String sourceVersion = null;
+			try {
+				sourceVersion = getDocumentVersion(args[0], fromFileType);
+			} catch (SpdxConverterException e) {
+				System.err.println(
+						"Error reading source document version: "
+						+ e.getMessage());
+				return ExitCode.ERROR;
+			}
+
+			if (targetSpdxVersion.startsWith("SPDX-3.")) {
+				normalizedTargetVersion = targetSpdxVersion.substring(5);
+			} else if (!targetSpdxVersion.startsWith("SPDX-")
+					&& !targetSpdxVersion.startsWith("3.")) {
+				normalizedTargetVersion = "SPDX-" + targetSpdxVersion;
+			}
+
+			if (SpdxVersion.compareVersions(sourceVersion,
+					normalizedTargetVersion) > 0) {
+				System.err.println("Invalid SPDX version upgrade: "
+						+ "cannot downgrade from " + sourceVersion
+						+ " to " + targetSpdxVersion);
+				return ExitCode.USAGE_ERROR;
+			}
+		}
+
+		if (args.length < 4) {
+			try {
+				convert(args[0], args[1], normalizedTargetVersion);
+			} catch (SpdxConverterException e) {
+				System.err.println("Error converting: "+e.getMessage());
+				return ExitCode.ERROR;
+			}
+		} else {
 			SerFileType toFileType = null;
 			try {
 				toFileType = SpdxToolsHelper.strToFileType(args[3]);
@@ -122,7 +191,8 @@ public class SpdxConverter {
 				return ExitCode.USAGE_ERROR;
 			}
 			try {
-				convert(args[0], args[1], fromFileType, toFileType, excludeLicenseDetails);
+				convert(args[0], args[1], fromFileType, toFileType,
+						excludeLicenseDetails, normalizedTargetVersion);
 			} catch (SpdxConverterException e) {
 				System.err.println("Error converting: "+e.getMessage());
 				return ExitCode.ERROR;
@@ -178,82 +248,8 @@ public class SpdxConverter {
 	 */
 	public static void convert(String fromFilePath, String toFilePath, SerFileType fromFileType, 
 			SerFileType toFileType, boolean excludeLicenseDetails) throws SpdxConverterException {
-		File fromFile = new File(fromFilePath);
-		if (!fromFile.exists()) {
-			throw new SpdxConverterException("Input file "+fromFilePath+" does not exist.");
-		}
-		File toFile = new File(toFilePath);
-		if (toFile.exists()) {
-			throw new SpdxConverterException("Output file "+toFilePath+" already exists.");
-		}
-		FileInputStream input = null;
-		FileOutputStream output = null;
-		String oldXmlInputFactory = null;
-		boolean propertySet = false;
-		try {
-			ISerializableModelStore fromStore = SpdxToolsHelper.fileTypeToStore(fromFileType);
-			ISerializableModelStore toStore = SpdxToolsHelper.fileTypeToStore(toFileType);
-			SpdxMajorVersion fromVersion = fromStore instanceof JsonLDStore ? SpdxMajorVersion.VERSION_3 :
-					SpdxMajorVersion.VERSION_2;
-			SpdxMajorVersion toVersion = toStore instanceof JsonLDStore ? SpdxMajorVersion.VERSION_3 :
-				SpdxMajorVersion.VERSION_2;
-			if (fromVersion == SpdxMajorVersion.VERSION_3 && toVersion != SpdxMajorVersion.VERSION_3) {
-				throw new SpdxConverterException("Can not convert from SPDX spec version 3 to previous versions");
-			}
-			if (fromStore instanceof RdfStore || toStore instanceof RdfStore) {
-				// Setting the property value will avoid the error message
-				// See issue #90 for more information
-				try {
-					oldXmlInputFactory = System.setProperty(SpdxToolsHelper.XML_INPUT_FACTORY_PROPERTY_KEY, 
-					        "com.sun.xml.internal.stream.XMLInputFactoryImpl");
-					propertySet = true;
-				} catch (SecurityException e) {
-					propertySet = false; // we'll just deal with the extra error message
-				}
-			}
-			if (toStore instanceof JsonLDStore) {
-				((JsonLDStore)toStore).setUseExternalListedElements(true);
-			}
-			input = new FileInputStream(fromFile);
-			output = new FileOutputStream(toFile);
-			fromStore.deSerialize(input, false);
-			if (fromVersion == SpdxMajorVersion.VERSION_3) {
-				copyV3ToV3(fromStore, toStore, excludeLicenseDetails);
-			} else if (toVersion  == SpdxMajorVersion.VERSION_3) {
-				copyV2ToV3(fromStore, toStore, excludeLicenseDetails);
-			} else {
-				copyV2ToV2(fromStore, toStore, excludeLicenseDetails);
-			}
-			toStore.serialize(output);
-		} catch (Exception ex) {
-			String msg = "Error converting SPDX file: "+ex.getClass().toString();
-			if (Objects.nonNull(ex.getMessage())) {
-				msg = msg + " " + ex.getMessage();
-			}
-			throw new SpdxConverterException(msg, ex);
-		} finally {
-			if (propertySet) {
-				if (Objects.isNull(oldXmlInputFactory)) {
-					System.clearProperty(SpdxToolsHelper.XML_INPUT_FACTORY_PROPERTY_KEY);
-				} else {
-					System.setProperty(SpdxToolsHelper.XML_INPUT_FACTORY_PROPERTY_KEY, oldXmlInputFactory);
-				}
-			}
-			if (Objects.nonNull(input)) {
-				try {
-					input.close();
-				} catch (IOException e) {
-					logger.warn("Error closing input file: "+e.getMessage());
-				}
-			}
-			if (Objects.nonNull(output)) {
-				try {
-					output.close();
-				} catch (IOException e) {
-					logger.warn("Error closing output file: "+e.getMessage());
-				}
-			}
-		}
+		convert(fromFilePath, toFilePath, fromFileType, toFileType,
+				excludeLicenseDetails, null);
 	}
 
 
@@ -363,13 +359,315 @@ public class SpdxConverter {
 		});
 	}
 
+	public static void convert(String fromFilePath, String toFilePath,
+			String spdxVersion) throws SpdxConverterException {
+		SerFileType fromFileType;
+		try {
+			fromFileType = SpdxToolsHelper.fileToFileType(
+					new File(fromFilePath));
+		} catch (InvalidFileNameException e) {
+			throw new SpdxConverterException("From file " + fromFilePath
+					+ " does not end with a valid SPDX file extension.");
+		}
+		SerFileType toFileType;
+		try {
+			toFileType = SpdxToolsHelper.fileToFileType(new File(toFilePath));
+		} catch (InvalidFileNameException e) {
+			throw new SpdxConverterException("To file " + toFilePath
+					+ " does not end with a valid SPDX file extension.");
+		}
+		convert(fromFilePath, toFilePath, fromFileType, toFileType,
+				false, spdxVersion);
+	}
+
+	public static void convert(String fromFilePath, String toFilePath,
+			SerFileType fromFileType, SerFileType toFileType,
+			boolean excludeLicenseDetails, String targetVersion)
+			throws SpdxConverterException {
+		File fromFile = new File(fromFilePath);
+		if (!fromFile.exists()) {
+			throw new SpdxConverterException("Input file " + fromFilePath
+					+ " does not exist.");
+		}
+		File toFile = new File(toFilePath);
+		if (toFile.exists()) {
+			throw new SpdxConverterException("Output file " + toFilePath
+					+ " already exists.");
+		}
+
+		String normalizedTargetVersion = targetVersion;
+		if (targetVersion != null) {
+			if (targetVersion.startsWith("SPDX-3.")) {
+				normalizedTargetVersion = targetVersion.substring(5);
+			} else if (!targetVersion.startsWith("SPDX-")
+					&& !targetVersion.startsWith("3.")) {
+				normalizedTargetVersion = "SPDX-" + targetVersion;
+			}
+		}
+
+		FileInputStream input = null;
+		FileOutputStream output = null;
+		String oldXmlInputFactory = null;
+		boolean propertySet = false;
+		try {
+			ISerializableModelStore fromStore = SpdxToolsHelper.fileTypeToStore(
+					fromFileType);
+			ISerializableModelStore toStore = SpdxToolsHelper.fileTypeToStore(
+					toFileType);
+			SpdxMajorVersion fromVersion = fromStore instanceof JsonLDStore
+					? SpdxMajorVersion.VERSION_3 : SpdxMajorVersion.VERSION_2;
+			SpdxMajorVersion toVersion = toStore instanceof JsonLDStore
+					? SpdxMajorVersion.VERSION_3 : SpdxMajorVersion.VERSION_2;
+			if (fromVersion == SpdxMajorVersion.VERSION_3
+					&& toVersion != SpdxMajorVersion.VERSION_3) {
+				throw new SpdxConverterException("Can not convert from SPDX "
+						+ "spec version 3 to previous versions");
+			}
+
+			boolean isTargetV3 = normalizedTargetVersion != null
+					&& (normalizedTargetVersion.startsWith("3.")
+					|| normalizedTargetVersion.startsWith("SPDX-3."));
+			if (isTargetV3 && toVersion != SpdxMajorVersion.VERSION_3) {
+				throw new SpdxConverterException("Target SPDX version 3.x "
+						+ "requires a JSON-LD output file type (JSONLD) "
+						+ "or file extension (.jsonld, .spdx3.json).");
+			}
+			if (normalizedTargetVersion != null && !isTargetV3
+					&& toVersion == SpdxMajorVersion.VERSION_3) {
+				throw new SpdxConverterException("Target SPDX version 2.x "
+						+ "cannot be used with a JSON-LD output file type "
+						+ "or file extension.");
+			}
+
+			if (fromStore instanceof RdfStore || toStore instanceof RdfStore) {
+				try {
+					oldXmlInputFactory = System.setProperty(
+							SpdxToolsHelper.XML_INPUT_FACTORY_PROPERTY_KEY,
+							"com.sun.xml.internal.stream.XMLInputFactoryImpl");
+					propertySet = true;
+				} catch (SecurityException e) {
+					propertySet = false;
+				}
+			}
+			if (toStore instanceof JsonLDStore) {
+				((JsonLDStore) toStore).setUseExternalListedElements(true);
+			}
+			input = new FileInputStream(fromFile);
+			output = new FileOutputStream(toFile);
+			fromStore.deSerialize(input, false);
+			if (fromVersion == SpdxMajorVersion.VERSION_3) {
+				copyV3ToV3(fromStore, toStore, excludeLicenseDetails,
+						normalizedTargetVersion);
+			} else if (toVersion == SpdxMajorVersion.VERSION_3) {
+				copyV2ToV3(fromStore, toStore, excludeLicenseDetails,
+						normalizedTargetVersion);
+			} else {
+				copyV2ToV2(fromStore, toStore, excludeLicenseDetails,
+						normalizedTargetVersion);
+			}
+			toStore.serialize(output);
+		} catch (Exception ex) {
+			String msg = "Error converting SPDX file: "
+					+ ex.getClass().toString();
+			if (Objects.nonNull(ex.getMessage())) {
+				msg = msg + " " + ex.getMessage();
+			}
+			throw new SpdxConverterException(msg, ex);
+		} finally {
+			if (propertySet) {
+				if (Objects.isNull(oldXmlInputFactory)) {
+					System.clearProperty(
+							SpdxToolsHelper.XML_INPUT_FACTORY_PROPERTY_KEY);
+				} else {
+					System.setProperty(
+							SpdxToolsHelper.XML_INPUT_FACTORY_PROPERTY_KEY,
+							oldXmlInputFactory);
+				}
+			}
+			if (Objects.nonNull(input)) {
+				try {
+					input.close();
+				} catch (IOException e) {
+					logger.warn("Error closing input file: " + e.getMessage());
+				}
+			}
+			if (Objects.nonNull(output)) {
+				try {
+					output.close();
+				} catch (IOException e) {
+					logger.warn("Error closing output file: " + e.getMessage());
+				}
+			}
+		}
+	}
+
+	private static void copyV2ToV2(ISerializableModelStore fromStore,
+			ISerializableModelStore toStore, boolean excludeLicenseDetails,
+			String targetVersion) throws InvalidSPDXAnalysisException {
+		String documentUri = SpdxToolsHelper.getDocFromStoreCompatV2(fromStore)
+				.getDocumentUri();
+		if (toStore instanceof RdfStore) {
+			((RdfStore) toStore).setDocumentUri(documentUri, false);
+			((RdfStore) toStore).setDontStoreLicenseDetails(
+					excludeLicenseDetails);
+		}
+		ModelCopyManager copyManager = new ModelCopyManager();
+		fromStore.getAllItems(documentUri,
+				SpdxConstantsCompatV2.CLASS_EXTERNAL_DOC_REF).forEach(tv -> {
+			try {
+				String specVersion = targetVersion != null ? targetVersion
+						: tv.getSpecVersion();
+				copyManager.copy(toStore, fromStore, tv.getObjectUri(),
+						specVersion, documentUri + "#");
+			} catch (InvalidSPDXAnalysisException e) {
+				throw new RuntimeException(e);
+			}
+		});
+		fromStore.getAllItems(documentUri, null).forEach(tv -> {
+			try {
+				if (!SpdxConstantsCompatV2.CLASS_EXTERNAL_DOC_REF.equals(
+						tv.getType()) && !(excludeLicenseDetails
+						&& SpdxConstantsCompatV2.CLASS_CROSS_REF.equals(
+						tv.getType()))) {
+					String specVersion = targetVersion != null ? targetVersion
+							: tv.getSpecVersion();
+					copyManager.copy(toStore, fromStore, tv.getObjectUri(),
+							specVersion, documentUri);
+				}
+			} catch (InvalidSPDXAnalysisException e) {
+				throw new RuntimeException(e);
+			}
+		});
+		if (targetVersion != null) {
+			org.spdx.library.model.v2.SpdxDocument toDoc = SpdxToolsHelper
+					.getDocFromStoreCompatV2(toStore);
+			toDoc.setSpecVersion(targetVersion);
+		}
+	}
+
+	private static void copyV2ToV3(ISerializableModelStore fromStore,
+			ISerializableModelStore toStore, boolean excludeLicenseDetails,
+			String targetVersion) throws InvalidSPDXAnalysisException {
+		ModelCopyManager copyManager = new ModelCopyManager();
+		org.spdx.library.model.v2.SpdxDocument fromDoc = SpdxToolsHelper
+				.getDocFromStoreCompatV2(fromStore);
+		String toUriPrefix = fromDoc.getDocumentUri() + "-specv3/";
+		CreationInfo defaultCreationInfo = Spdx2to3Converter
+				.convertCreationInfo(fromDoc.getCreationInfo(), toStore,
+				toUriPrefix);
+		String specVersion = targetVersion != null ? targetVersion
+				: SpdxModelFactory.getLatestSpecVersion();
+		Spdx2to3Converter converter = new Spdx2to3Converter(toStore,
+				copyManager, defaultCreationInfo, specVersion, toUriPrefix,
+				!excludeLicenseDetails);
+		converter.convertAndStore(fromDoc);
+		SpdxModelFactory.getSpdxObjects(fromStore, copyManager,
+				SpdxConstantsCompatV2.CLASS_SPDX_FILE,
+				fromDoc.getDocumentUri(),
+				fromDoc.getDocumentUri()).forEach(f -> {
+					if (!converter.alreadyCopied(
+							(((org.spdx.library.model.v2.SpdxFile) f)
+							.getObjectUri()))) {
+						try {
+							converter.convertAndStore(
+									(org.spdx.library.model.v2.SpdxFile) f);
+						} catch (InvalidSPDXAnalysisException e) {
+							throw new RuntimeException(
+									"Error upgrading file " + f
+									+ " from spec version 2 to version 3", e);
+						}
+					}
+				});
+		SpdxModelFactory.getSpdxObjects(fromStore, copyManager,
+				SpdxConstantsCompatV2.CLASS_SPDX_PACKAGE,
+				fromDoc.getDocumentUri(),
+				fromDoc.getDocumentUri()).forEach(p -> {
+					if (!converter.alreadyCopied(
+							(((org.spdx.library.model.v2.SpdxPackage) p)
+							.getObjectUri()))) {
+						try {
+							converter.convertAndStore(
+									(org.spdx.library.model.v2.SpdxPackage) p);
+						} catch (InvalidSPDXAnalysisException e) {
+							throw new RuntimeException(
+									"Error upgrading package " + p
+									+ " from spec version 2 to version 3", e);
+						}
+					}
+				});
+		SpdxModelFactory.getSpdxObjects(fromStore, copyManager,
+				SpdxConstantsCompatV2.CLASS_SPDX_SNIPPET,
+				fromDoc.getDocumentUri(),
+				fromDoc.getDocumentUri()).forEach(s -> {
+					if (!converter.alreadyCopied(
+							(((org.spdx.library.model.v2.SpdxSnippet) s)
+							.getObjectUri()))) {
+						try {
+							converter.convertAndStore(
+									(org.spdx.library.model.v2.SpdxSnippet) s);
+						} catch (InvalidSPDXAnalysisException e) {
+							throw new RuntimeException(
+									"Error upgrading snippet " + s
+									+ " from spec version 2 to version 3", e);
+						}
+					}
+				});
+	}
+
+	private static void copyV3ToV3(ISerializableModelStore fromStore,
+			ISerializableModelStore toStore, boolean excludeLicenseDetails,
+			String targetVersion) throws InvalidSPDXAnalysisException {
+		ModelCopyManager copyManager = new ModelCopyManager();
+		fromStore.getAllItems(null, null).forEach(tv -> {
+			try {
+				String specVersion = targetVersion != null ? targetVersion
+						: tv.getSpecVersion();
+				copyManager.copy(toStore, fromStore, tv.getObjectUri(),
+						specVersion, null);
+			} catch (InvalidSPDXAnalysisException e) {
+				throw new RuntimeException(e);
+			}
+		});
+	}
+
+	private static String getDocumentVersion(
+			String filePath, SerFileType fileType)
+			throws SpdxConverterException {
+		File file = new File(filePath);
+		if (!file.exists()) {
+			throw new SpdxConverterException("Input file " + filePath
+					+ " does not exist.");
+		}
+		try {
+			ISerializableModelStore store = SpdxToolsHelper.fileTypeToStore(
+					fileType);
+			SpdxToolsHelper.deserializeFile(store, file);
+			if (store instanceof JsonLDStore) {
+				return SpdxToolsHelper.getDocFromStore(store)
+						.getSpecVersion();
+			} else {
+				return SpdxToolsHelper.getDocFromStoreCompatV2(store)
+						.getSpecVersion();
+			}
+		} catch (Exception e) {
+			throw new SpdxConverterException(
+					"Error reading source document version: "
+					+ e.getMessage(), e);
+		}
+	}
+
 	private static void usage() {
 		System.out.println("Usage:");
-		System.out.println("SpdxConverter fromFilePath toFilePath [fromFileType] [toFileType]");
+		System.out.println("SpdxConverter fromFilePath toFilePath "
+				+ "[fromFileType] [toFileType] [--toVersion version] "
+				+ "[excludeLicenseDetails]");
 		System.out.println("\tfromFilePath - File path of the file to convert from");
 		System.out.println("\ttoFilePath - output file");
 		System.out.println("\t[fromFileType] - optional file type of the input file.  One of JSON, XLS, XLSX, TAG, RDFXML, RDFTTL, YAML, XML or JSONLD.  If not provided the file type will be determined by the file extension");
 		System.out.println("\t[toFileType] - optional file type of the output file.  One of JSON, XLS, XLSX, TAG, RDFXML, RDFTTL, YAML, XML or JSONLD.  If not provided the file type will be determined by the file extension");
+		System.out.println("\t[--toVersion version] - optional target SPDX "
+				+ "specification version. Must be equal to or greater than the "
+				+ "input file's version.");
 		System.out.println("\t[excludeLicenseDetails] - If present, listed license and listed exception properties will not be included in the output file");
 	}
 
