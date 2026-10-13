@@ -55,7 +55,7 @@ public class SpdxViewer {
 	 *
 	 * Main entry point for the SpdxViewer tool.
 	 * Delegates to {@link #run(String[])} and terminates the JVM with its exit status.
-     * @param args args[0] SPDX file path; args[1] [RDFXML|JSON|XLS|XLSX|YAML|TAG] an optional file type - if not present, file type of the to file will be used
+     * @param args args[0] SPDX file path; args[1] [RDFXML|JSON|ODS|XLS|XLSX|YAML|TAG] an optional file type - if not present, file type of the to file will be used
 	 */
 	public static void main(String[] args) {
 		System.exit(run(args));
@@ -64,15 +64,15 @@ public class SpdxViewer {
 	/**
 	 * Runs the SpdxViewer command logic and reports results to standard
 	 * out/error.
-	 * @param args args[0] SPDX file path; args[1] [RDFXML|JSON|XLS|XLSX|YAML|TAG] an optional file type - if not present, file type of the to file will be used
+	 * @param args args[0] SPDX file path; args[1] [RDFXML|JSON|ODS|XLS|XLSX|YAML|TAG] an optional file type - if not present, file type of the to file will be used
 	 * @return process exit status, see {@link ExitCode}
 	 */
 	static int run(String[] args) {
 		if (args.length < MIN_ARGS) {
 			System.err
-					.println("Usage:\n SPDXViewer file [RDFXML|JSON|XLS|XLSX|YAML|TAG] \n"
+					.println("Usage:\n SPDXViewer file [RDFXML|JSON|ODS|XLS|XLSX|YAML|TAG] \n"
 							+ "where file is the file path to a valid SPDX file\n"
-							+ "and [RDFXML|JSON|XLS|XLSX|YAML|TAG|JSONLD] is an optional file type\n"
+							+ "and [RDFXML|JSON|ODS|XLS|XLSX|YAML|TAG|JSONLD] is an optional file type\n"
 							+ "if not present, file type of the to file will be used");
 			return ExitCode.USAGE_ERROR;
 		}
