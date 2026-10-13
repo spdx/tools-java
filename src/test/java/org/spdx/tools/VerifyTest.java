@@ -6,9 +6,11 @@
 package org.spdx.tools;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.spdx.core.DefaultModelStore;
+import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.core.ModelRegistry;
 import org.spdx.library.ModelCopyManager;
 import org.spdx.library.model.v2.SpdxModelInfoV2_X;
@@ -17,6 +19,7 @@ import org.spdx.storage.simple.InMemSpdxStore;
 import org.spdx.tools.SpdxToolsHelper.SerFileType;
 
 import junit.framework.TestCase;
+import org.spdx.utility.compare.SpdxCompareException;
 
 public class VerifyTest extends TestCase {
 	
@@ -36,7 +39,8 @@ public class VerifyTest extends TestCase {
 	static final String TEST_WARNING_FILE_PATH = TEST_DIR + File.separator + "SPDXTagExample-v2.2-warning.spdx";
     static final String BAD_JSON_FILE_PATH = TEST_DIR + File.separator + "BadJSON.spdx.json";
 	static final String DOUBLE_JSON_LD_FILE_PATH = TEST_DIR + File.separator + "double.jsonld";
-	
+	static final String TEST_NGINX_RDF_FILE_PATH = TEST_DIR + File.separator + "nginx_1.27-spdx-1.rdf";
+
 	protected void setUp() throws Exception {
 		super.setUp();
 		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV3_0());
@@ -105,5 +109,10 @@ public class VerifyTest extends TestCase {
 	public void testVerifyDouble() throws SpdxVerificationException {
 		List<String> result = Verify.verify(DOUBLE_JSON_LD_FILE_PATH, SerFileType.JSONLD);
         assertEquals(0, result.size());
+	}
+
+	public void testIssue207() throws SpdxVerificationException {
+		List<String> result = Verify.verify(TEST_NGINX_RDF_FILE_PATH, SerFileType.RDFXML);
+		assertFalse(result.isEmpty());
 	}
 }
