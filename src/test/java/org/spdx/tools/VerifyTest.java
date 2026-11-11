@@ -36,7 +36,11 @@ public class VerifyTest extends TestCase {
 	static final String TEST_WARNING_FILE_PATH = TEST_DIR + File.separator + "SPDXTagExample-v2.2-warning.spdx";
     static final String BAD_JSON_FILE_PATH = TEST_DIR + File.separator + "BadJSON.spdx.json";
 	static final String DOUBLE_JSON_LD_FILE_PATH = TEST_DIR + File.separator + "double.jsonld";
-	
+	static final String JSON_WRONG_DOC_ID_FILE_PATH = TEST_DIR + File.separator + "SPDXJSONExample-wrongdocid.spdx.json";
+	static final String YAML_WRONG_DOC_ID_FILE_PATH = TEST_DIR + File.separator + "SPDXYAMLExample-wrongdocid.spdx.yaml";
+	static final String XML_WRONG_DOC_ID_FILE_PATH = TEST_DIR + File.separator + "SPDXXMLExample-wrongdocid.spdx.xml";
+	static final String WRONG_DOC_ID_MESSAGE = "SPDX Document SPDXRef-NOTDOC is invalid.  Document IDs must be SPDXRef-DOCUMENT";
+
 	protected void setUp() throws Exception {
 		super.setUp();
 		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV3_0());
@@ -105,5 +109,14 @@ public class VerifyTest extends TestCase {
 	public void testVerifyDouble() throws SpdxVerificationException {
 		List<String> result = Verify.verify(DOUBLE_JSON_LD_FILE_PATH, SerFileType.JSONLD);
         assertEquals(0, result.size());
+	}
+
+	public void testVerifyWrongDocumentId() throws SpdxVerificationException {
+		List<String> result = Verify.verify(JSON_WRONG_DOC_ID_FILE_PATH, SerFileType.JSON);
+		assertTrue(result.contains(WRONG_DOC_ID_MESSAGE));
+		result = Verify.verify(YAML_WRONG_DOC_ID_FILE_PATH, SerFileType.YAML);
+		assertTrue(result.contains(WRONG_DOC_ID_MESSAGE));
+		result = Verify.verify(XML_WRONG_DOC_ID_FILE_PATH, SerFileType.XML);
+		assertTrue(result.contains(WRONG_DOC_ID_MESSAGE));
 	}
 }
