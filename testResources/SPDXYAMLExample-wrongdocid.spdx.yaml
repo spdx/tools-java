@@ -1,0 +1,15 @@
+---
+SPDXID: "SPDXRef-NOTDOC"
+spdxVersion: "SPDX-2.3"
+creationInfo:
+  created: "2026-11-10T00:00:00Z"
+  creators:
+  - "Tool: test"
+name: "wrong-document-id"
+dataLicense: "CC0-1.0"
+documentNamespace: "https://example.com/wrong-document-id"
+packages:
+- SPDXID: "SPDXRef-Package"
+  name: "package"
+  downloadLocation: "NOASSERTION"
+  filesAnalyzed: false

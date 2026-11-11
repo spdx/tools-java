@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Document>
+  <SPDXID>SPDXRef-NOTDOC</SPDXID>
+  <spdxVersion>SPDX-2.3</spdxVersion>
+  <creationInfo>
+    <created>2026-11-10T00:00:00Z</created>
+    <creators>Tool: test</creators>
+  </creationInfo>
+  <name>wrong-document-id</name>
+  <dataLicense>CC0-1.0</dataLicense>
+  <documentNamespace>https://example.com/wrong-document-id</documentNamespace>
+  <packages>
+    <SPDXID>SPDXRef-Package</SPDXID>
+    <name>package</name>
+    <downloadLocation>NOASSERTION</downloadLocation>
+    <filesAnalyzed>false</filesAnalyzed>
+  </packages>
+</Document>
