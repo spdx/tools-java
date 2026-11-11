@@ -32,6 +32,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 
 import org.spdx.core.CoreModelObject;
 import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.library.model.v2.Version;
 import org.spdx.storage.ISerializableModelStore;
 import org.spdx.tagvaluestore.TagValueStore;
@@ -40,6 +41,8 @@ import org.spdx.tools.SpdxToolsHelper.SerFileType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
@@ -67,6 +70,8 @@ public class Verify {
 	public static final String JSON_SCHEMA_RESOURCE_V3 = "resources/spdx-schema-v3.0.1.json";
 
 	static final ObjectMapper JSON_MAPPER = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+	static final ObjectMapper YAML_MAPPER = new YAMLMapper();
+	static final ObjectMapper XML_MAPPER = new XmlMapper();
 
 	/**
 	 * Main entry point for the Verify tool
@@ -185,6 +190,9 @@ public class Verify {
 			// add in any parser warnings
 			retval.addAll(((TagValueStore)store).getWarnings());
 		}
+		if (SerFileType.JSON.equals(fileType) || SerFileType.YAML.equals(fileType) || SerFileType.XML.equals(fileType)) {
+			retval.addAll(verifyDocumentId(file, fileType));
+		}
 		if (SerFileType.JSON.equals(fileType) || SerFileType.JSONLD.equals(fileType)) {
 			try {
 				String jsonSchemaResource;
@@ -233,6 +241,37 @@ public class Verify {
 					retval.add(msg);
 				}
 			}
+		}
+		return retval;
+	}
+
+	/**
+	 * Verify the document SPDX ID in a JSON, YAML or XML file
+	 * <p>
+	 * The Jackson store always stores the document as SPDXRef-DOCUMENT, so the
+	 * ID in the file is checked here rather than by the model's verify
+	 * @param file SPDX file
+	 * @param fileType JSON, YAML or XML
+	 * @return A list of verification errors - empty if the document ID is valid
+	 */
+	private static List<String> verifyDocumentId(File file, SerFileType fileType) {
+		ObjectMapper mapper;
+		if (SerFileType.YAML.equals(fileType)) {
+			mapper = YAML_MAPPER;
+		} else if (SerFileType.XML.equals(fileType)) {
+			mapper = XML_MAPPER;
+		} else {
+			mapper = JSON_MAPPER;
+		}
+		List<String> retval = new ArrayList<>();
+		try (InputStream is = new FileInputStream(file)) {
+			JsonNode documentId = mapper.readTree(is).get(SpdxConstantsCompatV2.SPDX_IDENTIFIER);
+			if (documentId != null && !SpdxConstantsCompatV2.SPDX_DOCUMENT_ID.equals(documentId.asText())) {
+				retval.add("SPDX Document " + documentId.asText() + " is invalid.  Document IDs must be "
+						+ SpdxConstantsCompatV2.SPDX_DOCUMENT_ID);
+			}
+		} catch (IOException e) {
+			retval.add("Unable to verify the document SPDX ID due to I/O Error");
 		}
 		return retval;
 	}
