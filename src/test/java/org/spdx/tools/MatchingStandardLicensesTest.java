@@ -8,6 +8,7 @@ package org.spdx.tools;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.spdx.core.DefaultModelStore;
 import org.spdx.core.ModelRegistry;
@@ -43,11 +44,11 @@ public class MatchingStandardLicensesTest extends TestCase {
 	}
 
 	public void testMatch() throws Exception {
-		File licenseFile = File.createTempFile("apache20", ".txt");
-		licenseFile.deleteOnExit();
-		Files.write(licenseFile.toPath(),
+		Path licenseFile = Files.createTempFile("apache20", ".txt");
+		licenseFile.toFile().deleteOnExit();
+		Files.write(licenseFile,
 				"Apache License Version 2.0, January 2004".getBytes(StandardCharsets.UTF_8));
-		int result = MatchingStandardLicenses.run(new String[] {licenseFile.getAbsolutePath()});
+		int result = MatchingStandardLicenses.run(new String[] {licenseFile.toAbsolutePath().toString()});
 		assertEquals(ExitCode.SUCCESS, result);
 	}
 
