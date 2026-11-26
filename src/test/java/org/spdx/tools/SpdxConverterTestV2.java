@@ -54,6 +54,9 @@ public class SpdxConverterTestV2 extends TestCase {
 	static final String TEST_JSON_FILE_PATH = TEST_DIR + File.separator + "SPDXJSONExample-v2.3.spdx.json";
 	static final String TEST_WITH_EXCEPTION_FILE_PATH = TEST_DIR + File.separator + "SPDXJSONExample-v2.3-with-exception.spdx.json";
 	static final String TEST_RDF_FILE_PATH = TEST_DIR + File.separator + "SPDXRdfExample-v2.3.spdx.rdf";
+	// Trailing empty rows removed from content.xml in the ODS spreadsheet,
+	// to avoid this bug https://github.com/spdx/spdx-java-spreadsheet-store/issues/109
+	static final String TEST_SPREADSHEET_ODS_FILE_PATH = TEST_DIR + File.separator + "SPDXSpreadsheetExample-v2.3.ods";
 	static final String TEST_SPREADSHEET_XLS_FILE_PATH = TEST_DIR + File.separator + "SPDXSpreadsheetExample-v2.3.xls";
 	static final String TEST_SPREADSHEET_XLSX_FILE_PATH = TEST_DIR + File.separator + "SPDXSpreadsheetExample-v2.3.xlsx";
 	static final String TEST_TAG_FILE_PATH = TEST_DIR + File.separator + "SPDXTagExample-v2.3.spdx";
@@ -103,7 +106,7 @@ public class SpdxConverterTestV2 extends TestCase {
 		}
 	}
 	
-	// Supported file types: JSON, XLS, XLSX, TAG, RDFXML, YAML or XML
+	// Supported file types: JSON, ODS, XLS, XLSX, TAG, RDFXML, YAML or XML
 	
 	public void testXlsxToRDFXML() throws SpdxConverterException, InvalidSPDXAnalysisException, IOException, SpdxCompareException {
 		String outFileName = "result.rdf.xml";
@@ -224,6 +227,30 @@ public class SpdxConverterTestV2 extends TestCase {
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());
 	}
+
+	public void testOdsToRDFXML() throws SpdxConverterException, InvalidSPDXAnalysisException, IOException, SpdxCompareException {
+		String outFileName = "result.rdf.xml";
+		Path outFilePath = tempDirPath.resolve(outFileName);
+		SpdxConverter.convert(TEST_SPREADSHEET_ODS_FILE_PATH, outFilePath.toString(), SerFileType.ODS, SerFileType.RDFXML);
+		File result = new File(outFilePath.toString());
+		File source = new File(TEST_SPREADSHEET_ODS_FILE_PATH);
+		assertTrue(result.exists());
+		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocumentCompatV2(source, SerFileType.ODS);
+		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.RDFXML);
+		SpdxComparer comparer = new SpdxComparer();
+		comparer.compare(sourceDoc, resultDoc);
+		assertFalse(comparer.isDifferenceFound());
+		
+		// Try with no file types
+		Files.delete(outFilePath);
+		SpdxConverter.convert(TEST_SPREADSHEET_ODS_FILE_PATH, outFilePath.toString());
+		result = new File(outFilePath.toString());
+		assertTrue(result.exists());
+		resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.RDFXML);
+		comparer = new SpdxComparer();
+		comparer.compare(sourceDoc, resultDoc);
+		assertFalse(comparer.isDifferenceFound());
+	}
 	
 	public void testJsonToXls() throws SpdxConverterException, InvalidSPDXAnalysisException, IOException, SpdxCompareException {
 		String xmlFileName = "result.rdf.xls";
@@ -244,6 +271,30 @@ public class SpdxConverterTestV2 extends TestCase {
 		result = new File(outFilePath.toString());
 		assertTrue(result.exists());
 		resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.XLS);
+		comparer = new SpdxComparer();
+		comparer.compare(sourceDoc, resultDoc);
+		assertFalse(comparer.isDifferenceFound());
+	}
+
+	public void testJsonToOds() throws SpdxConverterException, InvalidSPDXAnalysisException, IOException, SpdxCompareException {
+		String xmlFileName = "result.rdf.ods";
+		Path outFilePath = tempDirPath.resolve(xmlFileName);
+		SpdxConverter.convert(TEST_JSON_FILE_PATH, outFilePath.toString(), SerFileType.JSON, SerFileType.ODS);
+		File result = new File(outFilePath.toString());
+		File source = new File(TEST_JSON_FILE_PATH);
+		assertTrue(result.exists());
+		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocumentCompatV2(source, SerFileType.JSON);
+		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.ODS);
+		SpdxComparer comparer = new SpdxComparer();
+		comparer.compare(sourceDoc, resultDoc);
+		assertFalse(comparer.isDifferenceFound());
+		
+		// Try with no file types
+		Files.delete(outFilePath);
+		SpdxConverter.convert(TEST_JSON_FILE_PATH, outFilePath.toString());
+		result = new File(outFilePath.toString());
+		assertTrue(result.exists());
+		resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.ODS);
 		comparer = new SpdxComparer();
 		comparer.compare(sourceDoc, resultDoc);
 		assertFalse(comparer.isDifferenceFound());

@@ -18,3 +18,4 @@ buildNumber.properties
 
 # IntelliJ IDE
 .idea
+.DS_Store

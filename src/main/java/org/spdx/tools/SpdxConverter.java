@@ -42,8 +42,8 @@ import org.spdx.v3jsonldstore.JsonLDStore;
  * Converts between various SPDX file types
  * arg[0] from file path
  * arg[1] to file path
- * arg[2] from file type [RDFXML|RDFTTL|JSON|XLS|XLSX|YAML|TAG] - if not present, file type of the from file will be used
- * arg[3] to file type [RDFXML|RDFTTL|JSON|XLS|XLSX|YAML|TAG] - if not present, file type of the to file will be used
+ * arg[2] from file type [RDFXML|RDFTTL|JSON|ODS|XLS|XLSX|YAML|TAG] - if not present, file type of the from file will be used
+ * arg[3] to file type [RDFXML|RDFTTL|JSON|ODS|XLS|XLSX|YAML|TAG] - if not present, file type of the to file will be used
  * arg[4] excludeLicenseDetails If present, listed license and listed exception properties will not be included in the output file
  * 
  * the <code>covert(...)</code> methods can be called programmatically to convert files
@@ -368,8 +368,8 @@ public class SpdxConverter {
 		System.out.println("SpdxConverter fromFilePath toFilePath [fromFileType] [toFileType]");
 		System.out.println("\tfromFilePath - File path of the file to convert from");
 		System.out.println("\ttoFilePath - output file");
-		System.out.println("\t[fromFileType] - optional file type of the input file.  One of JSON, XLS, XLSX, TAG, RDFXML, RDFTTL, YAML, XML or JSONLD.  If not provided the file type will be determined by the file extension");
-		System.out.println("\t[toFileType] - optional file type of the output file.  One of JSON, XLS, XLSX, TAG, RDFXML, RDFTTL, YAML, XML or JSONLD.  If not provided the file type will be determined by the file extension");
+		System.out.println("\t[fromFileType] - optional file type of the input file.  One of JSON, XLS, XLSX, ODS, TAG, RDFXML, RDFTTL, YAML, XML or JSONLD.  If not provided the file type will be determined by the file extension");
+		System.out.println("\t[toFileType] - optional file type of the output file.  One of JSON, XLS, XLSX, ODS, TAG, RDFXML, RDFTTL, YAML, XML or JSONLD.  If not provided the file type will be determined by the file extension");
 		System.out.println("\t[excludeLicenseDetails] - If present, listed license and listed exception properties will not be included in the output file");
 	}
 

@@ -62,7 +62,7 @@ public class SpdxToolsHelper {
 	 * Supported serialization file types
 	 */
 	public enum SerFileType {
-		JSON, RDFXML, XML, XLS, XLSX, YAML, TAG, RDFTTL, JSONLD
+		JSON, RDFXML, XML, ODS, XLS, XLSX, YAML, TAG, RDFTTL, JSONLD
 	}
 
 	static final String XML_INPUT_FACTORY_PROPERTY_KEY = "javax.xml.stream.XMLInputFactory";
@@ -77,6 +77,7 @@ public class SpdxToolsHelper {
 		temp.put("rdf.xml", SerFileType.RDFXML);
 		temp.put("rdf", SerFileType.RDFXML);
 		temp.put("xml", SerFileType.XML);
+		temp.put("ods", SerFileType.ODS);
 		temp.put("xls", SerFileType.XLS);
 		temp.put("xlsx", SerFileType.XLSX);
 		temp.put("yaml", SerFileType.YAML);
@@ -115,6 +116,9 @@ public class SpdxToolsHelper {
 			}
 			case TAG :
 				return new TagValueStore(new InMemSpdxStore());
+			case ODS :
+				return new SpreadsheetStore(new InMemSpdxStore(),
+						SpreadsheetFormatType.ODS);
 			case XLS :
 				return new SpreadsheetStore(new InMemSpdxStore(),
 						SpreadsheetFormatType.XLS);
