@@ -36,6 +36,7 @@ public class VerifyTest extends TestCase {
 	static final String TEST_WARNING_FILE_PATH = TEST_DIR + File.separator + "SPDXTagExample-v2.2-warning.spdx";
     static final String BAD_JSON_FILE_PATH = TEST_DIR + File.separator + "BadJSON.spdx.json";
 	static final String DOUBLE_JSON_LD_FILE_PATH = TEST_DIR + File.separator + "double.jsonld";
+	static final String JSONLD_CASE_SENSITIVE_ID = TEST_DIR + File.separator + "SPDXJsonLDExample-casesensitive.json";
 	
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -105,5 +106,10 @@ public class VerifyTest extends TestCase {
 	public void testVerifyDouble() throws SpdxVerificationException {
 		List<String> result = Verify.verify(DOUBLE_JSON_LD_FILE_PATH, SerFileType.JSONLD);
         assertEquals(0, result.size());
+	}
+
+	public void testCaseSensitive() throws SpdxVerificationException {
+		List<String> result = Verify.verify(JSONLD_CASE_SENSITIVE_ID, SerFileType.JSONLD);
+		assertTrue(result.isEmpty());
 	}
 }
