@@ -153,6 +153,20 @@ public class SpdxConverterTestV2 extends TestCase {
 		assertFalse(comparer.isDifferenceFound());
 	}
 	
+	public void testTagToTtl() throws SpdxConverterException, InvalidSPDXAnalysisException, IOException, SpdxCompareException {
+		String outFileName = "result.ttl";
+		Path outFilePath = tempDirPath.resolve(outFileName);
+		SpdxConverter.convert(TEST_TAG_FILE_PATH, outFilePath.toString());
+		File result = new File(outFilePath.toString());
+		File source = new File(TEST_TAG_FILE_PATH);
+		assertTrue(result.exists());
+		SpdxDocument sourceDoc = SpdxToolsHelper.deserializeDocumentCompatV2(source, SerFileType.TAG);
+		SpdxDocument resultDoc = SpdxToolsHelper.deserializeDocumentCompatV2(result, SerFileType.RDFTTL);
+		SpdxComparer comparer = new SpdxComparer();
+		comparer.compare(sourceDoc, resultDoc);
+		assertFalse(comparer.isDifferenceFound());
+	}
+	
 	public void testYamlToRDFXML() throws SpdxConverterException, InvalidSPDXAnalysisException, IOException, SpdxCompareException {
 		String outFileName = "result.rdf.xml";
 		Path outFilePath = tempDirPath.resolve(outFileName);
