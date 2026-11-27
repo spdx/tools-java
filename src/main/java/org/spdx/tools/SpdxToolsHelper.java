@@ -84,6 +84,7 @@ public class SpdxToolsHelper {
 		temp.put("spdx", SerFileType.TAG);
 		temp.put("yml", SerFileType.YAML);
 		temp.put("rdf.ttl", SerFileType.RDFTTL);
+		temp.put("ttl", SerFileType.RDFTTL);
 		EXT_TO_FILETYPE = Collections.unmodifiableMap(temp);
 	}
 
